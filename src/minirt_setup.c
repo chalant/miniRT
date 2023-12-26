@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "minirt.h"
 
 int	set_transforms(t_transforms_3d *transforms, t_matrix *x, t_matrix *y,
 		t_matrix *z)
@@ -23,7 +23,7 @@ int	set_transforms(t_transforms_3d *transforms, t_matrix *x, t_matrix *y,
 	return (1);
 }
 
-int	set_rotations(t_fdf *fdf, float x, float y, float z)
+int	set_rotations(t_minirt *fdf, float x, float y, float z)
 {
 	fdf->rotations = malloc(sizeof(t_transforms_3d));
 	if (!fdf->rotations)
@@ -40,7 +40,7 @@ int	set_rotations(t_fdf *fdf, float x, float y, float z)
 	return (1);
 }
 
-int	set_translations(t_fdf *fdf, float x, float y, float z)
+int	set_translations(t_minirt *fdf, float x, float y, float z)
 {
 	fdf->translations = malloc(sizeof(t_transforms_3d));
 	if (!fdf->translations)
@@ -57,7 +57,7 @@ int	set_translations(t_fdf *fdf, float x, float y, float z)
 	return (1);
 }
 
-int	set_scalings(t_fdf *fdf, float x, float y, float z)
+int	set_scalings(t_minirt *fdf, float x, float y, float z)
 {
 	fdf->scalings = malloc(sizeof(t_transforms_3d));
 	if (!fdf->scalings)
@@ -74,7 +74,7 @@ int	set_scalings(t_fdf *fdf, float x, float y, float z)
 	return (1);
 }
 
-int	set_zooming(t_fdf *fdf, float value)
+int	set_zooming(t_minirt *fdf, float value)
 {
 	fdf->zooming_in = scaling(value, value, value);
 	fdf->zooming_out = scaling(1.0f / value, 1.0f / value, 1.0f / value);

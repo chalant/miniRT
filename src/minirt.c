@@ -10,10 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "minirt.h"
 #include <stdio.h>
 
-int	set_fdf_transforms(t_fdf *fdf)
+int	set_minirt_transforms(t_minirt *fdf)
 {
 	if (!set_rotations(fdf, 5.1f, 5.1f, 5.1f))
 		return (0);
@@ -57,7 +57,7 @@ int	mlx_setup(t_fdf *fdf)
 	return (1);
 }
 
-int	set_hooks(t_fdf *fdf)
+int	set_hooks(t_minirt *fdf)
 {
 	mlx_hook(fdf->window, 2, 1L << 0, key_press_hook, fdf);
 	mlx_hook(fdf->window, 3, 1L << 1, key_release_hook, fdf);
@@ -67,7 +67,7 @@ int	set_hooks(t_fdf *fdf)
 	return (1);
 }
 
-int	set_variables(t_fdf *fdf)
+int	set_variables(t_minirt *fdf)
 {
 	fdf->ctrl = malloc(sizeof(t_fdf_key));
 	if (!fdf->ctrl)
@@ -91,7 +91,7 @@ int	set_variables(t_fdf *fdf)
 
 int	main(int argc, char *argv[])
 {
-	t_fdf		fdf;
+	t_minirt	fdf;
 	t_display	display;
 
 	if (argc - 1 < 0 || argc - 1 > 1)
@@ -106,7 +106,7 @@ int	main(int argc, char *argv[])
 		return (fdf_free(&fdf, 1));
 	if (!mlx_setup(&fdf))
 		return (fdf_free(&fdf, 1));
-	if (!set_fdf_transforms(&fdf))
+	if (!set_minirt_transforms(&fdf))
 		return (fdf_free(&fdf, 1));
 	if (!normalize_object(&fdf, fdf.map))
 		return (fdf_free(&fdf, 1));

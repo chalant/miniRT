@@ -12,7 +12,7 @@
 
 #include "minirt.h"
 
-t_matrix	*translation(t_matrix *matrix, float x, float y, float z)
+int	translation(t_matrix *matrix, float x, float y, float z)
 {
 	matrix->points[0][3] = x;
 	matrix->points[1][3] = y;

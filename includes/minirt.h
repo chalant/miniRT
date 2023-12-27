@@ -19,6 +19,7 @@ typedef struct s_object
 	t_matrix		*rev_t_center;
 	t_matrix		*tmp;
 
+	//todo: set an intersection function pointer.
 	int				object_type;
 	float			*colors;
 	int				light;
@@ -33,12 +34,12 @@ typedef struct s_object
 	int				shape[2];
 }					t_object;
 
-typedef struct s_transforms_3d
+typedef struct	s_transforms_3d
 {
 	t_matrix		*x_axis;
 	t_matrix		*y_axis;
 	t_matrix		*z_axis;
-}					t_transforms_3d;
+}				t_transforms_3d;
 
 typedef struct s_display
 {

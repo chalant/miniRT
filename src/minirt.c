@@ -13,41 +13,41 @@
 #include "minirt.h"
 #include <stdio.h>
 
-int	set_minirt_transforms(t_minirt *fdf)
+int	set_minirt_transforms(t_minirt *minirt)
 {
-	if (!set_rotations(fdf, 5.1f, 5.1f, 5.1f))
+	if (!set_rotations(minirt, 5.1f, 5.1f, 5.1f))
 		return (0);
-	if (!set_translations(fdf, 0.1f, 0.1f, 0.1f))
+	if (!set_translations(minirt, 0.1f, 0.1f, 0.1f))
 		return (0);
-	if (!set_scalings(fdf, 1.1f, 1.1f, 1.1f))
+	if (!set_scalings(minirt, 1.1f, 1.1f, 1.1f))
 		return (0);
-	if (!set_zooming(fdf, 1.1f))
+	if (!set_zooming(minirt, 1.1f))
 		return (0);
-	if (!create_perspective_mode(fdf))
+	if (!create_perspective_mode(minirt))
 		return (0);
-	if (!create_isometric_mode(fdf))
+	if (!create_isometric_mode(minirt))
 		return (0);
-	fdf->transforms = identity_matrix(3, 3);
-	fdf->centering = translation(fdf->display->height / 2.0f,
-			fdf->display->width / 2.0f, 0.0f);
-	fdf->tmp = homogeneous_matrix(3, 3);
-	fdf->mode = fdf->isometric_mode;
+	homogeneous_matrix(&minirt->transforms, 3, 3);
+	identity_matrix(minirt->transforms, 3, 3);
+	homogeneous_matrix(&minirt->centering, 3, 3);
+	translation(minirt->centering, minirt->display->height / 2.0f, minirt->display->width / 2.0f, 0.0f);
+	homogeneous_matrix(&minirt->tmp, 3, 3);
 	return (1);
 }
 
-int	mlx_setup(t_fdf *fdf)
+int	mlx_setup(t_minirt *minirt)
 {
 	t_display	*display;
 
-	display = fdf->display;
-	fdf->mlx = mlx_init();
-	if (!fdf->mlx)
+	display = minirt->display;
+	minirt->mlx = mlx_init();
+	if (!minirt->mlx)
 		return (0);
-	fdf->window = mlx_new_window(fdf->mlx, display->width, display->height,
-			"FDF");
-	if (!fdf->window)
+	minirt->window = mlx_new_window(minirt->mlx, display->width, display->height,
+			"miniRT");
+	if (!minirt->window)
 		return (0);
-	display->img = mlx_new_image(fdf->mlx, display->width, display->height);
+	display->img = mlx_new_image(minirt->mlx, display->width, display->height);
 	if (!display->img)
 		return (0);
 	display->addr = mlx_get_data_addr(display->img, &display->bits_per_pixel,

@@ -69,23 +69,8 @@ int	set_hooks(t_minirt *fdf)
 
 int	set_variables(t_minirt *fdf)
 {
-	fdf->ctrl = malloc(sizeof(t_fdf_key));
-	if (!fdf->ctrl)
-		return (0);
-	fdf->shift = malloc(sizeof(t_fdf_key));
-	if (!fdf->shift)
-		return (0);
-	fdf->command = malloc(sizeof(t_fdf_key));
-	if (!fdf->command)
-		return (0);
-	fdf->ctrl->pressed = 0;
-	fdf->command->pressed = 0;
-	fdf->shift->pressed = 0;
 	fdf->display->height = 1080;
 	fdf->display->width = 1920;
-	fdf->world = WORLD;
-	fdf->view = VIEW;
-	fdf->space = fdf->world;
 	return (1);
 }
 

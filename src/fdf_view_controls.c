@@ -6,13 +6,13 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:53:50 by ychalant          #+#    #+#             */
-/*   Updated: 2023/08/30 12:52:53 by ychalant         ###   ########.fr       */
+/*   Updated: 2023/12/27 17:40:59 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "minirt.h"
 
-int	zooming_hook(int code, t_fdf *fdf)
+int	zooming_hook(int code, t_minirt *fdf)
 {
 	if (code == ZI)
 		inplace_matmul(fdf->zooming_in, fdf->transforms, fdf->tmp);
@@ -21,7 +21,7 @@ int	zooming_hook(int code, t_fdf *fdf)
 	return (0);
 }
 
-int	view_translation_hook(int code, t_fdf *fdf)
+int	view_translation_hook(int code, t_minirt *fdf)
 {
 	if (code == TU)
 		inplace_matmul(fdf->rev_translations->x_axis,

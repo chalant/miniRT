@@ -2,11 +2,29 @@
 # define MINIRT_H
 
 # include <stdlib.h>
+# include <math.h>
 # include "matrix.h"
 # include "minirt_bindings.h"
 # include "minirt_colors.h"
 # include "minirt_hooks.h"
 # include "libft.h"
+
+typedef struct	s_sphere
+{
+	float		radius;
+}				t_sphere;
+
+typedef struct	s_cylinder
+{
+	float		radius;
+	float		height;
+}				t_cylinsder;
+
+typedef struct	s_plane
+{
+	float		radius;
+	float		height;
+}				t_plane;
 
 typedef struct	s_object
 {
@@ -22,6 +40,8 @@ typedef struct	s_object
 
 	void			*object_shape;
 	//todo: set an intersection function pointer.
+	int				(*intersect)(void *shape, t_vector *point, float t);
+	int				(*transform)(void *shape, t_matrix *transform);
 	float			*colors;
 	int				light;
 	float			base_color;

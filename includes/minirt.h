@@ -5,9 +5,10 @@
 # include "matrix.h"
 # include "minirt_bindings.h"
 # include "minirt_colors.h"
+# include "minirt_hooks.h"
 # include "libft.h"
 
-typedef struct s_object
+typedef struct	s_object
 {
 	t_matrix		*transforms;
 	t_matrix		*rev_transforms;
@@ -19,8 +20,8 @@ typedef struct s_object
 	t_matrix		*rev_t_center;
 	t_matrix		*tmp;
 
+	void			*object_shape;
 	//todo: set an intersection function pointer.
-	int				object_type;
 	float			*colors;
 	int				light;
 	float			base_color;
@@ -32,7 +33,7 @@ typedef struct s_object
 	int				width;
 	int				height;
 	int				shape[2];
-}					t_object;
+}				t_object;
 
 typedef struct	s_transforms_3d
 {
@@ -75,5 +76,9 @@ typedef struct	s_minirt
 
 	t_display		*display;
 }				t_minirt;
+
+int	handle_expose(t_minirt *minirt);
+int	close_program(t_minirt *minirt);
+int	update_view(t_minirt *minirt);
 
 #endif

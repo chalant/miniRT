@@ -30,7 +30,8 @@ int	set_minirt_transforms(t_minirt *minirt)
 	homogeneous_matrix(&minirt->transforms, 3, 3);
 	identity_matrix(minirt->transforms, 3, 3);
 	homogeneous_matrix(&minirt->centering, 3, 3);
-	translation(minirt->centering, minirt->display->height / 2.0f, minirt->display->width / 2.0f, 0.0f);
+	translation(minirt->centering, minirt->display->height / 2.0f,
+		minirt->display->width / 2.0f, 0.0f);
 	homogeneous_matrix(&minirt->tmp, 3, 3);
 	return (1);
 }
@@ -43,11 +44,12 @@ int	mlx_setup(t_minirt *minirt)
 	minirt->mlx = mlx_init();
 	if (!minirt->mlx)
 		return (0);
-	minirt->window = mlx_new_window(minirt->mlx, display->width, display->height,
-			"miniRT");
+	minirt->window = mlx_new_window(minirt->mlx,
+		display->width, display->height, "miniRT");
 	if (!minirt->window)
 		return (0);
-	display->img = mlx_new_image(minirt->mlx, display->width, display->height);
+	display->img = mlx_new_image(minirt->mlx,
+		display->width, display->height);
 	if (!display->img)
 		return (0);
 	display->addr = mlx_get_data_addr(display->img, &display->bits_per_pixel,

@@ -4,7 +4,7 @@ OBJ_DIR = ./obj
 LIBFT_DIR = ./libft
 
 INCLUDES_FILES = minirt.h\
-		   		 get_next_line.h\
+		   		 minirt_key_hooks.h\
 		         minirt_bindings.h\
 		         matrix.h\
 				 fdf_rendering.h\

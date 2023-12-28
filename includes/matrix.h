@@ -20,8 +20,8 @@ typedef struct s_matrix
 	int		cols;
 }			t_matrix;
 
-float		get_point(t_matrix *matrix, int i, int j);
 float		**get_points(t_matrix *matrix);
+float		get_point(t_matrix *matrix, int i, int j);
 void		set_point(t_matrix *matrix, int i, int j, float value);
 
 int			create_matrix(t_matrix *matrix, int rows, int cols);

@@ -9,6 +9,17 @@
 # include "minirt_hooks.h"
 # include "libft.h"
 
+//stores data like colors, intersection points etc.
+typedef struct	s_intersection
+{
+
+}				t_intersection;
+
+typedef struct	s_ray
+{
+	
+}				t_ray;
+
 typedef struct	s_sphere
 {
 	float		radius;
@@ -40,7 +51,7 @@ typedef struct	s_object
 
 	void			*object_shape;
 	//todo: set an intersection function pointer.
-	int				(*intersect)(void *shape, t_vector *point, float t);
+	int				(*intersect)(void *shape, t_intersection *intersection, t_ray *ray);
 	int				(*transform)(void *shape, t_matrix *transform);
 	float			*colors;
 	int				light;

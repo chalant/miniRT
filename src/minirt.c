@@ -13,28 +13,24 @@
 #include "minirt.h"
 #include <stdio.h>
 
-int	set_minirt_transforms(t_minirt *minirt)
-{
-	if (!set_rotations(minirt, 5.1f, 5.1f, 5.1f))
-		return (0);
-	if (!set_translations(minirt, 0.1f, 0.1f, 0.1f))
-		return (0);
-	if (!set_scalings(minirt, 1.1f, 1.1f, 1.1f))
-		return (0);
-	if (!set_zooming(minirt, 1.1f))
-		return (0);
-	if (!create_perspective_mode(minirt))
-		return (0);
-	if (!create_isometric_mode(minirt))
-		return (0);
-	homogeneous_matrix(&minirt->transforms, 3, 3);
-	identity_matrix(minirt->transforms, 3, 3);
-	homogeneous_matrix(&minirt->centering, 3, 3);
-	translation(minirt->centering, minirt->display->height / 2.0f,
-		minirt->display->width / 2.0f, 0.0f);
-	homogeneous_matrix(&minirt->tmp, 3, 3);
-	return (1);
-}
+// int	set_minirt_transforms(t_minirt *minirt)
+// {
+// 	if (!set_rotations(minirt, 5.1f, 5.1f, 5.1f))
+// 		return (0);
+// 	if (!set_translations(minirt, 0.1f, 0.1f, 0.1f))
+// 		return (0);
+// 	if (!set_scalings(minirt, 1.1f, 1.1f, 1.1f))
+// 		return (0);
+// 	if (!set_zooming(minirt, 1.1f))
+// 		return (0);
+// 	homogeneous_matrix(&minirt->transforms, 3, 3);
+// 	identity_matrix(minirt->transforms, 3, 3);
+// 	homogeneous_matrix(&minirt->centering, 3, 3);
+// 	translation(minirt->centering, minirt->display->height / 2.0f,
+// 		minirt->display->width / 2.0f, 0.0f);
+// 	homogeneous_matrix(&minirt->tmp, 3, 3);
+// 	return (1);
+// }
 
 int	mlx_setup(t_minirt *minirt)
 {
@@ -81,13 +77,14 @@ int	main(int argc, char *argv[])
 	t_minirt	minirt;
 	t_display	display;
 
+	(void)argv;
 	if (argc - 1 < 0 || argc - 1 > 1)
 		return (0);
 	minirt_init(&minirt);
 	minirt.display = &display;
 	set_variables(&minirt);
 	mlx_setup(&minirt);
-	set_minirt_transforms(&minirt);
+	// set_minirt_transforms(&minirt);
 	set_hooks(&minirt);
 	mlx_loop(minirt.mlx);
 	return (0);

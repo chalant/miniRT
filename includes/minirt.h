@@ -5,9 +5,8 @@
 # include <math.h>
 # include "matrix.h"
 # include "minirt_bindings.h"
-# include "minirt_colors.h"
-# include "minirt_hooks.h"
 # include "libft.h"
+# include <mlx.h>
 
 //stores data like colors, intersection points etc.
 typedef struct	s_intersection
@@ -17,7 +16,9 @@ typedef struct	s_intersection
 
 typedef struct	s_ray
 {
-	
+	t_matrix	*origin;
+	t_matrix	*direction;
+	float		t;
 }				t_ray;
 
 typedef struct	s_sphere
@@ -50,8 +51,7 @@ typedef struct	s_object
 	t_matrix		*tmp;
 
 	void			*object_shape;
-	//todo: set an intersection function pointer.
-	int				(*intersect)(void *shape, t_object *object, t_ray *ray);
+	int				(*intersect)(void *shape, struct s_object *object, t_ray *ray);
 	int				(*transform)(void *shape, t_matrix *transform);
 	float			*colors;
 	int				light;
@@ -108,8 +108,15 @@ typedef struct	s_minirt
 	t_display		*display;
 }				t_minirt;
 
+int	minirt_init(t_minirt *minirt);
 int	handle_expose(t_minirt *minirt);
 int	close_program(t_minirt *minirt);
 int	update_view(t_minirt *minirt);
+
+int		key_release_hook(int code, t_minirt *minirt);
+int		key_press_hook(int code, t_minirt *minirt);
+void	fdf_control_key(int code, t_minirt *fdf);
+int		color_hook(int code, t_minirt *fdf);
+void	movement_hook(int code, t_minirt *fdf);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:53:50 by ychalant          #+#    #+#             */
-/*   Updated: 2023/08/30 12:53:55 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/01/03 15:51:04 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,13 @@ int	delete_matrix(t_matrix *matrix, int until)
 	int	i;
 
 	if (!matrix)
-		return (NULL);
+		return (0);
 	i = -1;
 	while (++i < until)
 		free(matrix->points[i]);
 	free(matrix->points);
 	free(matrix);
-	return (NULL);
+	return (0);
 }
 
 int	fill_vector(float *vector, int size, float value)
@@ -48,14 +48,14 @@ int	fill_vector(float *vector, int size, float value)
 	int	i;
 
 	if (!vector)
-		return (NULL);
+		return (-1);
 	i = 0;
 	while (i < size)
 	{
 		vector[i] = value;
 		i++;
 	}
-	return (vector);
+	return (0);
 }
 
 int	init_matrix(t_matrix *matrix, float value)
@@ -86,10 +86,17 @@ int	homogeneous_matrix(t_matrix **matrix, int rows, int cols)
 	return (0);
 }
 
-int	identity_matrix(t_matrix *matrix, int rows, int cols)
+int	set_diagonal(t_matrix *matrix, float value)
 {
-	matrix->points[0][0] = 1.0f;
-	matrix->points[1][1] = 1.0f;
-	matrix->points[2][2] = 1.0f;
+	int	i;
+	int	target;
+
+	i = -1;
+	if (matrix->rows <= matrix->cols)
+		target = matrix->rows;
+	else
+		target = matrix->cols;
+	while (++i < matrix->rows)
+		matrix->points[i][i] = value;
 	return (0);
 }

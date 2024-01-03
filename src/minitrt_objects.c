@@ -1,8 +1,28 @@
 #include "minirt.h"
 
-int create_sphere(t_object *object)
+int	sphere_intersection(void *shape, t_object *object, t_ray *ray)
 {
-	object->object_shape = ;
+	t_sphere	*sphere;
+
+	sphere = (t_sphere *)shape;
+	return (0);
 }
 
-int	create_cylinder(t_object *object)
+//generates sphere points and stores them into the objects body.
+int	generate_sphere_points(t_object *object)
+{
+	return (0);
+}
+
+int create_sphere(t_object *object, float radius)
+{
+	t_sphere	*sphere;
+
+	sphere = malloc(sizeof(t_sphere));
+	if (!sphere)
+		return (-1);
+	object->object_shape = sphere;
+	sphere->radius = radius;
+	object->intersect = sphere_intersection;
+	return (0);
+}

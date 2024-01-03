@@ -51,7 +51,7 @@ typedef struct	s_object
 
 	void			*object_shape;
 	//todo: set an intersection function pointer.
-	int				(*intersect)(void *shape, t_intersection *intersection, t_ray *ray);
+	int				(*intersect)(void *shape, t_object *object, t_ray *ray);
 	int				(*transform)(void *shape, t_matrix *transform);
 	float			*colors;
 	int				light;

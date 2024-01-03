@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.c                                              :+:      :+:    :+:   */
+/*   minirt.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -59,45 +59,36 @@ int	mlx_setup(t_minirt *minirt)
 	return (1);
 }
 
-int	set_hooks(t_minirt *fdf)
+int	set_hooks(t_minirt *minirt)
 {
-	mlx_hook(fdf->window, 2, 1L << 0, key_press_hook, fdf);
-	mlx_hook(fdf->window, 3, 1L << 1, key_release_hook, fdf);
-	mlx_hook(fdf->window, 17, 0, close_program, fdf);
-	mlx_expose_hook(fdf->window, handle_expose, fdf);
-	mlx_loop_hook(fdf->mlx, update_view, fdf);
+	mlx_hook(minirt->window, 2, 1L << 0, key_press_hook, minirt);
+	mlx_hook(minirt->window, 3, 1L << 1, key_release_hook, minirt);
+	mlx_hook(minirt->window, 17, 0, close_program, minirt);
+	mlx_expose_hook(minirt->window, handle_expose, minirt);
+	mlx_loop_hook(minirt->mlx, update_view, minirt);
 	return (1);
 }
 
-int	set_variables(t_minirt *fdf)
+int	set_variables(t_minirt *minirt)
 {
-	fdf->display->height = 1080;
-	fdf->display->width = 1920;
+	minirt->display->height = 1080;
+	minirt->display->width = 1920;
 	return (1);
 }
 
 int	main(int argc, char *argv[])
 {
-	t_minirt	fdf;
+	t_minirt	minirt;
 	t_display	display;
 
 	if (argc - 1 < 0 || argc - 1 > 1)
 		return (0);
-	fdf_init(&fdf);
-	fdf.map = load_object(argv[1]);
-	if (!fdf.map)
-		return (fdf_free(&fdf, 1));
-	fdf_object_color(fdf.map);
-	fdf.display = &display;
-	if (!set_variables(&fdf))
-		return (fdf_free(&fdf, 1));
-	if (!mlx_setup(&fdf))
-		return (fdf_free(&fdf, 1));
-	if (!set_minirt_transforms(&fdf))
-		return (fdf_free(&fdf, 1));
-	if (!normalize_object(&fdf, fdf.map))
-		return (fdf_free(&fdf, 1));
-	set_hooks(&fdf);
-	mlx_loop(fdf.mlx);
+	minirt_init(&minirt);
+	minirt.display = &display;
+	set_variables(&minirt);
+	mlx_setup(&minirt);
+	set_minirt_transforms(&minirt);
+	set_hooks(&minirt);
+	mlx_loop(minirt.mlx);
 	return (0);
 }

@@ -96,7 +96,7 @@ int	set_diagonal(t_matrix *matrix, float value)
 		target = matrix->rows;
 	else
 		target = matrix->cols;
-	while (++i < matrix->rows)
+	while (++i < target)
 		matrix->points[i][i] = value;
 	return (0);
 }

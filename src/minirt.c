@@ -67,8 +67,8 @@ int	set_hooks(t_minirt *minirt)
 
 int	set_variables(t_minirt *minirt)
 {
-	minirt->display->height = 1080;
-	minirt->display->width = 1920;
+	minirt->display->height = 700;
+	minirt->display->width = 800;
 	return (1);
 }
 
@@ -86,6 +86,7 @@ int	main(int argc, char *argv[])
 	mlx_setup(&minirt);
 	// set_minirt_transforms(&minirt);
 	set_hooks(&minirt);
+	create_sphere()
 	mlx_loop(minirt.mlx);
 	return (0);
 }

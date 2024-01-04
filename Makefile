@@ -2,6 +2,7 @@ INCLUDES_DIR = ./includes
 SRC_DIR = ./src
 OBJ_DIR = ./obj
 LIBFT_DIR = ./libft
+MLX_DIR = ./minilibx
 
 INCLUDES_FILES = minirt.h\
 		         minirt_bindings.h\
@@ -21,17 +22,22 @@ OBJ = $(addprefix $(OBJ_DIR)/, $(SRC_FILES:.c=.o))
 NAME = minirt
 
 LIBFT = $(LIBFT_DIR)/libft.a
+MINILIBX = $(MLX_DIR)/libmlx_Linux.a
 
-C_FLAGS = -O3 -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror -MMD -MP
+C_FLAGS = -O3 -I$(MLX_DIR) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror -MMD -MP
 
-LFLAGS = -lmlx -framework OpenGL -framework AppKit
+# LFLAGS = -lmlx -framework OpenGL -framework AppKit
+LFLAGS = -lXext -lX11 -lm
 
 all:
 	mkdir -p $(OBJ_DIR)
 	make $(NAME)
 
-$(NAME): $(OBJ) $(LIBFT)
-	cc $(C_FLAGS) $(OBJ) $(LIBFT) $(LFLAGS) -o $(NAME)
+$(NAME): $(OBJ) $(MINILIBX) $(LIBFT)
+	cc $(C_FLAGS) $(OBJ) $(MINILIBX) $(LIBFT) $(LFLAGS) -o $(NAME)
+
+$(MINILIBX):
+	make -C $(MLX_DIR)
 
 $(LIBFT):
 	make -C $(LIBFT_DIR)
@@ -41,6 +47,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCLUDES)
 
 clean:
 	make -C $(LIBFT_DIR) clean
+	make -C $(MLX_DIR) clean
 	rm -rf $(OBJ_DIR)
 
 fclean: clean

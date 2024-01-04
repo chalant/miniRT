@@ -86,7 +86,6 @@ int	main(int argc, char *argv[])
 	mlx_setup(&minirt);
 	// set_minirt_transforms(&minirt);
 	set_hooks(&minirt);
-	create_sphere()
 	mlx_loop(minirt.mlx);
 	return (0);
 }

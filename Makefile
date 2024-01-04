@@ -26,15 +26,12 @@ MINILIBX = $(MLX_DIR)/libmlx_Linux.a
 
 C_FLAGS = -O3 -I$(MLX_DIR) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror -MMD -MP
 
-# LFLAGS = -lmlx -framework OpenGL -framework AppKit
-LFLAGS = -lXext -lX11 -lm
-
 all:
 	mkdir -p $(OBJ_DIR)
 	make $(NAME)
 
-$(NAME): $(OBJ) $(MINILIBX) $(LIBFT)
-	cc $(C_FLAGS) $(OBJ) $(MINILIBX) $(LIBFT) $(LFLAGS) -o $(NAME)
+$(NAME): $(OBJ) $(LIBFT)
+	cc $(C_FLAGS) $(OBJ) $(LIBFT) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
 
 $(MINILIBX):
 	make -C $(MLX_DIR)
@@ -45,9 +42,11 @@ $(LIBFT):
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCLUDES)
 	cc $(C_FLAGS) -c $< -o $@
 
+linux:
+	cc $(C_FLAGS) $(OBJ) $(MINILIBX) $(LIBFT) -lXext -lX11 -lm -o $(NAME)
+
 clean:
 	make -C $(LIBFT_DIR) clean
-	make -C $(MLX_DIR) clean
 	rm -rf $(OBJ_DIR)
 
 fclean: clean

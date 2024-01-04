@@ -20,6 +20,7 @@ INCLUDES = $(addprefix $(INCLUDES_DIR)/, $(INCLUDES_FILES))
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC_FILES:.c=.o))
 
 NAME = minirt
+LINUX = lin
 
 LIBFT = $(LIBFT_DIR)/libft.a
 MINILIBX = $(MLX_DIR)/libmlx_Linux.a
@@ -33,6 +34,9 @@ all:
 $(NAME): $(OBJ) $(LIBFT)
 	cc $(C_FLAGS) $(OBJ) $(LIBFT) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
 
+$(LINUX): $(OBJ) $(LIBFT) $(MINILIBX)
+	cc $(C_FLAGS) $(OBJ) $(LIBFT) $(MINILIBX) -lXext -lX11 -lm -o $(NAME)
+
 $(MINILIBX):
 	make -C $(MLX_DIR)
 
@@ -43,7 +47,8 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCLUDES)
 	cc $(C_FLAGS) -c $< -o $@
 
 linux:
-	cc $(C_FLAGS) $(OBJ) $(MINILIBX) $(LIBFT) -lXext -lX11 -lm -o $(NAME)
+	mkdir -p $(OBJ_DIR)
+	make $(LINUX)
 
 clean:
 	make -C $(LIBFT_DIR) clean

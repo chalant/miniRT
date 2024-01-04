@@ -4,16 +4,19 @@ OBJ_DIR = ./obj
 LIBFT_DIR = ./libft
 MLX_DIR = ./minilibx
 
-INCLUDES_FILES = minirt.h\
-		         minirt_bindings.h\
-		         matrix.h
+INCLUDES_FILES = minirt.h \
+		         minirt_bindings.h \
+		         matrix.h \
+				 minirt_objects.h
 
 SRC_FILES =	minirt.c \
 			minirt_key_hooks.c \
 			matrix.c \
 			matrix_interface.c \
 			minirt_init.c \
-			minirt_window_hooks.c
+			minirt_window_hooks.c \
+			minirt_objects.c \
+			minirt_rendering.c
 
 
 INCLUDES = $(addprefix $(INCLUDES_DIR)/, $(INCLUDES_FILES))

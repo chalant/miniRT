@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minirt.h"
+#include "minirt_objects.h"
 #include <stdio.h>
 
 // int	set_minirt_transforms(t_minirt *minirt)
@@ -72,6 +73,15 @@ int	set_variables(t_minirt *minirt)
 	return (1);
 }
 
+int	load_objects(t_minirt *minirt)
+{
+	t_object	new;
+
+	create_sphere(&new, 0.5f);
+	ft_darray_append(minirt->objects, &new);
+	return (1);
+}
+
 int	main(int argc, char *argv[])
 {
 	t_minirt	minirt;
@@ -85,6 +95,7 @@ int	main(int argc, char *argv[])
 	set_variables(&minirt);
 	mlx_setup(&minirt);
 	// set_minirt_transforms(&minirt);
+	load_objects(&minirt);
 	set_hooks(&minirt);
 	mlx_loop(minirt.mlx);
 	return (0);

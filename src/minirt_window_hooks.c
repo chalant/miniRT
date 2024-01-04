@@ -6,7 +6,7 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:53:50 by ychalant          #+#    #+#             */
-/*   Updated: 2024/01/03 15:54:12 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/01/04 14:26:08 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,9 @@ void	free_mlx(t_minirt *fdf)
 
 int	update_view(t_minirt *minirt)
 {
-	(void)minirt;
+	if (!minirt->rendered)
+		render(minirt);
+	minirt->rendered = 1;
 	return (0);
 }
 

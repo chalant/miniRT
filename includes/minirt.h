@@ -2,6 +2,7 @@
 # define MINIRT_H
 
 # include <stdlib.h>
+# include <stdio.h>
 # include <math.h>
 # include "matrix.h"
 # include "minirt_bindings.h"
@@ -20,6 +21,15 @@ typedef struct	s_ray
 	t_matrix	*direction;
 	float		t;
 }				t_ray;
+
+typedef struct	s_camera
+{
+	t_matrix	*origin;
+	t_matrix	*direction;
+	float		fov;
+	int			height;
+	int			width;
+}				t_camera;
 
 typedef struct	s_sphere
 {
@@ -106,17 +116,22 @@ typedef struct	s_minirt
 	t_object		*target;
 
 	t_display		*display;
+	t_camera		*camera;
+
+	int				rendered;
 }				t_minirt;
 
-int	minirt_init(t_minirt *minirt);
-int	handle_expose(t_minirt *minirt);
-int	close_program(t_minirt *minirt);
-int	update_view(t_minirt *minirt);
+int		minirt_init(t_minirt *minirt);
+int		handle_expose(t_minirt *minirt);
+int		close_program(t_minirt *minirt);
+int		update_view(t_minirt *minirt);
 
 int		key_release_hook(int code, t_minirt *minirt);
 int		key_press_hook(int code, t_minirt *minirt);
 void	fdf_control_key(int code, t_minirt *fdf);
 int		color_hook(int code, t_minirt *fdf);
 void	movement_hook(int code, t_minirt *fdf);
+
+int		render(t_minirt *minirt);
 
 #endif

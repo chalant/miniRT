@@ -6,7 +6,7 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:53:50 by ychalant          #+#    #+#             */
-/*   Updated: 2024/01/03 14:02:00 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/01/04 14:26:30 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	minirt_init(t_minirt *fdf)
 {
+	fdf->rendered = 0;
 	fdf->mlx = NULL;
 	fdf->window = NULL;
 	fdf->rotations = NULL;
@@ -29,5 +30,10 @@ int	minirt_init(t_minirt *fdf)
 	fdf->zooming_out = NULL;
 	fdf->target = NULL;
 	fdf->display = NULL;
+	fdf->objects = malloc(sizeof(t_darray));
+	if (!fdf->objects)
+		return (-1);
+	if (ft_darray_init(fdf->objects, sizeof(t_object), 10) < 0)
+		return (-1);
 	return (1);
 }

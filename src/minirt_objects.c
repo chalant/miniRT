@@ -4,6 +4,8 @@ int	sphere_intersection(void *shape, t_object *object, t_ray *ray)
 {
 	t_sphere	*sphere;
 
+	(void)ray;
+	(void)object;
 	sphere = (t_sphere *)shape;
 	return (0);
 }
@@ -11,6 +13,7 @@ int	sphere_intersection(void *shape, t_object *object, t_ray *ray)
 //generates sphere points and stores them into the objects body.
 int	generate_sphere_points(t_object *object)
 {
+	(void)object;
 	return (0);
 }
 

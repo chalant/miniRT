@@ -24,8 +24,9 @@ typedef struct	s_ray
 
 typedef struct	s_camera
 {
-	t_matrix	*origin;
-	t_matrix	*direction;
+	t_matrix		*origin;
+	t_matrix		*orientation;
+	t_matrix		*transform;
 	float		fov;
 	int			height;
 	int			width;
@@ -132,6 +133,7 @@ void	fdf_control_key(int code, t_minirt *fdf);
 int		color_hook(int code, t_minirt *fdf);
 void	movement_hook(int code, t_minirt *fdf);
 
+int		set_camera_transform(t_camera *camera);
 int		render(t_minirt *minirt);
 
 #endif

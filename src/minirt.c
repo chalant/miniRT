@@ -73,10 +73,12 @@ int	set_variables(t_minirt *minirt)
 	return (1);
 }
 
-int	load_objects(t_minirt *minirt)
+int	load_scene(t_minirt *minirt)
 {
 	t_object	new;
 
+	minirt->camera = malloc(sizeof(t_camera));
+	set_camera_transform(minirt->camera);
 	create_sphere(&new, 0.5f);
 	ft_darray_append(minirt->objects, &new);
 	return (1);
@@ -95,8 +97,8 @@ int	main(int argc, char *argv[])
 	set_variables(&minirt);
 	mlx_setup(&minirt);
 	// set_minirt_transforms(&minirt);
-	load_objects(&minirt);
 	set_hooks(&minirt);
+	load_scene(&minirt);
 	mlx_loop(minirt.mlx);
 	return (0);
 }

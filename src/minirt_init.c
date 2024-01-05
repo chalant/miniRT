@@ -6,7 +6,7 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:53:50 by ychalant          #+#    #+#             */
-/*   Updated: 2024/01/04 14:26:30 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/01/05 15:29:28 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,6 @@ int	minirt_init(t_minirt *fdf)
 		return (-1);
 	if (ft_darray_init(fdf->objects, sizeof(t_object), 10) < 0)
 		return (-1);
+	fdf->camera = NULL;
 	return (1);
 }

@@ -23,6 +23,7 @@ int	render(t_minirt *minirt)
 	i = -1;
 	// ft_memset(display->addr, 0x0, display->width * display->height
 	// 	* (display->bits_per_pixel / 8));
+	// todo: need to move to pixel space.
 	while (++i < minirt->camera->width)
 	{
 		j = -1;

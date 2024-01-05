@@ -6,7 +6,7 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:53:50 by ychalant          #+#    #+#             */
-/*   Updated: 2024/01/03 15:51:04 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/01/05 15:11:54 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,14 @@ int	create_matrix(t_matrix *matrix, int rows, int cols)
 	return (0);
 }
 
-int	delete_matrix(t_matrix *matrix, int until)
+int	delete_matrix(t_matrix *matrix)
 {
 	int	i;
 
 	if (!matrix)
 		return (0);
 	i = -1;
-	while (++i < until)
+	while (++i < matrix->rows)
 		free(matrix->points[i]);
 	free(matrix->points);
 	free(matrix);

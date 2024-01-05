@@ -27,9 +27,9 @@ typedef struct	s_camera
 	t_matrix		*origin;
 	t_matrix		*orientation;
 	t_matrix		*transform;
-	float		fov;
-	int			height;
-	int			width;
+	float			fov;
+	int				height;
+	int				width;
 }				t_camera;
 
 typedef struct	s_sphere

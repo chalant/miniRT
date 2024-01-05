@@ -23,6 +23,11 @@ int	render(t_minirt *minirt)
 	i = -1;
 	// ft_memset(display->addr, 0x0, display->width * display->height
 	// 	* (display->bits_per_pixel / 8));
+	//TODO: should transform all points in the world to the camera coordinates system.
+	//uset the camera orientation to create the transform matrix.
+	//rays will be cast from the camera into the viewport.
+	//todo: need a change of basis where we use angles of the camera orientation with respect
+	// to the world coordinates. 
 	// todo: need to move to pixel space.
 	while (++i < minirt->camera->width)
 	{

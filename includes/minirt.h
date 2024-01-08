@@ -24,12 +24,21 @@ typedef struct	s_ray
 
 typedef struct	s_camera
 {
-	t_matrix		*origin;
-	t_matrix		*orientation;
 	t_matrix		*transform;
+	t_matrix		*inverse_transform;
+	float			near;
+	float			far;
+	float			left;
+	float			right;
+	float			top;
+	float			bottom;
+	float			*orientation;
+	float			*pixel_origin;
+	float			*ray_direction;
+	float			*origin;
 	float			fov;
-	int				height;
-	int				width;
+	float			height;
+	float			width;
 }				t_camera;
 
 typedef struct	s_sphere
@@ -89,10 +98,12 @@ typedef struct s_display
 	void			*img;
 	char			*addr;
 	int				bits_per_pixel;
+	int				offset;
 	int				line_length;
 	int				endian;
 	int				width;
 	int				height;
+	float			*origin;
 }					t_display;
 
 typedef struct	s_minirt
@@ -107,6 +118,8 @@ typedef struct	s_minirt
 	t_transforms_3d	*scalings;
 	t_transforms_3d	*rev_scalings;
 
+	t_matrix		*world_space;
+	t_matrix		*screen_space;
 	t_matrix		*transforms;
 	t_matrix		*centering;
 	t_matrix		*tmp;
@@ -133,7 +146,14 @@ void	fdf_control_key(int code, t_minirt *fdf);
 int		color_hook(int code, t_minirt *fdf);
 void	movement_hook(int code, t_minirt *fdf);
 
-int		set_camera_transform(t_camera *camera);
+int		set_rotations(t_minirt *fdf, float x, float y, float z);
+int		translation(t_matrix *matrix, float x, float y, float z);
+int		set_translations(t_minirt *fdf, float x, float y, float z);
+
+float	to_rad(float degrees);
+int		set_camera_transform(t_camera *camera, t_display *display);
+int		inv_perspective_projector(t_matrix **matrix, t_camera *camera);
+int		perspective_projector(t_matrix **matrix, t_camera *camera);
 int		render(t_minirt *minirt);
 
 #endif

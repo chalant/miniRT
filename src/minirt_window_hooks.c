@@ -24,7 +24,7 @@ int	update_view(t_minirt *minirt)
 {
 	if (!minirt->rendered)
 		render(minirt);
-	minirt->rendered = 1;
+	//minirt->rendered = 1;
 	return (0);
 }
 

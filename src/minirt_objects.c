@@ -2,11 +2,12 @@
 
 int	sphere_intersection(void *shape, t_object *object, t_ray *ray)
 {
-	t_sphere	*sphere;
+	//t_sphere	*sphere;
 
+	(void)shape;
 	(void)ray;
 	(void)object;
-	sphere = (t_sphere *)shape;
+	//sphere = (t_sphere *)shape;
 	return (0);
 }
 

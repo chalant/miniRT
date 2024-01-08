@@ -12,11 +12,17 @@ INCLUDES_FILES = minirt.h \
 SRC_FILES =	minirt.c \
 			minirt_key_hooks.c \
 			matrix.c \
+			matrix_operations.c \
 			matrix_interface.c \
+			rotations.c \
+			transforms.c \
 			minirt_init.c \
+			minirt_setup.c \
 			minirt_window_hooks.c \
 			minirt_objects.c \
-			minirt_rendering.c
+			minirt_rendering.c \
+			minirt_camera.c \
+			minirt_projection.c
 
 
 INCLUDES = $(addprefix $(INCLUDES_DIR)/, $(INCLUDES_FILES))
@@ -28,7 +34,8 @@ LINUX = lin
 LIBFT = $(LIBFT_DIR)/libft.a
 MINILIBX = $(MLX_DIR)/libmlx_Linux.a
 
-C_FLAGS = -O3 -I$(MLX_DIR) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror -MMD -MP
+# C_FLAGS = -O3 -I$(MLX_DIR) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror -MMD -MP
+C_FLAGS = -g -O3 -I$(MLX_DIR) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror -MMD -MP
 
 all:
 	mkdir -p $(OBJ_DIR)

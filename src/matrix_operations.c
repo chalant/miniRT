@@ -26,24 +26,34 @@ void	matrix_copy(t_matrix *source, t_matrix *dest)
 	}
 }
 
-void	map_row(t_matrix *matrix, void (*op)(float *, float), int index,
-		float value)
+int	smatmul(t_matrix *mat, float scalar, t_matrix *result)
 {
+	int	i;
 	int	j;
 
-	j = -1;
-	while (++j < matrix->cols)
-		op(&matrix->points[index][j], value);
+	i = -1;
+	while (++i < mat->rows)
+	{
+		j = -1;
+		while (++j < mat->cols)
+			result->points[i][j] = scalar * mat->points[i][j];
+	}
+	return (1);
 }
 
-void	map_col(t_matrix *matrix, void (*op)(float *, float), int index,
-		float value)
+int	vmatmul(t_matrix *mat, float *vec, float *result)
 {
+	int	i;
 	int	j;
 
-	j = -1;
-	while (++j < matrix->rows)
-		op(&matrix->points[j][index], value);
+	i = -1;
+	while (++i < mat->rows)
+	{
+		j = -1;
+		while (++j < mat->cols)
+			result[i] += vec[j] * mat->points[i][j];
+	}
+	return (1);
 }
 
 void	matmul(t_matrix *mat1, t_matrix *mat2, t_matrix *result)
@@ -63,6 +73,20 @@ void	matmul(t_matrix *mat1, t_matrix *mat2, t_matrix *result)
 			while (++k < mat1->cols)
 				result->points[i][j] += mat1->points[i][k] * mat2->points[k][j];
 		}
+	}
+}
+
+void	mattranspose(t_matrix *matrix, t_matrix *result)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	while (++i < matrix->rows)
+	{
+		j = -1;
+		while (++j < matrix->cols)
+			result->points[j][i] = matrix->points[i][j];
 	}
 }
 

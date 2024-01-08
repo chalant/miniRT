@@ -22,7 +22,7 @@ int	create_matrix(t_matrix *matrix, int rows, int cols)
 	if (!matrix->points)
 		return (-1);
 	i = -1;
-	while (++i < matrix->rows)
+	while (++i < rows)
 		matrix->points[i] = NULL;
 	matrix->cols = cols;
 	matrix->rows = rows;
@@ -80,6 +80,9 @@ int	init_matrix(t_matrix *matrix, float value)
 
 int	homogeneous_matrix(t_matrix **matrix, int rows, int cols)
 {
+	*matrix = malloc(sizeof(t_matrix));
+	if (!*matrix)
+		return (-1);
 	create_matrix(*matrix, rows + 1, cols + 1);
 	init_matrix(*matrix, 0.0f);
 	(*matrix)->points[rows][cols] = 1.0f;

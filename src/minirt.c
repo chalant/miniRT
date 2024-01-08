@@ -16,9 +16,9 @@
 
 int	set_minirt_transforms(t_minirt *minirt)
 {
-	if (set_rotations(minirt, 1.1f, 1.1f, 1.1f) < 0)
+	if (set_rotations(minirt, 2.1f, 2.1f, 2.1f) < 0)
 		return (0);
-	if (set_translations(minirt, 3.1f, 3.1f, 3.1f) < 0)
+	if (set_translations(minirt, 2.1f, 2.1f, 2.1f) < 0)
 		return (0);
 	// if (!set_scalings(minirt, 1.1f, 1.1f, 1.1f))
 	// 	return (0);
@@ -102,7 +102,7 @@ int	load_scene(t_minirt *minirt)
 	minirt->camera->origin = ft_calloc(3, sizeof(float));
 	minirt->camera->origin[0] = 0.0f;
 	minirt->camera->origin[1] = 0.0f;
-	minirt->camera->origin[2] = -10.0f;
+	minirt->camera->origin[2] = 0.0f;
 	minirt->camera->ray_direction = ft_calloc(4, sizeof(float));
 	minirt->camera->ray_direction[3] = 1.0f;
 	set_camera_transform(minirt->camera, minirt->display);
@@ -114,8 +114,8 @@ int	load_scene(t_minirt *minirt)
 int	screen_space(t_matrix **matrix, t_display *display)
 {
 	homogeneous_matrix(matrix, 3, 3);
-	(*matrix)->points[0][0] = 1.0f;
-	(*matrix)->points[1][1] = 1.0f;
+	(*matrix)->points[0][0] = 100.0f;
+	(*matrix)->points[1][1] = 100.0f;
 	(*matrix)->points[0][3] = display->width / 2.0f;
 	(*matrix)->points[1][3] = display->height / 2.0f;
 	(*matrix)->points[2][3] = 0;

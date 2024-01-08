@@ -22,7 +22,7 @@ int	compute_angles(float result[3], float orientation[3])
 	float	up[3];
 
 	up[0] = 0;
-	up[1] = -1;
+	up[1] = 1;
 	up[2] = 0;
 	cross_product(orientation, up, normal);
 	result[0] = atan2f(normal[0], normal[1]);
@@ -38,6 +38,7 @@ int	set_camera_transform(t_camera *camera, t_display *display)
 	t_matrix	*tmp;
 	float		angles[3];
 
+	(void)display;
 	compute_angles(angles, camera->orientation);
 	homogeneous_matrix(&camera->inverse_transform, 3, 3);
 	homogeneous_matrix(&camera->transform, 3, 3);
@@ -52,7 +53,7 @@ int	set_camera_transform(t_camera *camera, t_display *display)
 	// inplace_matmul(tmp, rotation, camera->transform);
 	mattranspose(camera->transform, camera->inverse_transform);
 	set_vtranslate(camera->transform, camera->origin);
-	set_vtranslate(camera->inverse_transform, display->origin);
+	set_vtranslate(camera->inverse_transform, camera->origin);
 	delete_matrix(tmp);
 	delete_matrix(rotation);
 	return (0);

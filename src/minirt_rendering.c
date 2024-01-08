@@ -135,16 +135,47 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, float *pi
 	//move the pixel to the camera coordinates system.
 	vmatmul(minirt->world_space, pixel, result);
 	//fprintf(stderr, "result: %f, %f, %f\n", result[0], result[1], result[3]);
-	vmatmul(camera->inverse_transform, result, camera->ray_direction);
+	vmatmul(camera->transform, result, camera->ray_direction);
+	vmatmul(camera->transform, camera->origin, result);
+	// fdf->camera->origin[0] = vector[0];
+	result[0] = 0.0f;
+	result[1] = 0.0f;
+	result[2] = 0.0f;
+	result[3] = 1.0f;
+	camera->origin[0] = result[0];
+	camera->origin[1] = result[1];
+	camera->origin[2] = result[2];
+	camera->origin[3] = result[3];
 	//unit_vector(camera->ray_direction, 800.0);
 	//todo: perform ray intersection with all objects in the scene.
 	//todo: move back to screen coordinates.
 	// fprintf(stderr, "ray direction: %f, %f, %f\n", camera->ray_direction[0], camera->ray_direction[1], camera->ray_direction[2]);
 	//vmatmul(camera->transform, sphere_center, result);
-	if (hit_sphere(sphere_center, 1.0f, camera->origin, camera->ray_direction) == 1)
+	pixel[0] = 0.0f;
+	pixel[1] = 0.0f;
+	pixel[2] = 0.0f;
+	pixel[3] = 1.0f;
+	result[0] = 0.0f;
+	result[1] = 0.0f;
+	result[2] = 0.0f;
+	result[3] = 1.0f;
+	if (hit_sphere(sphere_center, 0.5f, camera->origin, camera->ray_direction) == 1)
 	{
-		fprintf(stderr, "HIT\n");
-		minirt_pixel_put(display, camera->ray_direction[1], camera->ray_direction[0], 255);
+		//fprintf(stderr, "HIT\n");
+		//vmatmul(camera->transform, camera->ray_direction, pixel);
+		vmatmul(camera->inverse_transform, camera->ray_direction, result);
+		vmatmul(minirt->screen_space, result, pixel);
+		result[0] = 0.0f;
+		result[1] = 0.0f;
+		result[2] = 0.0f;
+		result[3] = 1.0f;
+		vmatmul(camera->inverse_transform, camera->origin, result);
+		camera->origin[0] = result[0];
+		camera->origin[1] = result[1];
+		camera->origin[2] = result[2];
+		camera->origin[3] = result[3];
+		//fprintf(stderr, "pixel: %f, %f\n", pixel[0] + display->width / 2, pixel[1]);
+		minirt_pixel_put(display, pixel[0] - display->width, pixel[1] - display->height, 255);
 	}
 	// pixel[0] = 0.0f;
 	// pixel[1] = 0.0f;
@@ -194,7 +225,7 @@ int	render(t_minirt *minirt)
 		while (++j < minirt->display->height)
 		{
 			//reset pixel
-			minirt_pixel_put(minirt->display, i, j, 0);
+			//minirt_pixel_put(minirt->display, i, j, 0);
 			set_pixel(minirt->display, minirt->camera, pixel, i, j);
 			draw_pixel(minirt, minirt->display, minirt->camera, pixel);
 			// while (++k < minirt->objects->size)

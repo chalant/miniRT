@@ -67,15 +67,12 @@ void	print_matrix(t_matrix *matrix)
 	}
 }
 
-float	*unit_vector(float *vector, float scale)
+float	*unit_vector(float *vector)
 {
 	float	magnitude;
 
 	magnitude = sqrtf(vector[0] * vector[0] + vector[1] * vector[1]
 			+ vector[2] * vector[2]);
-	vector[0] *= scale;
-	vector[1] *= scale;
-	vector[2] *= scale;
 	vector[0] /= magnitude;
 	vector[1] /= magnitude;
 	vector[2] /= magnitude;
@@ -96,14 +93,13 @@ float	dot_product(float v1[3], float v2[3])
 			+ v1[2] * v2[2]);
 }
 
-int	hit_sphere(float center[3], float radius, float origin[3], float direction[3])
+int	hit_sphere(float center[3], float radius, float direction[3])
 {
 	float	a;
 	float	b;
 	float	c;
 	float	discriminant;
 
-	(void)origin;
 	a = dot_product(direction, direction);
 	b = 2.0f * dot_product(center, direction);
 	c = dot_product(center, center) - radius * radius;
@@ -134,22 +130,16 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, float *pi
 	//ft_memset(result, 0, sizeof(float) * 3);
 	//move the pixel to the camera coordinates system.
 	vmatmul(minirt->world_space, pixel, result);
-	//fprintf(stderr, "result: %f, %f, %f\n", result[0], result[1], result[3]);
-	vmatmul(camera->transform, result, camera->ray_direction);
-	vmatmul(camera->transform, camera->origin, result);
-	// fdf->camera->origin[0] = vector[0];
-	result[0] = 0.0f;
-	result[1] = 0.0f;
-	result[2] = 0.0f;
-	result[3] = 1.0f;
-	camera->origin[0] = result[0];
-	camera->origin[1] = result[1];
-	camera->origin[2] = result[2];
-	camera->origin[3] = result[3];
+	//fprintf(stderr, "result: %f, %f, %f\n", result[0], result[1], result[2]);
+	vmatmul(camera->inverse_transform, result, camera->ray_direction);
+	//fprintf(stderr, "\n");
+	// print_matrix(camera->inverse_transform);
+	// fprintf(stderr, "\n");
+	// print_matrix(camera->transform);
 	//unit_vector(camera->ray_direction, 800.0);
 	//todo: perform ray intersection with all objects in the scene.
 	//todo: move back to screen coordinates.
-	// fprintf(stderr, "ray direction: %f, %f, %f\n", camera->ray_direction[0], camera->ray_direction[1], camera->ray_direction[2]);
+	//fprintf(stderr, "ray direction: %f, %f, %f\n", camera->ray_direction[0], camera->ray_direction[1], camera->ray_direction[2]);
 	//vmatmul(camera->transform, sphere_center, result);
 	pixel[0] = 0.0f;
 	pixel[1] = 0.0f;
@@ -159,21 +149,15 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, float *pi
 	result[1] = 0.0f;
 	result[2] = 0.0f;
 	result[3] = 1.0f;
-	if (hit_sphere(sphere_center, 0.5f, camera->origin, camera->ray_direction) == 1)
+	if (hit_sphere(sphere_center, 0.5f, camera->ray_direction) == 1)
 	{
-		//fprintf(stderr, "HIT\n");
 		//vmatmul(camera->transform, camera->ray_direction, pixel);
-		vmatmul(camera->inverse_transform, camera->ray_direction, result);
+		vmatmul(camera->transform, camera->ray_direction, result);
 		vmatmul(minirt->screen_space, result, pixel);
 		result[0] = 0.0f;
 		result[1] = 0.0f;
 		result[2] = 0.0f;
 		result[3] = 1.0f;
-		vmatmul(camera->inverse_transform, camera->origin, result);
-		camera->origin[0] = result[0];
-		camera->origin[1] = result[1];
-		camera->origin[2] = result[2];
-		camera->origin[3] = result[3];
 		//fprintf(stderr, "pixel: %f, %f\n", pixel[0] + display->width / 2, pixel[1]);
 		minirt_pixel_put(display, pixel[0] - display->width, pixel[1] - display->height, 255);
 	}

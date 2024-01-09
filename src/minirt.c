@@ -18,7 +18,7 @@ int	set_minirt_transforms(t_minirt *minirt)
 {
 	if (set_rotations(minirt, 2.1f, 2.1f, 2.1f) < 0)
 		return (0);
-	if (set_translations(minirt, 2.1f, 2.1f, 2.1f) < 0)
+	if (set_translations(minirt, 0.1f, 0.1f, 0.1f) < 0)
 		return (0);
 	// if (!set_scalings(minirt, 1.1f, 1.1f, 1.1f))
 	// 	return (0);
@@ -99,6 +99,9 @@ int	load_scene(t_minirt *minirt)
 	minirt->camera->orientation[1] = 0.0f;
 	minirt->camera->orientation[2] = 1.0f;
 	minirt->camera->orientation[3] = 1.0f;
+	// homogeneous_matrix(&minirt->camera->t_origin, 3, 3);
+	// minirt->camera->t_origin;
+	// minirt->camera->t_rev_origin;
 	minirt->camera->origin = ft_calloc(3, sizeof(float));
 	minirt->camera->origin[0] = 0.0f;
 	minirt->camera->origin[1] = 0.0f;
@@ -114,8 +117,9 @@ int	load_scene(t_minirt *minirt)
 int	screen_space(t_matrix **matrix, t_display *display)
 {
 	homogeneous_matrix(matrix, 3, 3);
-	(*matrix)->points[0][0] = 100.0f;
-	(*matrix)->points[1][1] = 100.0f;
+	set_diagonal(*matrix, 1.0f);
+	(*matrix)->points[0][0] = display->width;
+	(*matrix)->points[1][1] = display->height;
 	(*matrix)->points[0][3] = display->width / 2.0f;
 	(*matrix)->points[1][3] = display->height / 2.0f;
 	(*matrix)->points[2][3] = 0;
@@ -140,6 +144,7 @@ int	main(int argc, char *argv[])
 	load_scene(&minirt);
 	inv_perspective_projector(&minirt.world_space, minirt.camera);
 	screen_space(&minirt.screen_space, minirt.display);
+	// perspective_projector(&minirt.screen_space, minirt.camera);
 	mlx_loop(minirt.mlx);
 	return (0);
 }

@@ -46,75 +46,81 @@ void	print_matrix1(t_matrix *matrix)
 	}
 }
 
+// void	set_inverse_rotate_transforms(t_minirt *fdf, t_camera *camera,
+// 		t_matrix *rev_transform)
+// {
+// 	t_matrix	*target;
+
+// 	target = camera->inverse_transform;
+// 	matmul(target, object->t_center, fdf->tmp);
+// 	matrix_copy(fdf->tmp, target);
+// 	matmul(target, rev_transform, fdf->tmp);
+// 	matrix_copy(fdf->tmp, target);
+// 	matmul(target, object->rev_t_center, fdf->tmp);
+// 	matrix_copy(fdf->tmp, target);
+// }
+
 int	key_press_hook(int code, t_minirt *fdf)
 {
 	t_matrix	*tmp;
-	float		vector[4];
 
+	//todo: use a cache for this.
 	homogeneous_matrix(&tmp, 3, 3);
-	vector[0] = 0.0f;
-	vector[1] = 0.0f;
-	vector[2] = 0.0f;
-	vector[3] = 1.0f;
 	if (code == RL)
 	{
-		inplace_matmul(fdf->rotations->y_axis, fdf->camera->transform, tmp);
-		inplace_matmul(fdf->rev_rotations->y_axis, fdf->camera->inverse_transform, tmp);
+		inplace_matmul(fdf->rev_rotations->y_axis, fdf->camera->transform, tmp);
+		//inplace_matmul(fdf->rotations->y_axis, fdf->camera->inverse_transform, tmp);
+		matmul(fdf->camera->inverse_transform, fdf->rotations->y_axis, tmp);
+		matrix_copy(tmp, fdf->camera->inverse_transform);
 	}
 	else if (code == RR)
 	{
-		inplace_matmul(fdf->rev_rotations->y_axis, fdf->camera->transform, tmp);
-		inplace_matmul(fdf->rotations->y_axis, fdf->camera->inverse_transform, tmp);
+		inplace_matmul(fdf->rotations->y_axis, fdf->camera->transform, tmp);
+		//inplace_matmul(fdf->rev_rotations->y_axis, fdf->camera->inverse_transform, tmp);
+		matmul(fdf->camera->inverse_transform, fdf->rev_rotations->y_axis, tmp);
+		matrix_copy(tmp, fdf->camera->inverse_transform);
 	}
 	else if (code == RU)
 	{
-		inplace_matmul(fdf->rotations->x_axis, fdf->camera->transform, tmp);
-		inplace_matmul(fdf->rev_rotations->x_axis, fdf->camera->inverse_transform, tmp);
+		inplace_matmul(fdf->rev_rotations->x_axis, fdf->camera->transform, tmp);
+		//inplace_matmul(fdf->rotations->x_axis, fdf->camera->inverse_transform, tmp);
+		matmul(fdf->camera->inverse_transform, fdf->rotations->x_axis, tmp);
+		matrix_copy(tmp, fdf->camera->inverse_transform);
 	}
 	else if (code == RD)
 	{
-		inplace_matmul(fdf->rev_rotations->x_axis, fdf->camera->transform, tmp);
-		inplace_matmul(fdf->rotations->x_axis, fdf->camera->inverse_transform, tmp);
+		inplace_matmul(fdf->rotations->x_axis, fdf->camera->transform, tmp);
+		//inplace_matmul(fdf->rev_rotations->x_axis, fdf->camera->inverse_transform, tmp);
+		matmul(fdf->camera->inverse_transform, fdf->rev_rotations->x_axis, tmp);
+		matrix_copy(tmp, fdf->camera->inverse_transform);
 	}
 	else if (code == TL)
 	{
-		inplace_matmul(fdf->translations->x_axis, fdf->camera->transform, tmp);
-		inplace_matmul(fdf->rev_translations->x_axis, fdf->camera->inverse_transform, tmp);
-		// vmatmul(fdf->translations->x_axis, fdf->camera->origin, vector);
-		// fdf->camera->origin[0] = vector[0];
-		// fdf->camera->origin[1] = vector[1];
-		// fdf->camera->origin[2] = vector[2];
+		inplace_matmul(fdf->rev_translations->x_axis, fdf->camera->transform, tmp);
+		//inplace_matmul(fdf->rev_translations->x_axis, fdf->camera->inverse_transform, tmp);
+		matmul(fdf->camera->inverse_transform, fdf->translations->x_axis, tmp);
+		matrix_copy(tmp, fdf->camera->inverse_transform);
 	}
 	else if (code == TR)
 	{
-		inplace_matmul(fdf->rev_translations->x_axis, fdf->camera->transform, tmp);
-		inplace_matmul(fdf->translations->x_axis, fdf->camera->inverse_transform, tmp);
-		// vmatmul(fdf->translations->x_axis, fdf->camera->origin, vector);
-		// fdf->camera->origin[0] = vector[0];
-		// fdf->camera->origin[1] = vector[1];
-		// fdf->camera->origin[2] = vector[2];
+		inplace_matmul(fdf->translations->x_axis, fdf->camera->transform, tmp);
+		//inplace_matmul(fdf->translations->x_axis, fdf->camera->inverse_transform, tmp);
+		matmul(fdf->camera->inverse_transform, fdf->rev_translations->x_axis, tmp);
+		matrix_copy(tmp, fdf->camera->inverse_transform);
 	}
 	else if (code == TU)
 	{
-		inplace_matmul(fdf->rev_translations->z_axis, fdf->camera->transform, tmp);
-		inplace_matmul(fdf->translations->z_axis, fdf->camera->inverse_transform, tmp);
-		// vmatmul(fdf->rev_translations->z_axis, fdf->camera->origin, vector);
-		// fdf->camera->origin[0] = vector[0];
-		// fdf->camera->origin[1] = vector[1];
-		// fdf->camera->origin[2] = vector[2];
-		// fdf->camera->origin[3] = vector[3];
-		fprintf(stderr, "%f\n", fdf->camera->origin[2]);
+		inplace_matmul(fdf->translations->z_axis, fdf->camera->transform, tmp);
+		//inplace_matmul(fdf->translations->z_axis, fdf->camera->inverse_transform, tmp);
+		matmul(fdf->camera->inverse_transform, fdf->rev_translations->z_axis, tmp);
+		matrix_copy(tmp, fdf->camera->inverse_transform);
 	}
 	else if (code == TD)
 	{
-		inplace_matmul(fdf->translations->z_axis, fdf->camera->transform, tmp);
-		inplace_matmul(fdf->rev_translations->z_axis, fdf->camera->inverse_transform, tmp);
-		// vmatmul(fdf->translations->z_axis, fdf->camera->origin, vector);
-		// fdf->camera->origin[0] = vector[0];
-		// fdf->camera->origin[1] = vector[1];
-		// fdf->camera->origin[2] = vector[2];
-		// fdf->camera->origin[3] = vector[3];
-		fprintf(stderr, "%f\n", fdf->camera->origin[2]);
+		inplace_matmul(fdf->rev_translations->z_axis, fdf->camera->transform, tmp);
+		//inplace_matmul(fdf->rev_translations->z_axis, fdf->camera->inverse_transform, tmp);
+		matmul(fdf->camera->inverse_transform, fdf->translations->z_axis, tmp);
+		matrix_copy(tmp, fdf->camera->inverse_transform);
 	}
 	delete_matrix(tmp);
 	return (0);

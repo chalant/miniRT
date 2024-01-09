@@ -26,6 +26,8 @@ typedef struct	s_camera
 {
 	t_matrix		*transform;
 	t_matrix		*inverse_transform;
+	t_matrix		*t_origin;
+	t_matrix		*t_rev_origin;
 	float			near;
 	float			far;
 	float			left;
@@ -118,6 +120,7 @@ typedef struct	s_minirt
 	t_transforms_3d	*scalings;
 	t_transforms_3d	*rev_scalings;
 
+	t_matrix		*view_matrix;
 	t_matrix		*world_space;
 	t_matrix		*screen_space;
 	t_matrix		*transforms;

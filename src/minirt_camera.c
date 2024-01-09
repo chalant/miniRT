@@ -31,6 +31,16 @@ int	compute_angles(float result[3], float orientation[3])
 	return (0);
 }
 
+// int	set_view_matrix(t_minirt *minirt, t_camera *camera)
+// {
+// 	t_matrix	*rotation;
+// 	t_matrix	*tmp;
+
+// 	homogeneous_matrix(&minirt->view_matrix, 3, 3);
+// 	minirt->vi
+// 	return (0);
+// }
+
 //todo: handle errors.
 int	set_camera_transform(t_camera *camera, t_display *display)
 {

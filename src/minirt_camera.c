@@ -8,6 +8,14 @@ int	set_vtranslate(t_matrix *matrix, float v[3])
 	return (0);
 }
 
+int	set_col(t_matrix *matrix, int col, float value)
+{
+	matrix->points[0][col] = value;
+	matrix->points[1][col] = value;
+	matrix->points[2][col] = value;
+	return (0);
+}
+
 int	cross_product(float v1[3], float v2[3], float result[3])
 {
 	result[0] = v1[1] * v2[2] - v1[2] * v2[1];
@@ -61,6 +69,12 @@ int	set_camera_transform(t_camera *camera, t_display *display)
 	// inplace_matmul(camera->transform, rotation, tmp);
 	// z_rotation(rotation, angles[2]);
 	// inplace_matmul(tmp, rotation, camera->transform);
+	homogeneous_matrix(&camera->t_origin, 3, 3);
+	set_diagonal(camera->t_origin, 1.0f);
+	// set_col(camera->t_origin, 3, 1.0f);
+	homogeneous_matrix(&camera->t_rev_origin, 3, 3);
+	set_diagonal(camera->t_rev_origin, 1.0f);
+	// set_col(camera->t_rev_origin, 3, -1.0f);
 	mattranspose(camera->transform, camera->inverse_transform);
 	set_vtranslate(camera->transform, camera->origin);
 	set_vtranslate(camera->inverse_transform, camera->origin);

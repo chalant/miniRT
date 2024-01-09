@@ -12,16 +12,16 @@
 
 #include "minirt.h"
 
-void	matrix_copy(t_matrix *source, t_matrix *dest)
+void	matrix_copy(t_matrix *source, t_matrix *dest, int n)
 {
 	int	i;
 	int	j;
 
 	i = -1;
-	while (++i < source->rows)
+	while (++i < n)
 	{
 		j = -1;
-		while (++j < source->cols)
+		while (++j < n)
 			dest->points[i][j] = source->points[i][j];
 	}
 }
@@ -56,21 +56,21 @@ int	vmatmul(t_matrix *mat, float *vec, float *result)
 	return (1);
 }
 
-void	matmul(t_matrix *mat1, t_matrix *mat2, t_matrix *result)
+void	matmul(t_matrix *mat1, t_matrix *mat2, t_matrix *result, int n)
 {
 	int	i;
 	int	j;
 	int	k;
 
 	i = -1;
-	while (++i < mat1->rows)
+	while (++i < n)
 	{
 		j = -1;
-		while (++j < mat2->cols)
+		while (++j < n)
 		{
 			result->points[i][j] = 0.0;
 			k = -1;
-			while (++k < mat1->cols)
+			while (++k < n)
 				result->points[i][j] += mat1->points[i][k] * mat2->points[k][j];
 		}
 	}
@@ -90,8 +90,8 @@ void	mattranspose(t_matrix *matrix, t_matrix *result)
 	}
 }
 
-void	inplace_matmul(t_matrix *mat1, t_matrix *mat2, t_matrix *result)
+void	inplace_matmul(t_matrix *mat1, t_matrix *mat2, t_matrix *result, int n)
 {
-	matmul(mat1, mat2, result);
-	matrix_copy(result, mat2);
+	matmul(mat1, mat2, result, n);
+	matrix_copy(result, mat2, n);
 }

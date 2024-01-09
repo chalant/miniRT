@@ -17,9 +17,9 @@ void	set_rotate_transforms(t_minirt *fdf, t_object *object, t_matrix *transform)
 	t_matrix	*target;
 
 	target = object->transforms;
-	inplace_matmul(object->rev_t_center, target, fdf->tmp);
-	inplace_matmul(transform, target, fdf->tmp);
-	inplace_matmul(object->t_center, target, fdf->tmp);
+	inplace_matmul(object->rev_t_center, target, fdf->tmp, 3);
+	inplace_matmul(transform, target, fdf->tmp, 3);
+	inplace_matmul(object->t_center, target, fdf->tmp, 3);
 }
 
 void	set_inverse_rotate_transforms(t_minirt *fdf, t_object *object,
@@ -28,11 +28,11 @@ void	set_inverse_rotate_transforms(t_minirt *fdf, t_object *object,
 	t_matrix	*target;
 
 	target = object->rev_transforms;
-	matmul(target, object->t_center, fdf->tmp);
+	matmul(target, object->t_center, fdf->tmp, 3);
 	matrix_copy(fdf->tmp, target);
-	matmul(target, rev_transform, fdf->tmp);
+	matmul(target, rev_transform, fdf->tmp, 3);
 	matrix_copy(fdf->tmp, target);
-	matmul(target, object->rev_t_center, fdf->tmp);
+	matmul(target, object->rev_t_center, fdf->tmp, 3);
 	matrix_copy(fdf->tmp, target);
 }
 

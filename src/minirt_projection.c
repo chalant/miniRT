@@ -7,7 +7,7 @@ int inv_perspective_projector(t_matrix **matrix, t_camera *camera)
 	(*matrix)->points[0][3] = (camera->right + camera->left) / (2 * camera->near);
 	(*matrix)->points[1][1] = (camera->top - camera->bottom) / (2 * camera->near);
 	(*matrix)->points[1][3] = (camera->top + camera->bottom) / (2 * camera->near);
-	(*matrix)->points[2][3] = -1;
+	(*matrix)->points[2][3] = 1.0f;
 	(*matrix)->points[3][2] = (camera->far - camera->near) / (2 * camera->far * camera->near);
 	(*matrix)->points[3][3] = (camera->far + camera->near) / (2 * camera->far * camera->near);
 	return (0);

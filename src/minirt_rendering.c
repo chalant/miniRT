@@ -46,7 +46,7 @@ int	set_pixel(t_display *display, t_camera *camera, float *pixel, float i, float
 	pixel[1] = (j / (float)display->height) * 2.0f - 1.0f;
 	// pixel[0] = i;
 	// pixel[1] = j;
-	pixel[2] = 0.0f;
+	pixel[2] = 1.0f;
 	pixel[3] = 1.0f;
 	//fprintf(stderr, "pixel: %f, %f\n", camera->viewport_u, camera->viewport_v);
 	return (0);
@@ -109,6 +109,11 @@ int	hit_sphere(float center[3], float radius, float direction[3])
 	return (1);
 }
 
+// float *perspective_divide(float *vector)
+// {
+// 	if ()
+// }
+
 //todo: perform ray intersection with all objects in the scene.
 //todo: 
 int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, float *pixel)
@@ -126,12 +131,13 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, float *pi
 	result[3] = 1.0f;
 	sphere_center[0] = 0.0f;
 	sphere_center[1] = 0.0f;
-	sphere_center[2] = -2.0f;
+	sphere_center[2] = 2.0f;
 	//ft_memset(result, 0, sizeof(float) * 3);
 	//move the pixel to the camera coordinates system.
 	vmatmul(minirt->world_space, pixel, result);
-	//fprintf(stderr, "result: %f, %f, %f\n", result[0], result[1], result[2]);
-	vmatmul(camera->inverse_transform, result, camera->ray_direction);
+	vmatmul(camera->transform, result, camera->ray_direction);
+	if (result[3] != 0.0f)
+		fprintf(stderr, "HELLO\n");
 	//fprintf(stderr, "\n");
 	// print_matrix(camera->inverse_transform);
 	// fprintf(stderr, "\n");
@@ -141,25 +147,22 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, float *pi
 	//todo: move back to screen coordinates.
 	//fprintf(stderr, "ray direction: %f, %f, %f\n", camera->ray_direction[0], camera->ray_direction[1], camera->ray_direction[2]);
 	//vmatmul(camera->transform, sphere_center, result);
-	pixel[0] = 0.0f;
-	pixel[1] = 0.0f;
-	pixel[2] = 0.0f;
-	pixel[3] = 1.0f;
+	// pixel[0] = 0.0f;
+	// pixel[1] = 0.0f;
+	// pixel[2] = 0.0f;
+	// pixel[3] = 1.0f;
 	result[0] = 0.0f;
 	result[1] = 0.0f;
 	result[2] = 0.0f;
 	result[3] = 1.0f;
 	if (hit_sphere(sphere_center, 0.5f, camera->ray_direction) == 1)
 	{
+		//fprintf(stderr, "HIT! %f %f\n", pixel[0], pixel[1]);
 		//vmatmul(camera->transform, camera->ray_direction, pixel);
-		vmatmul(camera->transform, camera->ray_direction, result);
-		vmatmul(minirt->screen_space, result, pixel);
-		result[0] = 0.0f;
-		result[1] = 0.0f;
-		result[2] = 0.0f;
-		result[3] = 1.0f;
+		// vmatmul(camera->inverse_transform, camera->ray_direction, result);
+		vmatmul(minirt->screen_space, pixel, result);
 		//fprintf(stderr, "pixel: %f, %f\n", pixel[0] + display->width / 2, pixel[1]);
-		minirt_pixel_put(display, pixel[0] - display->width, pixel[1] - display->height, 255);
+		minirt_pixel_put(display, result[0], result[1], 255);
 	}
 	// pixel[0] = 0.0f;
 	// pixel[1] = 0.0f;

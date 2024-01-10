@@ -69,11 +69,8 @@ int	set_camera_transform(t_camera *camera, t_display *display)
 	// inplace_matmul(camera->transform, rotation, tmp);
 	// z_rotation(rotation, angles[2]);
 	// inplace_matmul(tmp, rotation, camera->transform);
-	homogeneous_matrix(&camera->t_origin, 3, 3);
-	set_diagonal(camera->t_origin, 1.0f);
+	camera->transform->points[0][0] = -1.0f;
 	// set_col(camera->t_origin, 3, 1.0f);
-	homogeneous_matrix(&camera->t_rev_origin, 3, 3);
-	set_diagonal(camera->t_rev_origin, 1.0f);
 	// set_col(camera->t_rev_origin, 3, -1.0f);
 	mattranspose(camera->transform, camera->inverse_transform);
 	set_vtranslate(camera->transform, camera->origin);

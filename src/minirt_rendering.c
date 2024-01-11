@@ -13,32 +13,6 @@ void	minirt_pixel_put(t_display *display, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-// //todo: handle errors
-// int	set_viewport_transforms(t_camera *camera, t_display *display, float focal_length)
-// {
-// 	float		tmp[4];
-// 	t_matrix	*transform;
-
-// 	if (homogeneous_matrix(&transform, 3, 3) < 0)
-// 		return (-1);
-// 	tmp[0] = 0.5f;
-// 	tmp[1] = 0.5f;
-// 	tmp[3] = 1.0f;
-// 	//todo: the origin must be homogeneous.
-// 	camera->pixel_origin = ft_calloc(4, sizeof(float));
-// 	camera->pixel_origin[3] = 1.0f;
-// 	camera->viewport_u = camera->width / display->width; 
-// 	camera->viewport_v = -camera->height / display->height;
-// 	transform->points[0][0] = camera->viewport_u;
-// 	transform->points[1][1] = camera->viewport_v;
-// 	transform->points[2][0] = camera->origin[0] - camera->width / 2.0f;
-// 	transform->points[2][1] = camera->origin[1] + camera->height / 2.0f;
-// 	transform->points[2][2] = focal_length;
-// 	vmatmul(transform, tmp, camera->pixel_origin);
-// 	delete_matrix(transform);
-// 	return (0);
-// }
-
 int	set_pixel(t_display *display, t_camera *camera, float *pixel, float i, float j)
 {
 	(void)camera;
@@ -151,7 +125,7 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, float *pi
 	sphere_center[0] = 0.0f;
 	sphere_center[1] = 0.0f;
 	sphere_center[2] = -1.0f;
-	sphere_center[3] = 0.0f;
+	sphere_center[3] = 1.0f;
 	//ft_memset(result, 0, sizeof(float) * 3);
 	//move the pixel to the camera coordinates system.
 	vmatmul(minirt->world_space, pixel, result);
@@ -177,14 +151,17 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, float *pi
 		//vmatmul(camera->transform, camera->ray_direction, pixel);
 		// vmatmul(camera->inverse_transform, camera->ray_direction, result);
 		//fprintf(stderr, "hit: %f, %f\n", hit[0], hit[1]);
-		vmatmul(camera->transform, scale_vector(camera->ray_direction, hit[0]), result);
+		if (hit[0] > 0.0f)
+			vmatmul(camera->transform, scale_vector(camera->ray_direction, hit[0]), result);
+		else if (hit[1] < 0.0f)
+			vmatmul(camera->transform, scale_vector(camera->ray_direction, hit[1]), result);
 		//fprintf(stderr, "hit: %f, %f, %f\n", result[0], result[1], result[2]);
 		// vmatmul(camera->inverse_transform, result, pixel);
 		if (result[2] <= 0)
 			return (0);
 		scale_vector(result, 1 / result[2]);
 		//fprintf(stderr, "result: %f, %f, %f\n", result[0], result[1], result[2]);
-		result[2] = 0.0f;
+		// result[2] = 0.0f;
 		vmatmul(minirt->screen_space, result, pixel);
 		//fprintf(stderr, "pixel: %f, %f\n", pixel[0] + display->width / 2, pixel[1]);
 		minirt_pixel_put(display, pixel[0], pixel[1], 255);

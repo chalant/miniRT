@@ -63,7 +63,7 @@ void	matmul(t_matrix *mat1, t_matrix *mat2, t_matrix *result, int n)
 	int	k;
 
 	i = -1;
-	while (++i < n)
+	while (++i < mat1->rows)
 	{
 		j = -1;
 		while (++j < n)

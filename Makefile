@@ -14,6 +14,7 @@ SRC_FILES =	minirt.c \
 			matrix.c \
 			matrix_operations.c \
 			matrix_interface.c \
+			matrix_inversion.c \
 			rotations.c \
 			transforms.c \
 			minirt_init.c \

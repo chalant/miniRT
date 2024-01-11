@@ -18,7 +18,7 @@ int	set_minirt_transforms(t_minirt *minirt)
 {
 	if (set_rotations(minirt, 2.1f, 2.1f, 2.1f) < 0)
 		return (0);
-	if (set_translations(minirt, 0.01f, 0.01f, 0.01f) < 0)
+	if (set_translations(minirt, 0.1f, 0.1f, 0.1f) < 0)
 		return (0);
 	// if (!set_scalings(minirt, 1.1f, 1.1f, 1.1f))
 	// 	return (0);
@@ -87,7 +87,7 @@ int	load_scene(t_minirt *minirt)
 	if (!minirt->camera)
 		return (-1);
 	//todo: malloc protection
-	minirt->camera->fov = 60.0f;
+	minirt->camera->fov = 100.0f;
 	minirt->camera->near = -1.0f;
 	minirt->camera->far = 1.0f;
 	minirt->camera->top = minirt->camera->near * tanf(to_rad(minirt->camera->fov / 2.0f));
@@ -113,6 +113,21 @@ int	load_scene(t_minirt *minirt)
 	return (1);
 }
 
+void	print_matrix2(t_matrix *matrix)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	while (++i < matrix->rows)
+	{
+		j = -1;
+		while (++j < matrix->cols)
+			fprintf(stderr, "%f ", matrix->points[i][j]);
+		fprintf(stderr, "\n");
+	}
+}
+
 int	screen_space(t_matrix **matrix, t_display *display)
 {
 	homogeneous_matrix(matrix, 3, 3);
@@ -128,10 +143,31 @@ int	screen_space(t_matrix **matrix, t_display *display)
 	return (0);
 }
 
+
+
 int	main(int argc, char *argv[])
 {
 	t_minirt	minirt;
 	t_display	display;
+	t_matrix	*tmp;
+
+
+	tmp = malloc(sizeof(t_matrix));
+	create_matrix(tmp, 3, 3);
+	init_matrix(tmp, 0.0f);
+	tmp->points[0][0] = 1.0f;
+	tmp->points[0][1] = 2.0f;
+	tmp->points[0][2] = 3.0f;
+	tmp->points[1][0] = 4.0f;
+	tmp->points[1][1] = 5.0f;
+	tmp->points[1][2] = 6.0f;
+	tmp->points[2][0] = 7.0f;
+	tmp->points[2][1] = 8.0f;
+	tmp->points[2][2] = 9.0f;
+
+	print_matrix2(tmp);
+	invert_matrix(tmp, 3);
+	print_matrix2(tmp);
 
 	(void)argv;
 	if (argc - 1 < 0 || argc - 1 > 1)
@@ -145,7 +181,10 @@ int	main(int argc, char *argv[])
 	set_minirt_transforms(&minirt);
 	homogeneous_matrix(&minirt.tmp, 3, 3);
 	load_scene(&minirt);
-	inv_perspective_projector(&minirt.world_space, minirt.camera);
+	perspective_projector(&minirt.world_space, minirt.camera);
+	print_matrix2(minirt.world_space);
+	invert_matrix(minirt.world_space, 4);
+	print_matrix2(minirt.world_space);
 	screen_space(&minirt.screen_space, minirt.display);
 	// perspective_projector(&minirt.screen_space, minirt.camera);
 	mlx_loop(minirt.mlx);

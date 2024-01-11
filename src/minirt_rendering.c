@@ -93,20 +93,36 @@ float	dot_product(float v1[3], float v2[3])
 			+ v1[2] * v2[2]);
 }
 
-int	hit_sphere(float center[3], float radius, float direction[3])
+int hit_sphere(float center[3], float radius, float direction[3], float *hit)
 {
-	float	a;
-	float	b;
-	float	c;
-	float	discriminant;
+    float a;
+    float b;
+    float c;
+    float discriminant;
+	float	t0;
+	float	t1;
 
-	a = dot_product(direction, direction);
-	b = 2.0f * dot_product(center, direction);
-	c = dot_product(center, center) - radius * radius;
-	discriminant = b * b - 4 * a * c;
-	if (discriminant < 0)
-		return (-1);
-	return (1);
+    a = dot_product(direction, direction);
+    b = 2.0f * dot_product(center, direction);
+    c = dot_product(center, center) - radius * radius;
+    discriminant = b * b - 4 * a * c;
+
+    if (discriminant < 0) {
+        // No intersection
+        return 0;
+    }
+
+    // Compute the solutions for t
+    float sqrt_discriminant = sqrt(discriminant);
+   	t0 = (-b - sqrt_discriminant) / (2 * a);
+    t1 = (-b + sqrt_discriminant) / (2 * a);
+
+	hit[0] = t0;
+	hit[1] = t1;
+	// if (*hit <= 0)
+	// 	return (0);
+    // You can return the number of intersections, or the specific points based on your requirements.
+    return 2;
 }
 
 // float *perspective_divide(float *vector)
@@ -127,33 +143,51 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, float *pi
 	camera->ray_direction[0] = 0.0f;
 	camera->ray_direction[1] = 0.0f;
 	camera->ray_direction[2] = 0.0f;
-	camera->ray_direction[3] = 0.0f;
+	camera->ray_direction[3] = 1.0f;
 	result[0] = 0.0f;
 	result[1] = 0.0f;
 	result[2] = 0.0f;
 	result[3] = 0.0f;
 	sphere_center[0] = 0.0f;
-	sphere_center[1] = 1.0f;
-	sphere_center[2] = -2.0f;
+	sphere_center[1] = 0.0f;
+	sphere_center[2] = -1.0f;
 	sphere_center[3] = 0.0f;
 	//ft_memset(result, 0, sizeof(float) * 3);
 	//move the pixel to the camera coordinates system.
 	vmatmul(minirt->world_space, pixel, result);
-	vmatmul(camera->transform, result, camera->ray_direction);
+	//fprintf(stderr, "result: %f, %f, %f\n", result[0], result[1], result[3]);
+	scale_vector(result, 1/result[3]);
+	unit_vector(result);
+	result[3] = 0.0f;
+	vmatmul(camera->inverse_transform, result, camera->ray_direction);
 	//vmatmul(camera->inverse_transform, sphere_center, result);
 	// vmatmul(minirt->world_space, sphere_center, result);
 	result[0] = 0.0f;
 	result[1] = 0.0f;
 	result[2] = 0.0f;
 	result[3] = 0.0f;
-	if (hit_sphere(sphere_center, 0.5f, unit_vector(camera->ray_direction)) == 1)
+	float hit[2];
+	pixel[0] = 0.0f;
+	pixel[1] = 0.0f;
+	pixel[2] = 0.0f;
+	pixel[3] = 0.0f;
+	if (hit_sphere(sphere_center, 0.5f, camera->ray_direction, hit) == 2)
 	{
 		//fprintf(stderr, "HIT! %f %f\n", pixel[0], pixel[1]);
 		//vmatmul(camera->transform, camera->ray_direction, pixel);
 		// vmatmul(camera->inverse_transform, camera->ray_direction, result);
-		vmatmul(minirt->screen_space, pixel, result);
+		//fprintf(stderr, "hit: %f, %f\n", hit[0], hit[1]);
+		vmatmul(camera->transform, scale_vector(camera->ray_direction, hit[0]), result);
+		//fprintf(stderr, "hit: %f, %f, %f\n", result[0], result[1], result[2]);
+		// vmatmul(camera->inverse_transform, result, pixel);
+		if (result[2] <= 0)
+			return (0);
+		scale_vector(result, 1 / result[2]);
+		//fprintf(stderr, "result: %f, %f, %f\n", result[0], result[1], result[2]);
+		result[2] = 0.0f;
+		vmatmul(minirt->screen_space, result, pixel);
 		//fprintf(stderr, "pixel: %f, %f\n", pixel[0] + display->width / 2, pixel[1]);
-		minirt_pixel_put(display, result[0], result[1], 255);
+		minirt_pixel_put(display, pixel[0], pixel[1], 255);
 	}
 	return (0);
 }

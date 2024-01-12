@@ -12,13 +12,6 @@
 
 #include "minirt.h"
 
-void	set_translate(t_matrix *matrix, float x, float y, float z)
-{
-	matrix->points[0][matrix->cols - 1] = x;
-	matrix->points[1][matrix->cols - 1] = y;
-	matrix->points[2][matrix->cols - 1] = z;
-}
-
 void	set_translate_transform(t_minirt *fdf, t_object *object,
 		t_matrix *transform)
 {

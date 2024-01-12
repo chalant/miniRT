@@ -90,10 +90,6 @@ int	load_scene(t_minirt *minirt)
 	minirt->camera->fov = 100.0f;
 	minirt->camera->near = -1.0f;
 	minirt->camera->far = 1.0f;
-	minirt->camera->top = minirt->camera->near * tanf(to_rad(minirt->camera->fov / 2.0f));
-	minirt->camera->bottom = -minirt->camera->top;
-	minirt->camera->right = minirt->camera->top * ((float)minirt->display->width / (float)minirt->display->height);
-	minirt->camera->left = -minirt->camera->right;
 	minirt->camera->orientation = ft_calloc(4, sizeof(float));
 	minirt->camera->orientation[0] = 0.0f;
 	minirt->camera->orientation[1] = 0.0f;

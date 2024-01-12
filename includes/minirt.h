@@ -22,18 +22,20 @@ typedef struct	s_ray
 	float		t;
 }				t_ray;
 
+typedef struct	s_transform
+{
+	float	*t_origin;
+	float	*t_rev_origin;
+}	t_transform;
+
 typedef struct	s_camera
 {
 	t_matrix		*transform;
 	t_matrix		*inverse_transform;
-	t_matrix		*t_origin;
-	t_matrix		*t_rev_origin;
+	float			*t_origin;
+	float			*t_rev_origin;
 	float			near;
 	float			far;
-	float			left;
-	float			right;
-	float			top;
-	float			bottom;
 	float			*orientation;
 	float			*pixel_origin;
 	float			*ray_direction;

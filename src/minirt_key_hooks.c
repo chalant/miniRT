@@ -138,8 +138,8 @@ int	key_press_hook(int code, t_minirt *fdf)
 		matrix_copy(tmp, fdf->camera->transform, 4);
 		matrix_copy(fdf->camera->transform, fdf->camera->inverse_transform, 4);
 		invert_matrix(fdf->camera->inverse_transform, 4);
-		//matmul(fdf->camera->inverse_transform, fdf->translations->x_axis, tmp, 4);
-		//matrix_copy(tmp, fdf->camera->inverse_transform, 4);
+		// matmul(fdf->camera->inverse_transform, fdf->translations->x_axis, tmp, 4);
+		// matrix_copy(tmp, fdf->camera->inverse_transform, 4);
 	}
 	else if (code == TR)
 	{
@@ -148,7 +148,7 @@ int	key_press_hook(int code, t_minirt *fdf)
 		matrix_copy(fdf->camera->transform, fdf->camera->inverse_transform, 4);
 		invert_matrix(fdf->camera->inverse_transform, 4);
 		// matrix_copy(tmp, fdf->camera->transform, 4);
-		// matmul(fdf->camera->inverse_transform, fdf->translations->x_axis, tmp, 4);
+		// matmul(fdf->camera->inverse_transform, fdf->rev_translations->x_axis, tmp, 4);
 		// matrix_copy(tmp, fdf->camera->inverse_transform, 4);
 		//inplace_matmul(fdf->translations->x_axis, fdf->camera->inverse_transform, tmp, 4);
 		//matmul(fdf->camera->inverse_transform, fdf->rev_translations->x_axis, tmp, 4);

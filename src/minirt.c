@@ -178,6 +178,7 @@ int	main(int argc, char *argv[])
 	homogeneous_matrix(&minirt.tmp, 3, 3);
 	load_scene(&minirt);
 	perspective_projector(&minirt.world_space, minirt.camera);
+	perspective_projector(&minirt.view_matrix, minirt.camera);
 	print_matrix2(minirt.world_space);
 	invert_matrix(minirt.world_space, 4);
 	print_matrix2(minirt.world_space);

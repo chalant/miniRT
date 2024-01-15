@@ -46,11 +46,10 @@ void	set_translate(t_matrix *matrix, float x, float y, float z)
 	matrix->points[2][matrix->cols - 1] = z;
 }
 
-int	rotate_around(t_minirt *fdf, t_matrix *rot, t_matrix *rev_rot)
+int	rotate_around(t_minirt *fdf, t_matrix *rot)
 {
 	t_matrix	*tmp;
 
-	(void)rev_rot;
 	//todo: use a cache for this.
 	homogeneous_matrix(&tmp, 3, 3);
 	matmul(fdf->camera->transform, rot, tmp, 4);
@@ -68,19 +67,19 @@ int	key_press_hook(int code, t_minirt *fdf)
 	homogeneous_matrix(&tmp, 3, 3);
 	if (code == RL)
 	{
-		rotate_around(fdf, fdf->rotations->y_axis, fdf->rev_rotations->y_axis);
+		rotate_around(fdf, fdf->rotations->y_axis);
 	}
 	else if (code == RR)
 	{
-		rotate_around(fdf, fdf->rev_rotations->y_axis, fdf->rotations->y_axis);
+		rotate_around(fdf, fdf->rev_rotations->y_axis);
 	}
 	else if (code == RU)
 	{
-		rotate_around(fdf, fdf->rotations->x_axis, fdf->rev_rotations->x_axis);
+		rotate_around(fdf, fdf->rotations->x_axis);
 	}
 	else if (code == RD)
 	{
-		rotate_around(fdf, fdf->rev_rotations->x_axis, fdf->rotations->x_axis);
+		rotate_around(fdf, fdf->rev_rotations->x_axis);
 	}
 	else if (code == TL)
 	{

@@ -17,8 +17,7 @@ typedef struct	s_intersection
 
 typedef struct	s_ray
 {
-	t_matrix	*origin;
-	t_matrix	*direction;
+	float		*direction;
 	float		t;
 }				t_ray;
 
@@ -32,6 +31,7 @@ typedef struct	s_camera
 {
 	t_matrix		*transform;
 	t_matrix		*inverse_transform;
+	t_ray			*ray;
 	float			*t_origin;
 	float			*t_rev_origin;
 	float			near;

@@ -18,7 +18,7 @@ int	set_minirt_transforms(t_minirt *minirt)
 {
 	if (set_rotations(minirt, 2.1f, 2.1f, 2.1f) < 0)
 		return (0);
-	if (set_translations(minirt, 0.01f, 0.01f, 0.01f) < 0)
+	if (set_translations(minirt, 0.1f, 0.1f, 0.1f) < 0)
 		return (0);
 	// if (!set_scalings(minirt, 1.1f, 1.1f, 1.1f))
 	// 	return (0);
@@ -43,6 +43,7 @@ int	mlx_setup(t_minirt *minirt)
 	display->origin[0] = 0.0f;
 	display->origin[1] = 0.0f;
 	display->origin[3] = 0.0f;
+	display->aspect_ratio = (float)display->width / (float)display->height;
 	minirt->mlx = mlx_init();
 	if (!minirt->mlx)
 		return (0);
@@ -95,8 +96,6 @@ int	load_scene(t_minirt *minirt)
 	minirt->camera->orientation[1] = 0.0f;
 	minirt->camera->orientation[2] = 0.0f;
 	minirt->camera->orientation[3] = 0.0f;
-	// minirt->camera->t_origin;
-	// minirt->camera->t_rev_origin;
 	minirt->camera->origin = ft_calloc(3, sizeof(float));
 	minirt->camera->origin[0] = 0.0f;
 	minirt->camera->origin[1] = 0.0f;
@@ -136,8 +135,6 @@ int	screen_space(t_matrix **matrix, t_display *display)
 	(*matrix)->points[2][2] = 0.0f;
 	(*matrix)->points[2][3] = 0.0f;
 	(*matrix)->points[3][3] = 0.0f;
-	// (*matrix)->points[0][0] = 200.0f;
-	// (*matrix)->points[1][1] = 200.0f;
 	(*matrix)->points[0][3] = display->width / 2.0f + 0.5f;
 	(*matrix)->points[1][3] = display->height / 2.0f + 0.5f; 
 	(*matrix)->points[2][3] = 0.0f;
@@ -151,25 +148,6 @@ int	main(int argc, char *argv[])
 {
 	t_minirt	minirt;
 	t_display	display;
-	t_matrix	*tmp;
-
-
-	tmp = malloc(sizeof(t_matrix));
-	create_matrix(tmp, 3, 3);
-	init_matrix(tmp, 0.0f);
-	tmp->points[0][0] = 1.0f;
-	tmp->points[0][1] = 2.0f;
-	tmp->points[0][2] = 3.0f;
-	tmp->points[1][0] = 4.0f;
-	tmp->points[1][1] = 5.0f;
-	tmp->points[1][2] = 6.0f;
-	tmp->points[2][0] = 7.0f;
-	tmp->points[2][1] = 8.0f;
-	tmp->points[2][2] = 9.0f;
-
-	print_matrix2(tmp);
-	invert_matrix(tmp, 3);
-	print_matrix2(tmp);
 
 	(void)argv;
 	if (argc - 1 < 0 || argc - 1 > 1)
@@ -178,18 +156,13 @@ int	main(int argc, char *argv[])
 	minirt.display = &display;
 	set_variables(&minirt);
 	mlx_setup(&minirt);
-	// set_minirt_transforms(&minirt);
 	set_hooks(&minirt);
 	set_minirt_transforms(&minirt);
 	homogeneous_matrix(&minirt.tmp, 3, 3);
 	load_scene(&minirt);
-	perspective_projector(&minirt.world_space, minirt.camera);
-	perspective_projector(&minirt.view_matrix, minirt.camera);
-	print_matrix2(minirt.world_space);
+	perspective_projector(&minirt.world_space, minirt.display, minirt.camera);
+	perspective_projector(&minirt.view_matrix, minirt.display, minirt.camera);
 	invert_matrix(minirt.world_space, 4);
-	print_matrix2(minirt.world_space);
-	screen_space(&minirt.screen_space, minirt.display);
-	// perspective_projector(&minirt.screen_space, minirt.camera);
 	mlx_loop(minirt.mlx);
 	return (0);
 }

@@ -13,17 +13,12 @@ void	minirt_pixel_put(t_display *display, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-int	set_pixel(t_display *display, t_camera *camera, float *pixel, float i, float j)
+int	set_pixel(t_display *display, float *pixel, float i, float j)
 {
-	(void)camera;
-	(void)display;
-	pixel[0] = ((2.0f * i / (float)display->width) - 1.0f);
+	pixel[0] = (2.0f * i / (float)display->width) - 1.0f;
 	pixel[1] = (2.0f * j / (float)display->height) - 1.0f;
-	// pixel[0] = i;
-	// pixel[1] = j;
 	pixel[2] = 0.0f;
 	pixel[3] = 1.0f;
-	//fprintf(stderr, "pixel: %f, %f\n", camera->viewport_u, camera->viewport_v);
 	return (0);
 }
 
@@ -82,12 +77,8 @@ int hit_sphere(float center[3], float radius, float direction[3], float *hit)
     c = dot_product(center, center) - radius * radius;
     discriminant = b * b - 4 * a * c;
 
-    if (discriminant < 0.0f) 
-	{
-        // No intersection
-        return 0;
-    }
-
+    if (discriminant < 0.0f)
+        return (0);
     // Compute the solutions for t
     float sqrt_discriminant = sqrt(discriminant);
    	t0 = (-b - sqrt_discriminant) / (2 * a);
@@ -95,31 +86,16 @@ int hit_sphere(float center[3], float radius, float direction[3], float *hit)
 
 	hit[0] = t0;
 	hit[1] = t1;
-	if (t0 < t1)
-		hit[0] = t0;
-	else
-		hit[0] = t1;
-	// if (*hit <= 0)
-	// 	return (0);
-    // You can return the number of intersections, or the specific points based on your requirements.
-    return (2);
+    return (1);
 }
 
-// float *perspective_divide(float *vector)
-// {
-// 	if ()
-// }
-
 //todo: perform ray intersection with all objects in the scene.
-//todo: 
 int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, float *pixel, int i , int j)
 {
 	float	sphere_center[4];
 	float	result[4];
 	float	world_point[4];
 	static	int	count = 0;
-	// static	int prev_x = 0;
-	// static	int	prev_y = 0;
 	
 	camera->ray_direction[0] = 0.0f;
 	camera->ray_direction[1] = 0.0f;
@@ -135,7 +111,7 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, float *pi
 	result[3] = 0.0f;
 	sphere_center[0] = 0.0f;
 	sphere_center[1] = 0.0f;
-	sphere_center[2] = 1.0f;
+	sphere_center[2] = -1.0f;
 	sphere_center[3] = 1.0f;
 
 	vmatmul(minirt->world_space, pixel, result);
@@ -148,40 +124,9 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, float *pi
 	result[1] = 0.0f;
 	result[2] = 0.0f;
 	result[3] = 0.0f;
-	vmatmul(minirt->screen_space, sphere_center, result);
-	// if (count % 9 == 0)
-	minirt_pixel_put(display, result[0], result[1], 0x00ffff);
-	//scale_vector(world_point, 1 / world_point[3]);
 	vmatmul(camera->transform, world_point, camera->ray_direction);
-	// camera->ray_direction[0] /= camera->ray_direction[3];
-	// camera->ray_direction[1] /= camera->ray_direction[3];
-	// camera->ray_direction[2] /= camera->ray_direction[3];
 	
 	float	hit[2];
-	// float	camera_center[4];
-	// camera_center[0] = camera->transform->points[0][3];
-	// camera_center[1] = camera->transform->points[1][3];
-	// camera_center[2] = camera->transform->points[2][3];
-	// camera_center[3] = 1.0f;
-	// result[0] = 0.0f;
-	// result[1] = 0.0f;
-	// result[2] = 0.0f;
-	// result[3] = 0.0f;
-	// vmatmul(camera->inverse_transform, camera_center, result);
-	// camera_center[0] = result[0];
-	// camera_center[1] = result[1];
-	// camera_center[2] = result[2];
-	// camera_center[3] = result[3];
-	// vmatmul(minirt->screen_space, result, camera_center);
-	// minirt_pixel_put(display, camera_center[0], camera_center[1], 0xffffff);
-	// result[0] = 0.0f;
-	// result[1] = 0.0f;
-	// result[2] = 0.0f;
-	// result[3] = 0.0f;
-	// vmatmul(camera->inverse_transform, camera->ray_direction, camera_center);
-	// vmatmul(minirt->screen_space, camera->ray_direction, result);
-	// if (!(count % 31))
-	// 	minirt_pixel_put(display, result[0], result[1], 0xf94449);
 	count++;
 	result[0] = 0.0f;
 	result[1] = 0.0f;
@@ -200,29 +145,19 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, float *pi
 	result[1] = 0.0f;
 	result[2] = 0.0f;
 	result[3] = 0.0f;
-	if (hit_sphere(sphere_center, 0.2f, camera->ray_direction, hit) == 2)
+	if (hit_sphere(sphere_center, 0.2f, camera->ray_direction, hit))
 	{
 		//vmatmul(camera->inverse_transform, scale_vector(camera->ray_direction, hit[0]), result);
 		scale_vector(camera->ray_direction, hit[0]);
-		// result[0] = camera->ray_direction[0];
-		// result[1] = camera->ray_direction[1];
-		// result[2] = camera->ray_direction[2];
-		// result[3] = 1.0f;
-		//fprintf(stderr, "hit: %f\n", camera->ray_direction[0] * hit[0]);
-		// result[3] = 1.0f;
+		if (camera->ray_direction[2] <= 0.0f)
+			return (0);
 		camera->ray_direction[3] = 1.0f;
 		vmatmul(minirt->view_matrix, camera->ray_direction, result);
-		// if (result[2] <= 0.0f)
-		// 	return (0);
 		scale_vector(result, 1 / result[3]);
 		result[0] = ((result[0] + 1.0f) * display->width) / 2.0f;
 		result[1] = ((result[1] + 1.0f) * display->height) / 2.0f;
-		//vmatmul(minirt->screen_space, result, pixel);
-		(void)i;
-		(void)j;
-		fprintf(stderr, "pixel: %f, %f %d %d\n", result[0], result[1], i, j);
-		minirt_pixel_put(display, i, j, 0xffffff);
-		minirt_pixel_put(display, result[0], result[1], 255);
+		minirt_pixel_put(display, i, j, 0xf94449);
+		//minirt_pixel_put(display, result[0], result[1], 255);
 	}
 	return (0);
 }
@@ -236,8 +171,6 @@ int	render(t_minirt *minirt)
 
 	i = -1;
 	display = minirt->display;
-	ft_memset(display->addr, 0, display->width * display->height
-		* (display->bits_per_pixel / 8));
 	minirt->camera->height = 2.0f;
 	minirt->camera->width = minirt->camera->height * (float)(minirt->display->width / minirt->display->height);
 	while (++i < minirt->display->width)
@@ -245,7 +178,8 @@ int	render(t_minirt *minirt)
 		j = -1;
 		while (++j < minirt->display->height)
 		{
-			set_pixel(minirt->display, minirt->camera, pixel, i, j);
+			minirt_pixel_put(display, i, j, 0);
+			set_pixel(minirt->display, pixel, i, j);
 			draw_pixel(minirt, minirt->display, minirt->camera, pixel, i, j);
 		}
 	}

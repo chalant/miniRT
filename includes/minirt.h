@@ -107,6 +107,7 @@ typedef struct s_display
 	int				endian;
 	int				width;
 	int				height;
+	float			aspect_ratio;
 	float			*origin;
 }					t_display;
 
@@ -157,8 +158,7 @@ int		set_translations(t_minirt *fdf, float x, float y, float z);
 
 float	to_rad(float degrees);
 int		set_camera_transform(t_camera *camera, t_display *display);
-int		inv_perspective_projector(t_matrix **matrix, t_camera *camera);
-int		perspective_projector(t_matrix **matrix, t_camera *camera);
+int		perspective_projector(t_matrix **matrix, t_display *display, t_camera *camera);
 int		render(t_minirt *minirt);
 
 #endif

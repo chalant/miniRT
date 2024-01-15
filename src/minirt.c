@@ -99,11 +99,16 @@ int	load_scene(t_minirt *minirt)
 	minirt->camera->origin = ft_calloc(3, sizeof(float));
 	minirt->camera->origin[0] = 0.0f;
 	minirt->camera->origin[1] = 0.0f;
-	minirt->camera->origin[2] = 1.0f;
+	minirt->camera->origin[2] = 0.0f;
 	minirt->camera->ray_direction = ft_calloc(4, sizeof(float));
 	minirt->camera->ray_direction[3] = 0.0f;
 	set_camera_transform(minirt->camera, minirt->display);
 	create_sphere(&new, 0.5f);
+	new.center = ft_calloc(4, sizeof(float));
+	new.center[0] = 0.0f;
+	new.center[1] = 0.0f;
+	new.center[2] = -2.0f;
+	new.center[3] = 1.0f;
 	ft_darray_append(minirt->objects, &new);
 	return (1);
 }

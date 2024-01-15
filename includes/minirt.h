@@ -9,15 +9,10 @@
 # include "libft.h"
 # include <mlx.h>
 
-//stores data like colors, intersection points etc.
-typedef struct	s_intersection
-{
-
-}				t_intersection;
-
 typedef struct	s_ray
 {
-	float		*direction;
+	float		object_center[4];
+	float		direction[4];
 	float		t;
 }				t_ray;
 
@@ -32,15 +27,13 @@ typedef struct	s_camera
 	t_matrix		*transform;
 	t_matrix		*inverse_transform;
 	t_ray			*ray;
-	float			*t_origin;
-	float			*t_rev_origin;
-	float			near;
-	float			far;
 	float			*orientation;
 	float			*pixel_origin;
 	float			*ray_direction;
 	float			*origin;
 	float			fov;
+	float			near;
+	float			far;
 	float			height;
 	float			width;
 }				t_camera;
@@ -69,14 +62,14 @@ typedef struct	s_object
 	t_matrix		*body;
 	t_matrix		*result;
 	t_matrix		*projection;
-	t_matrix		*center;
 	t_matrix		*t_center;
 	t_matrix		*rev_t_center;
 	t_matrix		*tmp;
 
-	void			*object_shape;
-	int				(*intersect)(void *shape, struct s_object *object, t_ray *ray);
-	int				(*transform)(void *shape, t_matrix *transform);
+	void			*shape;
+	float			*center;
+	int				(*intersect)(struct s_object *object, t_ray *ray);
+	int				(*transform)(struct s_object *object, t_matrix *transform);
 	float			*colors;
 	int				light;
 	float			base_color;
@@ -87,7 +80,6 @@ typedef struct	s_object
 	float			sat_base;
 	int				width;
 	int				height;
-	int				shape[2];
 }				t_object;
 
 typedef struct	s_transforms_3d

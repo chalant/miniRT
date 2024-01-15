@@ -50,6 +50,7 @@ int	vmatmul(t_matrix *mat, float *vec, float *result)
 	while (++i < mat->rows)
 	{
 		j = -1;
+		result[i] = 0.0f;
 		while (++j < mat->cols)
 			result[i] += vec[j] * mat->points[i][j];
 	}

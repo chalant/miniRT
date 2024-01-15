@@ -73,8 +73,10 @@ int	set_camera_transform(t_camera *camera, t_display *display)
 	// set_col(camera->t_origin, 3, 1.0f);
 	// set_col(camera->t_rev_origin, 3, -1.0f);
 	//mattranspose(camera->transform, camera->inverse_transform);
+	camera->transform->points[1][1] = -1.0f;
 	set_vtranslate(camera->transform, camera->origin);
-	set_vtranslate(camera->inverse_transform, camera->origin);
+	matrix_copy(camera->transform, camera->inverse_transform, 4);
+	invert_matrix(camera->inverse_transform, 4);
 	delete_matrix(tmp);
 	delete_matrix(rotation);
 	return (0);

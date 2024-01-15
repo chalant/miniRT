@@ -18,7 +18,7 @@ int	set_minirt_transforms(t_minirt *minirt)
 {
 	if (set_rotations(minirt, 2.1f, 2.1f, 2.1f) < 0)
 		return (0);
-	if (set_translations(minirt, 0.1f, 0.1f, 0.1f) < 0)
+	if (set_translations(minirt, 0.01f, 0.01f, 0.01f) < 0)
 		return (0);
 	// if (!set_scalings(minirt, 1.1f, 1.1f, 1.1f))
 	// 	return (0);
@@ -87,7 +87,7 @@ int	load_scene(t_minirt *minirt)
 	if (!minirt->camera)
 		return (-1);
 	//todo: malloc protection
-	minirt->camera->fov = 100.0f;
+	minirt->camera->fov = 60.0f;
 	minirt->camera->near = -1.0f;
 	minirt->camera->far = 1.0f;
 	minirt->camera->orientation = ft_calloc(4, sizeof(float));
@@ -100,7 +100,7 @@ int	load_scene(t_minirt *minirt)
 	minirt->camera->origin = ft_calloc(3, sizeof(float));
 	minirt->camera->origin[0] = 0.0f;
 	minirt->camera->origin[1] = 0.0f;
-	minirt->camera->origin[2] = 0.0f;
+	minirt->camera->origin[2] = 1.0f;
 	minirt->camera->ray_direction = ft_calloc(4, sizeof(float));
 	minirt->camera->ray_direction[3] = 0.0f;
 	set_camera_transform(minirt->camera, minirt->display);
@@ -128,12 +128,18 @@ int	screen_space(t_matrix **matrix, t_display *display)
 {
 	homogeneous_matrix(matrix, 3, 3);
 	set_diagonal(*matrix, 1.0f);
-	(*matrix)->points[0][0] = -display->width;
-	(*matrix)->points[1][1] = -display->height;
+	(*matrix)->points[0][0] = (float)display->width / 2.0f;
+	(*matrix)->points[1][1] = (float)display->height / 2.0f;
+	(*matrix)->points[2][2] = 0.0f;
+	(*matrix)->points[2][3] = 0.0f;
+	(*matrix)->points[3][3] = 0.0f;
+	(*matrix)->points[2][2] = 0.0f;
+	(*matrix)->points[2][3] = 0.0f;
+	(*matrix)->points[3][3] = 0.0f;
 	// (*matrix)->points[0][0] = 200.0f;
 	// (*matrix)->points[1][1] = 200.0f;
-	(*matrix)->points[0][3] = display->width / 2.0f;
-	(*matrix)->points[1][3] = display->height / 2.0f;
+	(*matrix)->points[0][3] = display->width / 2.0f + 0.5f;
+	(*matrix)->points[1][3] = display->height / 2.0f + 0.5f; 
 	(*matrix)->points[2][3] = 0.0f;
 	(*matrix)->points[2][2] = 0.0f;
 	return (0);

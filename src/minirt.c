@@ -99,7 +99,7 @@ int	load_scene(t_minirt *minirt)
 	minirt->camera->origin = ft_calloc(3, sizeof(float));
 	minirt->camera->origin[0] = 0.0f;
 	minirt->camera->origin[1] = 0.0f;
-	minirt->camera->origin[2] = 0.0f;
+	minirt->camera->origin[2] = 1.0f;
 	minirt->camera->ray_direction = ft_calloc(4, sizeof(float));
 	minirt->camera->ray_direction[3] = 0.0f;
 	set_camera_transform(minirt->camera, minirt->display);
@@ -153,7 +153,10 @@ int	main(int argc, char *argv[])
 {
 	t_minirt	minirt;
 	t_display	display;
+	t_matrix	*tmp;
 
+	//todo: use a cache for this.
+	homogeneous_matrix(&tmp, 3, 3);
 	(void)argv;
 	if (argc - 1 < 0 || argc - 1 > 1)
 		return (0);
@@ -167,7 +170,7 @@ int	main(int argc, char *argv[])
 	load_scene(&minirt);
 	perspective_projector(&minirt.world_space, minirt.display, minirt.camera);
 	perspective_projector(&minirt.view_matrix, minirt.display, minirt.camera);
-	invert_matrix(minirt.world_space, 4);
+	invert_matrix(minirt.world_space, minirt.world_space, tmp, 4);
 	mlx_loop(minirt.mlx);
 	return (0);
 }

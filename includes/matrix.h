@@ -31,7 +31,7 @@ int			homogeneous_matrix(t_matrix **matrix, int rows, int cols);
 int			set_diagonal(t_matrix *matrix, float value);
 
 void		matmul(t_matrix *mat1, t_matrix *mat2, t_matrix *result, int n);
-void		invert_matrix(t_matrix *matrix, int n);
+void		invert_matrix(t_matrix *matrix, t_matrix *result, t_matrix *identity, int n);
 void		mattranspose(t_matrix *matrix, t_matrix *result);
 void		inplace_matmul(t_matrix *mat1, t_matrix *mat2, t_matrix *result, int n);
 void		matrix_copy(t_matrix *source, t_matrix *dest, int n);

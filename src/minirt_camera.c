@@ -52,32 +52,20 @@ int	compute_angles(float result[3], float orientation[3])
 //todo: handle errors.
 int	set_camera_transform(t_camera *camera, t_display *display)
 {
-	t_matrix	*rotation;
-	t_matrix	*tmp;
 	float		angles[3];
+	t_matrix	*tmp;
 
+	//todo: use a cache for this.
+	homogeneous_matrix(&tmp, 3, 3);
 	(void)display;
 	compute_angles(angles, camera->orientation);
 	homogeneous_matrix(&camera->inverse_transform, 3, 3);
 	set_diagonal(camera->inverse_transform, 1.0f);
 	homogeneous_matrix(&camera->transform, 3, 3);
 	set_diagonal(camera->transform, 1.0f);
-	homogeneous_matrix(&rotation, 3, 3);
-	homogeneous_matrix(&tmp, 3, 3);
-	// set_diagonal(camera->transform, 1.0f);
-	// x_rotation(camera->transform, angles[0]);
-	// y_rotation(rotation, angles[1]);
-	// inplace_matmul(camera->transform, rotation, tmp);
-	// z_rotation(rotation, angles[2]);
-	// inplace_matmul(tmp, rotation, camera->transform);
-	// set_col(camera->t_origin, 3, 1.0f);
-	// set_col(camera->t_rev_origin, 3, -1.0f);
-	//mattranspose(camera->transform, camera->inverse_transform);
-	camera->transform->points[1][1] = -1.0f;
+	camera->transform->points[1][1] = 1.0f;
 	set_vtranslate(camera->transform, camera->origin);
-	matrix_copy(camera->transform, camera->inverse_transform, 4);
-	invert_matrix(camera->inverse_transform, 4);
-	delete_matrix(tmp);
-	delete_matrix(rotation);
+	//matrix_copy(camera->transform, camera->inverse_transform, tmp, 4);
+	invert_matrix(camera->transform, camera->inverse_transform, tmp, 4);
 	return (0);
 }

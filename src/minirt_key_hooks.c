@@ -54,8 +54,8 @@ int	rotate_around(t_minirt *fdf, t_matrix *rot)
 	homogeneous_matrix(&tmp, 3, 3);
 	matmul(fdf->camera->transform, rot, tmp, 4);
 	matrix_copy(tmp, fdf->camera->transform, 4);
-	matrix_copy(fdf->camera->transform, fdf->camera->inverse_transform, 4);
-	invert_matrix(fdf->camera->inverse_transform, 4);
+	//matrix_copy(fdf->camera->transform, fdf->camera->inverse_transform, 4);
+	invert_matrix(fdf->camera->transform, fdf->camera->inverse_transform, tmp, 4);
 	return (0);
 }
 
@@ -85,29 +85,29 @@ int	key_press_hook(int code, t_minirt *fdf)
 	{
 		matmul(fdf->camera->transform, fdf->rev_translations->x_axis, tmp, 4);
 		matrix_copy(tmp, fdf->camera->transform, 4);
-		matrix_copy(fdf->camera->transform, fdf->camera->inverse_transform, 4);
-		invert_matrix(fdf->camera->inverse_transform, 4);
+		//matrix_copy(fdf->camera->transform, fdf->camera->inverse_transform, 4);
+		invert_matrix(fdf->camera->transform, fdf->camera->inverse_transform, tmp, 4);
 	}
 	else if (code == TR)
 	{
 		matmul(fdf->camera->transform, fdf->translations->x_axis,tmp, 4);
 		matrix_copy(tmp, fdf->camera->transform, 4);
-		matrix_copy(fdf->camera->transform, fdf->camera->inverse_transform, 4);
-		invert_matrix(fdf->camera->inverse_transform, 4);
+		//matrix_copy(fdf->camera->transform, fdf->camera->inverse_transform, 4);
+		invert_matrix(fdf->camera->transform, fdf->camera->inverse_transform, tmp, 4);
 	}
 	else if (code == TU)
 	{
 		matmul(fdf->camera->transform, fdf->rev_translations->z_axis, tmp, 4);
 		matrix_copy(tmp, fdf->camera->transform, 4);
-		matrix_copy(fdf->camera->transform, fdf->camera->inverse_transform, 4);
-		invert_matrix(fdf->camera->inverse_transform, 4);
+		//matrix_copy(fdf->camera->transform, fdf->camera->inverse_transform, 4);
+		invert_matrix(fdf->camera->transform, fdf->camera->inverse_transform, tmp, 4);
 	}
 	else if (code == TD)
 	{
 		matmul(fdf->camera->transform, fdf->translations->z_axis, tmp, 4);
 		matrix_copy(tmp, fdf->camera->transform, 4);
-		matrix_copy(fdf->camera->transform, fdf->camera->inverse_transform, 4);
-		invert_matrix(fdf->camera->inverse_transform, 4);
+		//matrix_copy(fdf->camera->transform, fdf->camera->inverse_transform, 4);
+		invert_matrix(fdf->camera->transform, fdf->camera->inverse_transform, tmp, 4);
 	}
 	delete_matrix(tmp);
 	return (0);

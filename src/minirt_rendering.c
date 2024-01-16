@@ -13,7 +13,7 @@ void	minirt_pixel_put(t_display *display, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-int	set_pixel(t_display *display, float *pixel, float i, float j)
+int	to_screen_space(t_display *display, float *pixel, float i, float j)
 {
 	pixel[0] = (2.0f * i / (float)display->width) - 1.0f;
 	pixel[1] = (2.0f * j / (float)display->height) - 1.0f;
@@ -66,19 +66,20 @@ int	init_ray(t_ray *ray)
 }
 
 //todo: perform ray intersection with all objects in the scene.
-int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, float *pixel, int x ,int y)
+int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,int y)
 {
 	int			i;
 	float		result[4];
-	float		world_point[4];
+	float		point[4];
 	t_object	*object;
 	t_ray		ray;
 
-	vmatmul(minirt->world_space, pixel, result);
+	to_screen_space(minirt->display, point, x, y);
+	vmatmul(minirt->world_space, point, result);
 	scale_vector(result, -1 / result[3]);
 	result[3] = 1.0f;
-	vmatmul(camera->inverse_transform, result, world_point);
-	vmatmul(camera->transform, world_point, ray.direction);
+	vmatmul(camera->inverse_transform, result, point);
+	vmatmul(camera->transform, point, ray.direction);
 	i = -1;
 	while (++i < minirt->objects->size)
 	{
@@ -87,7 +88,7 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, float *pi
 		if (object->intersect(object, &ray))
 		{
 			scale_vector(ray.direction, ray.t);
-			if (ray.direction[2] <= 0.0f)
+			if (ray.direction[2] < 0.0f)
 				return (0);
 			ray.direction[3] = 1.0f;
 			vmatmul(minirt->view_matrix, ray.direction, result);
@@ -105,7 +106,6 @@ int	render(t_minirt *minirt)
 {
 	int			i;
 	int			j;
-	float 		pixel[4];
 	t_display	*display;
 
 	i = -1;
@@ -115,9 +115,8 @@ int	render(t_minirt *minirt)
 		j = -1;
 		while (++j < minirt->display->height)
 		{
-			minirt_pixel_put(display, i, j, 0);
-			set_pixel(minirt->display, pixel, i, j);
-			draw_pixel(minirt, minirt->display, minirt->camera, pixel, i, j);
+			minirt_pixel_put(display, i, j, 0xffffff);
+			draw_pixel(minirt, minirt->display, minirt->camera, i, j);
 		}
 	}
 	mlx_put_image_to_window(minirt->mlx, minirt->window, minirt->display->img, 0, 0);

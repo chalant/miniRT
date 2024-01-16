@@ -37,26 +37,6 @@ void	print_matrix(t_matrix *matrix)
 	}
 }
 
-float	*unit_vector(float *vector)
-{
-	float	magnitude;
-
-	magnitude = sqrtf(vector[0] * vector[0] + vector[1] * vector[1]
-			+ vector[2] * vector[2]);
-	vector[0] /= magnitude;
-	vector[1] /= magnitude;
-	vector[2] /= magnitude;
-	return (vector);
-}
-
-float	*scale_vector(float *vector, float scale)
-{
-	vector[0] *= scale;
-	vector[1] *= scale;
-	vector[2] *= scale;
-	return (vector);
-}
-
 int	init_ray(t_ray *ray)
 {
 	ft_memset(ray->direction, 0, sizeof(float) * 4);
@@ -76,7 +56,7 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,in
 
 	to_screen_space(minirt->display, point, x, y);
 	vmatmul(minirt->world_space, point, result);
-	scale_vector(result, -1 / result[3]);
+	scale_vector(result, -1 / result[3], 3);
 	result[3] = 1.0f;
 	vmatmul(camera->inverse_transform, result, point);
 	vmatmul(camera->transform, point, ray.direction);
@@ -87,7 +67,7 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,in
 		vmatmul(camera->inverse_transform, object->center, ray.object_center);
 		if (object->intersect(object, &ray))
 		{
-			scale_vector(ray.direction, ray.t);
+			scale_vector(ray.direction, ray.t, 3);
 			if (ray.direction[2] < 0.0f)
 				return (0);
 			ray.direction[3] = 1.0f;

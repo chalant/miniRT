@@ -92,14 +92,14 @@ int	load_scene(t_minirt *minirt)
 	minirt->camera->near = -1.0f;
 	minirt->camera->far = 1.0f;
 	minirt->camera->orientation = ft_calloc(4, sizeof(float));
-	minirt->camera->orientation[0] = 0.0f;
-	minirt->camera->orientation[1] = 0.0f;
-	minirt->camera->orientation[2] = 0.0f;
-	minirt->camera->orientation[3] = 0.0f;
+	minirt->camera->orientation[0] = 1.0f;
+	minirt->camera->orientation[1] = 1.0f;
+	minirt->camera->orientation[2] = 1.0f;
+	minirt->camera->orientation[3] = 1.0f;
 	minirt->camera->origin = ft_calloc(3, sizeof(float));
 	minirt->camera->origin[0] = 0.0f;
 	minirt->camera->origin[1] = 0.0f;
-	minirt->camera->origin[2] = 1.0f;
+	minirt->camera->origin[2] = -1.0f;
 	minirt->camera->ray_direction = ft_calloc(4, sizeof(float));
 	minirt->camera->ray_direction[3] = 0.0f;
 	set_camera_transform(minirt->camera, minirt->display);
@@ -110,22 +110,21 @@ int	load_scene(t_minirt *minirt)
 	new.center[2] = -2.0f;
 	new.center[3] = 1.0f;
 	ft_darray_append(minirt->objects, &new);
+	create_sphere(&new, 0.2f);
+	new.center = ft_calloc(4, sizeof(float));
+	new.center[0] = 1.0f;
+	new.center[1] = 0.0f;
+	new.center[2] = -2.0f;
+	new.center[3] = 1.0f;
+	ft_darray_append(minirt->objects, &new);
+	create_sphere(&new, 0.2f);
+	new.center = ft_calloc(4, sizeof(float));
+	new.center[0] = -1.0f;
+	new.center[1] = 1.0f;
+	new.center[2] = -2.0f;
+	new.center[3] = 1.0f;
+	ft_darray_append(minirt->objects, &new);
 	return (1);
-}
-
-void	print_matrix2(t_matrix *matrix)
-{
-	int	i;
-	int	j;
-
-	i = -1;
-	while (++i < matrix->rows)
-	{
-		j = -1;
-		while (++j < matrix->cols)
-			fprintf(stderr, "%f ", matrix->points[i][j]);
-		fprintf(stderr, "\n");
-	}
 }
 
 int	screen_space(t_matrix **matrix, t_display *display)
@@ -153,10 +152,8 @@ int	main(int argc, char *argv[])
 {
 	t_minirt	minirt;
 	t_display	display;
-	t_matrix	*tmp;
 
 	//todo: use a cache for this.
-	homogeneous_matrix(&tmp, 3, 3);
 	(void)argv;
 	if (argc - 1 < 0 || argc - 1 > 1)
 		return (0);
@@ -169,8 +166,8 @@ int	main(int argc, char *argv[])
 	homogeneous_matrix(&minirt.tmp, 3, 3);
 	load_scene(&minirt);
 	perspective_projector(&minirt.world_space, minirt.display, minirt.camera);
+	invert_matrix(minirt.world_space, minirt.world_space, minirt.tmp, 4);
 	perspective_projector(&minirt.view_matrix, minirt.display, minirt.camera);
-	invert_matrix(minirt.world_space, minirt.world_space, tmp, 4);
 	mlx_loop(minirt.mlx);
 	return (0);
 }

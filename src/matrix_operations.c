@@ -69,7 +69,7 @@ void	matmul(t_matrix *mat1, t_matrix *mat2, t_matrix *result, int n)
 		j = -1;
 		while (++j < n)
 		{
-			result->points[i][j] = 0.0;
+			result->points[i][j] = 0.0f;
 			k = -1;
 			while (++k < n)
 				result->points[i][j] += mat1->points[i][k] * mat2->points[k][j];

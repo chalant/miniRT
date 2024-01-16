@@ -8,19 +8,10 @@ int	set_vtranslate(t_matrix *matrix, float v[3])
 	return (0);
 }
 
-int	set_col(t_matrix *matrix, int col, float value)
+int	set_col(t_matrix *matrix, float *values, int col, int n)
 {
-	matrix->points[0][col] = value;
-	matrix->points[1][col] = value;
-	matrix->points[2][col] = value;
-	return (0);
-}
-
-int	cross_product(float v1[3], float v2[3], float result[3])
-{
-	result[0] = v1[1] * v2[2] - v1[2] * v2[1];
-	result[1] = v1[2] * v2[0] - v1[0] * v2[2];
-	result[2] = v1[0] * v2[1] - v1[1] * v2[0];
+	while (--n > -1)
+		matrix->points[n][col] = values[n];
 	return (0);
 }
 
@@ -39,33 +30,46 @@ int	compute_angles(float result[3], float orientation[3])
 	return (0);
 }
 
-// int	set_view_matrix(t_minirt *minirt, t_camera *camera)
-// {
-// 	t_matrix	*rotation;
-// 	t_matrix	*tmp;
+float	*choose_vector(float vec1[3], float vec2[3], float vec3[3], float orientation[3])
+{
+	float	v2;
+	float	max_v;
+	float	*max;
 
-// 	homogeneous_matrix(&minirt->view_matrix, 3, 3);
-// 	minirt->vi
-// 	return (0);
-// }
+	max = vec1;
+	max_v = fabsf(dot_product(vec1, orientation, 3) - 1.0f);
+	v2 = fabsf(dot_product(vec2, orientation, 3) - 1.0f);
+	if (max_v < v2)
+	{
+		max = vec2;
+		max_v = v2;
+	}
+	if (max_v < fabsf(dot_product(vec2, orientation, 3) - 1.0f))
+		max = vec3;
+	return (max);
+}
 
 //todo: handle errors.
 int	set_camera_transform(t_camera *camera, t_display *display)
 {
-	float		angles[3];
 	t_matrix	*tmp;
+	float		*vec;
+	float		normal[3];
 
-	//todo: use a cache for this.
-	homogeneous_matrix(&tmp, 3, 3);
 	(void)display;
-	compute_angles(angles, camera->orientation);
+	homogeneous_matrix(&tmp, 3, 3);
+	set_diagonal(tmp, 1.0f);
+	normalize_vector(camera->orientation, 3);
+	vec = choose_vector(tmp->points[0], tmp->points[1], tmp->points[1], camera->orientation);
+	cross_product(vec, camera->orientation, normal);
 	homogeneous_matrix(&camera->inverse_transform, 3, 3);
-	set_diagonal(camera->inverse_transform, 1.0f);
 	homogeneous_matrix(&camera->transform, 3, 3);
-	set_diagonal(camera->transform, 1.0f);
+	set_col(camera->transform, vec, 0, 3);
+	set_col(camera->transform, normal, 1, 3);
+	set_col(camera->transform, camera->orientation, 2, 3);
 	camera->transform->points[1][1] = 1.0f;
 	set_vtranslate(camera->transform, camera->origin);
-	//matrix_copy(camera->transform, camera->inverse_transform, tmp, 4);
-	invert_matrix(camera->transform, camera->inverse_transform, tmp, 4);
+	invert_matrix(camera->transform, camera->inverse_transform, tmp, 4);\
+	delete_matrix(tmp);
 	return (0);
 }

@@ -1,26 +1,41 @@
 #include "minirt.h"
 
+int	set_matrix(t_matrix *matrix, float value)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	while (++i < matrix->rows)
+	{
+		j = -1;
+		while (++j < matrix->cols) 
+			matrix->points[i][j] = value;
+	}
+	return (0);
+}
+
 void invert_matrix(t_matrix *matrix, t_matrix *result, t_matrix *identity, int n) 
 {
-	float       diagValue;
+	float       diag;
 	float       factor;
+	int			i;
+	int			j;
 
-	//set_diagonal(identity, 1.0f);
-	for (int i = 0; i < n; i++) 
+	set_matrix(identity, 0.0f);
+	set_diagonal(identity, 1.0f);
+	matrix_copy(matrix, result, 4);
+	i = -1;
+	while (++i < n) 
 	{
-		diagValue = matrix->points[i][i];
-		for (int j = 0; j < n; j++) 
+		j = -1;
+		diag = result->points[i][i];
+		while (++j < n) 
 		{
-			if (j != i)
-				identity->points[i][j] = 0.0f;
-			else
-				identity->points[i][j] = 1.0f;
-			result->points[i][j] = matrix->points[i][j];
-			result->points[i][j] /= diagValue;
-			identity->points[i][j] /= diagValue;
+			result->points[i][j] /= diag;
+			identity->points[i][j] /= diag;
 		}
-
-		for (int k = 0; k < n; k++) 
+		for (int k = 0; k < n; k++)
 		{
 			if (k != i) 
 			{

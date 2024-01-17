@@ -87,8 +87,24 @@ int	load_scene(t_minirt *minirt)
 	minirt->camera = malloc(sizeof(t_camera));
 	if (!minirt->camera)
 		return (-1);
+	minirt->light = malloc(sizeof(t_light));
+	if (!minirt->light)
+		return (-1);
+	minirt->light->position[0] = -1.0f;
+	minirt->light->position[1] = -1.0f;
+	minirt->light->position[2] = -1.0f;
+	minirt->light->position[3] = 1.0f;
+	minirt->light->direction[0] = 1.0f;
+	minirt->light->direction[1] = 1.0f;
+	minirt->light->direction[2] = 1.0f;
+	minirt->light->direction[3] = 1.0f;
+	//scale_vector(minirt->light->direction, -1.0f, 3);
+	//normalize_vector(minirt->light->direction, 3);
+	//todo: the light direction should be the negative of the position, normalized.
+	minirt->light->brightness = 1.0f;
+	to_color(0x00ffffff, minirt->light->color);
 	//todo: malloc protection
-	minirt->camera->fov = 60.0f;
+	minirt->camera->fov = 90.0f;
 	minirt->camera->near = -1.0f;
 	minirt->camera->far = 1.0f;
 	minirt->camera->orientation = ft_calloc(4, sizeof(float));
@@ -102,29 +118,30 @@ int	load_scene(t_minirt *minirt)
 	minirt->camera->origin[2] = 0.0f;
 	minirt->camera->ray_direction = ft_calloc(4, sizeof(float));
 	minirt->camera->ray_direction[3] = 0.0f;
-	set_camera_transform(minirt->camera, minirt->display);
+	if (set_camera_transform(minirt->camera) == -1)
+		return (-1);
 	create_sphere(&new, 0.2f);
-	new.color = 0xf94449;
-	new.center = ft_calloc(4, sizeof(float));
-	new.center[0] = 0.0f;
-	new.center[1] = 0.0f;
-	new.center[2] = -1.0f;
-	new.center[3] = 1.0f;
-	ft_darray_append(minirt->objects, &new);
-	create_sphere(&new, 0.2f);
-	new.color = 0x3261e3;
-	new.center = ft_calloc(4, sizeof(float));
-	new.center[0] = 1.0f;
-	new.center[1] = 1.0f;
-	new.center[2] = -2.0f;
-	new.center[3] = 1.0f;
-	ft_darray_append(minirt->objects, &new);
-	create_sphere(&new, 1.0f);
-	new.color = 0xaaea8c;
+	to_color(0x00f94449, new.color);
 	new.center = ft_calloc(4, sizeof(float));
 	new.center[0] = 0.0f;
 	new.center[1] = 0.0f;
 	new.center[2] = -4.0f;
+	new.center[3] = 1.0f;
+	ft_darray_append(minirt->objects, &new);
+	create_sphere(&new, 0.2f);
+	to_color(0x003261e3, new.color);
+	new.center = ft_calloc(4, sizeof(float));
+	new.center[0] = 0.5f;
+	new.center[1] = 0.5f;
+	new.center[2] = -2.0f;
+	new.center[3] = 1.0f;
+	ft_darray_append(minirt->objects, &new);
+	create_sphere(&new, 0.5f);
+	to_color(0x00aaea8c, new.color);
+	new.center = ft_calloc(4, sizeof(float));
+	new.center[0] = -0.5f;
+	new.center[1] = 0.0f;
+	new.center[2] = -1.0f;
 	new.center[3] = 1.0f;
 	ft_darray_append(minirt->objects, &new);
 	return (1);

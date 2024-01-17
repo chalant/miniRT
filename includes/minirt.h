@@ -6,8 +6,17 @@
 # include <math.h>
 # include "matrix.h"
 # include "minirt_bindings.h"
+# include "minirt_colors.h"
 # include "libft.h"
 # include <mlx.h>
+
+typedef struct	s_light
+{
+	float	color[4];
+	float	position[4];
+	float	direction[4];
+	float	brightness;
+}				t_light;
 
 typedef struct	s_ray
 {
@@ -28,14 +37,11 @@ typedef struct	s_camera
 	t_matrix		*inverse_transform;
 	t_ray			*ray;
 	float			*orientation;
-	float			*pixel_origin;
 	float			*ray_direction;
 	float			*origin;
 	float			fov;
 	float			near;
 	float			far;
-	float			height;
-	float			width;
 }				t_camera;
 
 typedef struct	s_sphere
@@ -70,7 +76,7 @@ typedef struct	s_object
 	float			*center;
 	int				(*intersect)(struct s_object *object, t_ray *ray);
 	int				(*transform)(struct s_object *object, t_matrix *transform);
-	int				color;
+	float			color[4];
 	int				light;
 	float			base_color;
 	float			intensity;
@@ -124,6 +130,7 @@ typedef struct	s_minirt
 	t_matrix		*zooming_in;
 	t_matrix		*zooming_out;
 
+	t_light			*light;
 	t_darray		*objects;
 	t_object		*target;
 
@@ -149,7 +156,7 @@ int		translation(t_matrix *matrix, float x, float y, float z);
 int		set_translations(t_minirt *fdf, float x, float y, float z);
 
 float	to_rad(float degrees);
-int		set_camera_transform(t_camera *camera, t_display *display);
+int		set_camera_transform(t_camera *camera);
 int		perspective_projector(t_matrix **matrix, t_display *display, t_camera *camera);
 int		render(t_minirt *minirt);
 

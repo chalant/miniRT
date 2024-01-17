@@ -55,15 +55,21 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,in
 	t_object	*object;
 	t_ray		ray;
 	float		max_hit;
+	float		light_direction[4];
+	float		hit_color[4];
+	float		hit_angle;
 
 	to_screen_space(minirt->display, point, x, y);
 	vmatmul(minirt->world_space, point, result);
 	scale_vector(result, -1 / result[3], 3);
 	result[3] = 1.0f;
 	vmatmul(camera->inverse_transform, result, point);
+	vmatmul(camera->inverse_transform, minirt->light->direction, light_direction);
 	vmatmul(camera->transform, point, ray.direction);
 	i = -1;
 	max_hit = FLT_MAX;
+	//todo: fix issue where when we are inside the sphere, the sphere behind gets displayed...
+	//maybe use normals ? if the normal is negative only render the current sphere ?
 	while (++i < minirt->objects->size)
 	{
 		object = ft_darray_get(minirt->objects, i);
@@ -73,13 +79,21 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,in
 			scale_vector(ray.direction, ray.t, 3);
 			if (ray.direction[2] < 0.0f || ray.direction[2] > max_hit)
 				continue;
-			ray.direction[3] = 1.0f;
-			vmatmul(minirt->view_matrix, ray.direction, result);
-			// scale_vector(result, 1 / result[3]);
+			max_hit = ray.direction[2];
+			ray.direction[3] = 0.0f;
+			//vmatmul(camera->inverse_transform, ray.direction, result);
+			hit_angle = dot_product(light_direction, normalize_vector(ray.direction, 3), 3) * 0.5 + 0.5;
+			hit_color[0] = hit_angle * object->color[0] * minirt->light->brightness * minirt->light->color[0];
+			hit_color[1] = hit_angle * object->color[1] * minirt->light->brightness * minirt->light->color[1];
+			hit_color[2] = hit_angle * object->color[2] * minirt->light->brightness * minirt->light->color[2];
+			hit_color[3] = 0.0f;
+			//fprintf(stderr, "hit_color %f\n", hit_angle);
+			// scale_vector(result, 1 / result[3], 3);
 			// result[0] = ((result[0] + 1.0f) * (float)display->width) / 2.0f;
 			// result[1] = ((result[1] + 1.0f) * (float)display->height) / 2.0f;
-			minirt_pixel_put(display, x, y, object->color);
-			max_hit = ray.direction[2];
+			//fprintf(stderr, "Color %f %f\n", object->color[0], object->color[1]);
+			result[3] = 0.0f; 
+			minirt_pixel_put(display, x, y, to_argb(hit_color));
 			//minirt_pixel_put(display, result[0], result[1], 255);
 		}
 	}
@@ -99,7 +113,7 @@ int	render(t_minirt *minirt)
 		j = -1;
 		while (++j < minirt->display->height)
 		{
-			minirt_pixel_put(display, i, j, 0xffffff);
+			minirt_pixel_put(display, i, j, 0);
 			draw_pixel(minirt, minirt->display, minirt->camera, i, j);
 		}
 	}

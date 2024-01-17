@@ -50,20 +50,22 @@ float	*choose_vector(float vec1[3], float vec2[3], float vec3[3], float orientat
 }
 
 //todo: handle errors.
-int	set_camera_transform(t_camera *camera, t_display *display)
+int	set_camera_transform(t_camera *camera)
 {
 	t_matrix	*tmp;
 	float		*vec;
 	float		normal[3];
 
-	(void)display;
-	homogeneous_matrix(&tmp, 3, 3);
+	if (homogeneous_matrix(&tmp, 3, 3) == -1)
+		return (-1);
 	set_diagonal(tmp, 1.0f);
 	normalize_vector(camera->orientation, 3);
 	vec = choose_vector(tmp->points[0], tmp->points[1], tmp->points[1], camera->orientation);
 	cross_product(vec, camera->orientation, normal);
-	homogeneous_matrix(&camera->inverse_transform, 3, 3);
-	homogeneous_matrix(&camera->transform, 3, 3);
+	if (homogeneous_matrix(&camera->inverse_transform, 3, 3) == -1)
+		return (-1);
+	if (homogeneous_matrix(&camera->transform, 3, 3) == -1)
+		return (-1);
 	set_col(camera->transform, vec, 0, 3);
 	set_col(camera->transform, normal, 1, 3);
 	set_col(camera->transform, camera->orientation, 2, 3);

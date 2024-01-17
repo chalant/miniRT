@@ -24,6 +24,9 @@ typedef struct s_hsl
 }					t_hsl;
 
 unsigned int		hsl_to_rgb(t_hsl *hsl);
+unsigned int		to_argb(float color[4]);
+float				*to_color(int rgb, float color[4]);
+float				clamp(float value, float min, float max);
 unsigned int		fdf_gradient(float fraction, unsigned int start,
 						unsigned int end);
 float				fdf_color(char *point_values);

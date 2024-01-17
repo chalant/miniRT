@@ -7,7 +7,8 @@ MLX_DIR = ./minilibx
 INCLUDES_FILES = minirt.h \
 		         minirt_bindings.h \
 		         matrix.h \
-				 minirt_objects.h
+				 minirt_objects.h \
+				 minirt_colors.h
 
 SRC_FILES =	minirt.c \
 			minirt_key_hooks.c \
@@ -24,7 +25,8 @@ SRC_FILES =	minirt.c \
 			minirt_objects.c \
 			minirt_rendering.c \
 			minirt_camera.c \
-			minirt_projection.c
+			minirt_projection.c \
+			minirt_colors.c
 
 
 INCLUDES = $(addprefix $(INCLUDES_DIR)/, $(INCLUDES_FILES))

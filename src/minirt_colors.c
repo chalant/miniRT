@@ -50,20 +50,28 @@ unsigned int	fdf_gradient(float fraction, unsigned int start,
 	return ((r << 16) | (g << 8) | b);
 }
 
-float	fdf_color(char *point_values)
+float	*to_color(int rgb, float color[4])
+{
+	color[3] = (float)((rgb & (0xFF << 24)) >> 24) / 255.0f;
+	color[0] = (float)((rgb & (0xFF << 16)) >> 16) / 255.0f;
+	color[1] = (float)((rgb & (0xFF << 8)) >> 8) / 255.0f;
+	color[2] = (float)((rgb & (0xFF))) / 255.0f;
+	return (color);
+}
+
+float	clamp(float value, float min, float max)
+{
+	return (fmaxf(min, fminf(value, max)));
+}
+
+unsigned int	to_argb(float color[4])
 {
 	unsigned int	rgb;
-	char			**color;
-	t_hsl			hsl;
 
-	if (!ft_strchr(point_values, ','))
-		return (0.0f);
-	color = ft_split(point_values, ',');
-	if (!color)
-		return (0);
-	rgb = str_to_uint(color[1], 16);
-	hsl = rgb_to_hsl((float)((rgb >> 16) & 0xFF),
-			(float)((rgb >> 8) & 0xFF), (float)(rgb & 0xFF));
-	delete_strings(color);
-	return (hsl.hue);
+	rgb = 0;
+	rgb |= (unsigned int)(clamp(color[3], 0.0f, 1.0f) * 255.0f) << 24;
+	rgb |= (unsigned int)(clamp(color[0], 0.0f, 1.0f) * 255.0f) << 16;
+	rgb |= (unsigned int)(clamp(color[1], 0.0f, 1.0f) * 255.0f) << 8;
+	rgb |= (unsigned int)(clamp(color[2], 0.0f, 1.0f) * 255.0f);
+	return (rgb);
 }

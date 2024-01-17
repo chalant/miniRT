@@ -1,4 +1,5 @@
 #include "minirt.h"
+#include <float.h>
 
 void	minirt_pixel_put(t_display *display, int x, int y, int color)
 {
@@ -53,6 +54,7 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,in
 	float		point[4];
 	t_object	*object;
 	t_ray		ray;
+	float		max_hit;
 
 	to_screen_space(minirt->display, point, x, y);
 	vmatmul(minirt->world_space, point, result);
@@ -61,6 +63,7 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,in
 	vmatmul(camera->inverse_transform, result, point);
 	vmatmul(camera->transform, point, ray.direction);
 	i = -1;
+	max_hit = FLT_MAX;
 	while (++i < minirt->objects->size)
 	{
 		object = ft_darray_get(minirt->objects, i);
@@ -68,14 +71,15 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,in
 		if (object->intersect(object, &ray))
 		{
 			scale_vector(ray.direction, ray.t, 3);
-			if (ray.direction[2] < 0.0f)
-				return (0);
+			if (ray.direction[2] < 0.0f || ray.direction[2] > max_hit)
+				continue;
 			ray.direction[3] = 1.0f;
 			vmatmul(minirt->view_matrix, ray.direction, result);
 			// scale_vector(result, 1 / result[3]);
 			// result[0] = ((result[0] + 1.0f) * (float)display->width) / 2.0f;
 			// result[1] = ((result[1] + 1.0f) * (float)display->height) / 2.0f;
-			minirt_pixel_put(display, x, y, 0xf94449);
+			minirt_pixel_put(display, x, y, object->color);
+			max_hit = ray.direction[2];
 			//minirt_pixel_put(display, result[0], result[1], 255);
 		}
 	}

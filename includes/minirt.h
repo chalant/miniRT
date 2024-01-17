@@ -70,7 +70,7 @@ typedef struct	s_object
 	float			*center;
 	int				(*intersect)(struct s_object *object, t_ray *ray);
 	int				(*transform)(struct s_object *object, t_matrix *transform);
-	float			*colors;
+	int				color;
 	int				light;
 	float			base_color;
 	float			intensity;

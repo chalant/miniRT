@@ -99,7 +99,7 @@ int	create_plane(t_object *object, float normal[4])
 		return (-1);
 	plane->normal[0] = normal[0];
 	plane->normal[1] = normal[1];
-	plane->normal[2] = normal[2];
+	plane->normal[2] = -normal[2];
 	plane->normal[3] = normal[3];
 	object->shape = plane;
 	object->intersect = hit_plane;

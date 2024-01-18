@@ -53,18 +53,23 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,in
 	float		result[4];
 	float		point[4];
 	t_object	*object;
+	t_object	*closest;
 	t_ray		ray;
 	float		max_hit;
-	float		light_direction[4];
+	//float		light_direction[4];
 	float		hit_color[4];
 	float		hit_angle;
+	float		cx;
+	float		cy;
+	float		cz;
+	//float		normal[4];
 
 	to_screen_space(minirt->display, point, x, y);
 	vmatmul(minirt->world_space, point, result);
-	scale_vector(result, -1 / result[3], 3);
+	//scale_vector(result, -1 / result[3], 3);
+	//fprintf(stderr, "%f\n", result[2]);
 	result[3] = 1.0f;
 	vmatmul(camera->inverse_transform, result, point);
-	vmatmul(camera->inverse_transform, minirt->light->direction, light_direction);
 	vmatmul(camera->transform, point, ray.direction);
 	//vmatmul(camera->transform, point, light_direction);
 	//scale_vector(light_direction, 1 / light_direction[3], 3);
@@ -72,35 +77,48 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,in
 	max_hit = FLT_MAX;
 	//todo: fix issue where when we are inside the sphere, the sphere behind gets displayed...
 	//maybe use normals ? if the normal is negative only render the current sphere ?
-	minirt_pixel_put(display, x, y, 0xa9edfe);
+	minirt_pixel_put(display, x, y, 0x0);
 	ray.transform = camera->inverse_transform;
+	closest = NULL;
+	cx = 0.0f;
+	cy = 0.0f;
+	static int count = 0;
 	while (++i < minirt->objects->size)
 	{
 		object = ft_darray_get(minirt->objects, i);
 		vmatmul(camera->inverse_transform, object->center, ray.object_center);
-		if (object->intersect(object, &ray))
-		{
-			scale_vector(ray.direction, ray.t, 3);
-			if (ray.direction[2] < 0.0f || ray.direction[2] > max_hit)
-				continue;
-			max_hit = ray.direction[2];
-			ray.direction[3] = 0.0f;
-			//vmatmul(camera->inverse_transform, ray.direction, result);
-			hit_angle = dot_product(minirt->light->direction, normalize_vector(ray.direction, 3), 3) * 0.5 + 0.5;
-			hit_color[0] = hit_angle * object->color[0] * minirt->light->brightness * minirt->light->color[0];
-			hit_color[1] = hit_angle * object->color[1] * minirt->light->brightness * minirt->light->color[1];
-			hit_color[2] = hit_angle * object->color[2] * minirt->light->brightness * minirt->light->color[2];
-			hit_color[3] = 0.0f;
-			//fprintf(stderr, "hit_color %f\n", hit_angle);
-			// scale_vector(result, 1 / result[3], 3);
-			// result[0] = ((result[0] + 1.0f) * (float)display->width) / 2.0f;
-			// result[1] = ((result[1] + 1.0f) * (float)display->height) / 2.0f;
-			//fprintf(stderr, "Color %f %f\n", object->color[0], object->color[1]);
-			result[3] = 0.0f; 
-			minirt_pixel_put(display, x, y, to_argb(hit_color));
+		if (!object->intersect(object, &ray))
+			continue;
+		scale_vector(ray.direction, ray.t, 3);
+		if (ray.direction[2] < 0.0f || ray.direction[2] >= max_hit)
+			continue;
+		max_hit = ray.direction[2];
+		hit_angle = dot_product(minirt->light->direction, normalize_vector(ray.direction, 3), 3);
+		// if (!(count % 1000001))
+		// {
+		// 	fprintf(stderr, "id : %d %f %f %f Angle %f\n", i, ray.direction[0], ray.direction[1], ray.direction[2], hit_angle);
+		// }
+		count++;
+		hit_color[0] = hit_angle * object->color[0] * minirt->light->brightness * minirt->light->color[0];
+		hit_color[1] = hit_angle * object->color[1] * minirt->light->brightness * minirt->light->color[1];
+		hit_color[2] = hit_angle * object->color[2] * minirt->light->brightness * minirt->light->color[2];
+		hit_color[3] = 0.0f;
+		closest = object;
+		//fprintf(stderr, "hit_color %f\n", hit_angle);
+		// scale_vector(result, 1 / result[3], 3);
+		// result[0] = ((result[0] + 1.0f) * (float)display->width) / 2.0f;
+		// result[1] = ((result[1] + 1.0f) * (float)display->height) / 2.0f;
+		//fprintf(stderr, "Color %f %f\n", object->color[0], object->color[1]);
+		cx = x;
+		cy = y;
+		cz = ray.direction[2];
+		minirt_pixel_put(display, cx, cy, to_argb(hit_color));
 			//minirt_pixel_put(display, result[0], result[1], 255);
-		}
 	}
+	// if (closest)
+	// {
+	// 	minirt_pixel_put(display, cx, cy, to_argb(hit_color));
+	// }
 	return (0);
 }
 

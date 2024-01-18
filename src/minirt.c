@@ -127,13 +127,13 @@ int	load_scene(t_minirt *minirt)
 	create_sphere(&new, 0.2f);
 	to_color(0x003261e3, new.color);
 	new.center = ft_calloc(4, sizeof(float));
-	new.center[0] = 0.5f;
+	new.center[0] = -0.5f;
 	new.center[1] = 0.5f;
 	new.center[2] = -2.0f;
 	new.center[3] = 1.0f;
 	ft_darray_append(minirt->objects, &new);
 	create_sphere(&new, 0.5f);
-	to_color(0x00aaea8c, new.color);
+	to_color(0x11aaea8c, new.color);
 	new.center = ft_calloc(4, sizeof(float));
 	new.center[0] = -0.5f;
 	new.center[1] = 0.0f;

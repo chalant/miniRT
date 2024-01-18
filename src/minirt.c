@@ -90,19 +90,15 @@ int	load_scene(t_minirt *minirt)
 	minirt->light = malloc(sizeof(t_light));
 	if (!minirt->light)
 		return (-1);
-	minirt->light->position[0] = -1.0f;
-	minirt->light->position[1] = -1.0f;
-	minirt->light->position[2] = -1.0f;
-	minirt->light->position[3] = 1.0f;
-	minirt->light->direction[0] = 1.0f;
+	minirt->light->direction[0] = -1.0f;
 	minirt->light->direction[1] = 1.0f;
-	minirt->light->direction[2] = 1.0f;
+	minirt->light->direction[2] = 2.0f;
 	minirt->light->direction[3] = 1.0f;
 	//scale_vector(minirt->light->direction, -1.0f, 3);
-	//normalize_vector(minirt->light->direction, 3);
+	normalize_vector(minirt->light->direction, 3);
 	//todo: the light direction should be the negative of the position, normalized.
 	minirt->light->brightness = 1.0f;
-	to_color(0x00ffffff, minirt->light->color);
+	to_color(0x00eafafe, minirt->light->color);
 	//todo: malloc protection
 	minirt->camera->fov = 90.0f;
 	minirt->camera->near = -1.0f;
@@ -142,6 +138,14 @@ int	load_scene(t_minirt *minirt)
 	new.center[0] = -0.5f;
 	new.center[1] = 0.0f;
 	new.center[2] = -1.0f;
+	new.center[3] = 1.0f;
+	ft_darray_append(minirt->objects, &new);
+	create_plane(&new, (float[4]){0.0f, 0.1f, 0.0f, 0.0f});
+	new.center = ft_calloc(4, sizeof(float));
+	to_color(0x00ffffff, new.color);
+	new.center[0] = 0.0f;
+	new.center[1] = 5.0f;
+	new.center[2] = -4.0f;
 	new.center[3] = 1.0f;
 	ft_darray_append(minirt->objects, &new);
 	return (1);

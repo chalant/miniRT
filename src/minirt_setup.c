@@ -28,6 +28,7 @@ float	to_rad(float angle)
 	return (angle * (M_PI / 180.0));
 }
 
+//todo: handle errors.
 int	set_rotations(t_minirt *fdf, float x, float y, float z)
 {
 	t_matrix	*tmp;

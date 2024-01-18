@@ -66,10 +66,14 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,in
 	vmatmul(camera->inverse_transform, result, point);
 	vmatmul(camera->inverse_transform, minirt->light->direction, light_direction);
 	vmatmul(camera->transform, point, ray.direction);
+	//vmatmul(camera->transform, point, light_direction);
+	//scale_vector(light_direction, 1 / light_direction[3], 3);
 	i = -1;
 	max_hit = FLT_MAX;
 	//todo: fix issue where when we are inside the sphere, the sphere behind gets displayed...
 	//maybe use normals ? if the normal is negative only render the current sphere ?
+	minirt_pixel_put(display, x, y, 0xa9edfe);
+	ray.transform = camera->inverse_transform;
 	while (++i < minirt->objects->size)
 	{
 		object = ft_darray_get(minirt->objects, i);
@@ -82,7 +86,7 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,in
 			max_hit = ray.direction[2];
 			ray.direction[3] = 0.0f;
 			//vmatmul(camera->inverse_transform, ray.direction, result);
-			hit_angle = dot_product(light_direction, normalize_vector(ray.direction, 3), 3) * 0.5 + 0.5;
+			hit_angle = dot_product(minirt->light->direction, normalize_vector(ray.direction, 3), 3) * 0.5 + 0.5;
 			hit_color[0] = hit_angle * object->color[0] * minirt->light->brightness * minirt->light->color[0];
 			hit_color[1] = hit_angle * object->color[1] * minirt->light->brightness * minirt->light->color[1];
 			hit_color[2] = hit_angle * object->color[2] * minirt->light->brightness * minirt->light->color[2];
@@ -113,8 +117,7 @@ int	render(t_minirt *minirt)
 		j = -1;
 		while (++j < minirt->display->height)
 		{
-			minirt_pixel_put(display, i, j, 0);
-			draw_pixel(minirt, minirt->display, minirt->camera, i, j);
+			draw_pixel(minirt, display, minirt->camera, i, j);
 		}
 	}
 	mlx_put_image_to_window(minirt->mlx, minirt->window, minirt->display->img, 0, 0);

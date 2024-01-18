@@ -20,8 +20,11 @@ typedef struct	s_light
 
 typedef struct	s_ray
 {
+	float		origin[4];
 	float		object_center[4];
+	float		object_direction[4];
 	float		direction[4];
+	t_matrix	*transform;
 	float		t;
 }				t_ray;
 
@@ -57,8 +60,9 @@ typedef struct	s_cylinder
 
 typedef struct	s_plane
 {
-	float		radius;
-	float		height;
+	float		normal[4];
+	float		point[4];
+	float		color[4];
 }				t_plane;
 
 typedef struct	s_object

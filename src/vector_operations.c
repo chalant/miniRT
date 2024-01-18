@@ -39,3 +39,20 @@ float	*scale_vector(float *vector, float scale, int n)
 		vector[n] *= scale;
 	return (vector);
 }
+
+float	*add_vectors(float *v1, float *v2, float *result, int n)
+{
+	while (--n > -1)
+		result[n] = v1[n] + v2[n];
+	return (result);
+}
+
+float	*subtract_vectors(float *v1, float *v2, float *result, int n)
+{
+	while (--n > -1)
+	{
+		result[n] = 0.0f;
+		result[n] = v1[n] - v2[n];
+	}
+	return (result);
+}

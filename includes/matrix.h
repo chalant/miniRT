@@ -21,6 +21,8 @@ typedef struct s_matrix
 }			t_matrix;
 
 float	dot_product(float *v1, float *v2, int n);
+float	*add_vectors(float *v1, float *v2, float *result, int n);
+float	*subtract_vectors(float *v1, float *v2, float *result, int n);
 float	*cross_product(float v1[3], float v2[3], float result[3]);
 float	*scale_vector(float *vector, float scale, int n);
 float	*normalize_vector(float *vector, int n);

@@ -43,11 +43,13 @@ int	key_press_hook(int code, t_minirt *fdf)
 {
 	if (code == RL)
 	{
-		rotate_around(fdf, fdf->rotations->y_axis);
+		rotate_around(fdf, fdf->rotations->z_axis);	
+		//rotate_around(fdf, fdf->rotations->y_axis);
 	}
 	else if (code == RR)
 	{
-		rotate_around(fdf, fdf->rev_rotations->y_axis);
+		rotate_around(fdf, fdf->rev_rotations->z_axis);
+		//rotate_around(fdf, fdf->rev_rotations->y_axis);
 	}
 	else if (code == RU)
 	{
@@ -59,12 +61,14 @@ int	key_press_hook(int code, t_minirt *fdf)
 	}
 	else if (code == TL)
 	{
+		//rotate_around(fdf, fdf->rotations->z_axis);	
 		matmul(fdf->camera->transform, fdf->rev_translations->x_axis, fdf->tmp, 4);
 		matrix_copy(fdf->tmp, fdf->camera->transform, 4);
 		invert_matrix(fdf->camera->transform, fdf->camera->inverse_transform, fdf->tmp, 4);
 	}
 	else if (code == TR)
 	{
+		//rotate_around(fdf, fdf->rev_rotations->z_axis);	
 		matmul(fdf->camera->transform, fdf->translations->x_axis, fdf->tmp, 4);
 		matrix_copy(fdf->tmp, fdf->camera->transform, 4);
 		invert_matrix(fdf->camera->transform, fdf->camera->inverse_transform, fdf->tmp, 4);

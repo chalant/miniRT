@@ -98,7 +98,7 @@ int	load_scene(t_minirt *minirt)
 	normalize_vector(minirt->light->direction, 3);
 	//todo: the light direction should be the negative of the position, normalized.
 	minirt->light->brightness = 1.0f;
-	to_color(0x00eafafe, minirt->light->color);
+	to_color(0x00ffffff, minirt->light->color);
 	//todo: malloc protection
 	minirt->camera->fov = 90.0f;
 	minirt->camera->near = -1.0f;
@@ -111,43 +111,45 @@ int	load_scene(t_minirt *minirt)
 	minirt->camera->origin = ft_calloc(3, sizeof(float));
 	minirt->camera->origin[0] = 0.0f;
 	minirt->camera->origin[1] = 0.0f;
-	minirt->camera->origin[2] = 0.0f;
+	minirt->camera->origin[2] = 2.0f;
 	minirt->camera->ray_direction = ft_calloc(4, sizeof(float));
 	minirt->camera->ray_direction[3] = 0.0f;
 	if (set_camera_transform(minirt->camera) == -1)
 		return (-1);
-	create_sphere(&new, 0.2f);
+	create_sphere(&new, 0.3f, "red");
 	to_color(0x00f94449, new.color);
+	new.name = "red";
 	new.center = ft_calloc(4, sizeof(float));
 	new.center[0] = 0.0f;
 	new.center[1] = 0.0f;
 	new.center[2] = -4.0f;
 	new.center[3] = 1.0f;
 	ft_darray_append(minirt->objects, &new);
-	create_sphere(&new, 0.2f);
+	create_sphere(&new, 0.2f, "blue");
 	to_color(0x003261e3, new.color);
+	new.name = "blue";
 	new.center = ft_calloc(4, sizeof(float));
-	new.center[0] = -0.5f;
-	new.center[1] = 0.5f;
-	new.center[2] = -2.0f;
-	new.center[3] = 1.0f;
-	ft_darray_append(minirt->objects, &new);
-	create_sphere(&new, 0.5f);
-	to_color(0x11aaea8c, new.color);
-	new.center = ft_calloc(4, sizeof(float));
-	new.center[0] = -0.5f;
+	new.center[0] = -0.0f;
 	new.center[1] = 0.0f;
-	new.center[2] = -1.0f;
+	new.center[2] = -0.0f;
 	new.center[3] = 1.0f;
 	ft_darray_append(minirt->objects, &new);
-	create_plane(&new, (float[4]){0.0f, 0.1f, 0.0f, 0.0f});
-	new.center = ft_calloc(4, sizeof(float));
-	to_color(0x00ffffff, new.color);
-	new.center[0] = 0.0f;
-	new.center[1] = 5.0f;
-	new.center[2] = -4.0f;
-	new.center[3] = 1.0f;
-	ft_darray_append(minirt->objects, &new);
+	// create_sphere(&new, 0.5f);
+	// to_color(0x11aaea8c, new.color);
+	// new.center = ft_calloc(4, sizeof(float));
+	// new.center[0] = -0.5f;
+	// new.center[1] = 0.0f;
+	// new.center[2] = -1.0f;
+	// new.center[3] = 1.0f;
+	// ft_darray_append(minirt->objects, &new);
+	// create_plane(&new, (float[4]){0.0f, 0.1f, 0.0f, 0.0f});
+	// new.center = ft_calloc(4, sizeof(float));
+	// to_color(0x00ffffff, new.color);
+	// new.center[0] = 0.0f;
+	// new.center[1] = 5.0f;
+	// new.center[2] = -4.0f;
+	// new.center[3] = 1.0f;
+	// ft_darray_append(minirt->objects, &new);
 	return (1);
 }
 

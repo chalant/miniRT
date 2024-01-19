@@ -50,6 +50,7 @@ typedef struct	s_camera
 typedef struct	s_sphere
 {
 	float		radius;
+	const char	*name;
 }				t_sphere;
 
 typedef struct	s_cylinder
@@ -76,6 +77,7 @@ typedef struct	s_object
 	t_matrix		*rev_t_center;
 	t_matrix		*tmp;
 
+	const char		*name;
 	void			*shape;
 	float			*center;
 	int				(*intersect)(struct s_object *object, t_ray *ray);

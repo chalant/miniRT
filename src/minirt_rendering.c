@@ -55,15 +55,12 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,in
 	t_object	*object;
 	t_object	*closest;
 	t_ray		ray;
-	float		max_hit;
-	float		light_direction[4];
+	float		min_hit;
 	float		hit_color[4];
 	float		hit_angle = 0.0f;
 	float		cx;
 	float		cy;
-	//float		cz = 0.0f;
 	float		normal[4];
-	//float		camera_position[4];
 
 	to_screen_space(minirt->display, point, x, y);
 	vmatmul(minirt->world_space, point, result);
@@ -72,47 +69,31 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,in
 	result[3] = 1.0f;
 	vmatmul(camera->inverse_transform, result, point);
 	vmatmul(camera->transform, point, ray.direction);
-	vmatmul(camera->inverse_transform, minirt->light->direction, light_direction);
-	//scale_vector(light_direction, 1 / light_direction[3], 3);
 	i = -1;
-	max_hit = FLT_MAX;
-	//todo: fix issue where when we are inside the sphere, the sphere behind gets displayed...
-	//maybe use normals ? if the normal is negative only render the current sphere ?
+	min_hit = FLT_MAX;
 	minirt_pixel_put(display, x, y, 0x0);
 	ray.transform = camera->inverse_transform;
 	closest = NULL;
-	cx = 0.0f;
-	cy = 0.0f;
+	cx = x;
+	cy = y;
 	static int count = 0;
 	while (++i < minirt->objects->size)
 	{
 		object = ft_darray_get(minirt->objects, i);
 		vmatmul(camera->inverse_transform, object->center, ray.object_center);
-		// normal[0] = ray.direction[0] - object->center[0];
-		// normal[1] = ray.direction[1] - object->center[1];
-		// normal[2] = ray.direction[2] - object->center[2];
-		//vmatmul(camera->inverse_transform, ray.direction, normal);
 		if (!object->intersect(object, &ray))
 			continue;
 		scale_vector(ray.direction, ray.t, 3);
-		add_vectors(ray.direction, ray.object_center, normal, 3);
-		if (ray.direction[2] < 0.0f || -ray.t >= max_hit)
-		{
-			if (!(count % 1000001))
-				fprintf(stderr, "skip %d\n", i);
+		if (ray.direction[2] < 0.0f || -ray.t >= min_hit)
 			continue;
-		}
-		max_hit = -ray.t;
-		hit_angle = dot_product(light_direction, normalize_vector(normal, 3), 3) * 0.8f + 0.2f;
-		hit_color[0] = hit_angle * object->color[0] * minirt->light->brightness * minirt->light->color[0];
-		hit_color[1] = hit_angle * object->color[1] * minirt->light->brightness * minirt->light->color[1];
-		hit_color[2] = hit_angle * object->color[2] * minirt->light->brightness * minirt->light->color[2];
-		hit_color[3] = 0.0f;
-		if (!(count % 1000001))
-		{
-			fprintf(stderr, "id : %d %f %f %f Angle %f\n", i, ray.direction[0], ray.direction[1], ray.direction[2], -ray.t);
-		}
-		count++;
+		add_vectors(ray.direction, ray.object_center, normal, 3);
+		min_hit =  -ray.t;
+		// if (!(count % 1))
+		// {
+		// 	//fprintf(stdout, "CLOSEST: %s %f %f %f\n", closest->name, ray.direction[0], ray.direction[1], min_hit);
+		// 	fprintf(stdout, "CLOSEST: %s %f\n", object->name, min_hit);
+		// }
+		hit_angle = dot_product(minirt->light->direction, normalize_vector(normal, 3), 3) * 0.7f + 0.3f;
 		closest = object;
 		//fprintf(stderr, "hit_color %f\n", hit_angle);
 		// scale_vector(result, 1 / result[3], 3);
@@ -121,16 +102,22 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,in
 		//fprintf(stderr, "Color %f %f\n", object->color[0], object->color[1]);
 		cx = x;
 		cy = y;
-		//cz = fabs(ray.t);
-		//minirt_pixel_put(display, cx, cy, to_argb(hit_color));
-			//minirt_pixel_put(display, result[0], result[1], 255);
 	}
+	count++;
 	if (closest)
 	{
-		// if (!(count % 1000001))
-		// {
-		// 	fprintf(stderr, "CLOSESTR: %d %f %f %f Angle %f\n", i, ray.direction[0], ray.direction[1], ray.direction[2], cz);
-		// }
+		if (!(count % 1))
+		{
+			//fprintf(stdout, "CLOSEST: %s %f %f %f\n", closest->name, ray.direction[0], ray.direction[1], min_hit);
+			fprintf(stdout, "CLOSEST: %s %f %s %f\n", closest->name, min_hit, object->name, ray.direction[2]);
+		}
+		hit_color[0] = hit_angle * minirt->light->brightness * minirt->light->color[0];
+		hit_color[1] = hit_angle * minirt->light->brightness * minirt->light->color[1];
+		hit_color[2] = hit_angle * minirt->light->brightness * minirt->light->color[2];
+		hit_color[3] = 0.0f;//
+		hit_color[0] *= closest->color[0];
+		hit_color[1] *= closest->color[1];
+		hit_color[2] *= closest->color[2];
 		minirt_pixel_put(display, cx, cy, to_argb(hit_color));
 	}
 	return (0);

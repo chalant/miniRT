@@ -50,9 +50,6 @@ float	*add_vectors(float *v1, float *v2, float *result, int n)
 float	*subtract_vectors(float *v1, float *v2, float *result, int n)
 {
 	while (--n > -1)
-	{
-		result[n] = 0.0f;
 		result[n] = v1[n] - v2[n];
-	}
 	return (result);
 }

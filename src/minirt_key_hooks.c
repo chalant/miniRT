@@ -43,12 +43,12 @@ int	key_press_hook(int code, t_minirt *fdf)
 {
 	if (code == RL)
 	{
-		rotate_around(fdf, fdf->rotations->z_axis);	
+		rotate_around(fdf, fdf->rotations->y_axis);	
 		//rotate_around(fdf, fdf->rotations->y_axis);
 	}
 	else if (code == RR)
 	{
-		rotate_around(fdf, fdf->rev_rotations->z_axis);
+		rotate_around(fdf, fdf->rev_rotations->y_axis);
 		//rotate_around(fdf, fdf->rev_rotations->y_axis);
 	}
 	else if (code == RU)

@@ -26,11 +26,12 @@ int	hit_sphere(t_object *object, t_ray *ray)
 	return (1);
 }
 
-int create_sphere(t_object *object, float radius)
+int create_sphere(t_object *object, float radius, const char *name)
 {
 	t_sphere	*sphere;
 
 	sphere = malloc(sizeof(t_sphere));
+	sphere->name = name;
 	if (!sphere)
 		return (-1);
 	sphere->radius = radius;

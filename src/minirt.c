@@ -90,10 +90,10 @@ int	load_scene(t_minirt *minirt)
 	minirt->light = malloc(sizeof(t_light));
 	if (!minirt->light)
 		return (-1);
-	minirt->light->direction[0] = -1.0f;
-	minirt->light->direction[1] = 1.0f;
-	minirt->light->direction[2] = 2.0f;
-	minirt->light->direction[3] = 1.0f;
+	minirt->light->direction[0] = 5.0f;
+	minirt->light->direction[1] = 5.0f;
+	minirt->light->direction[2] = 10.0f;
+	minirt->light->direction[3] = 0.0f;
 	//scale_vector(minirt->light->direction, -1.0f, 3);
 	normalize_vector(minirt->light->direction, 3);
 	//todo: the light direction should be the negative of the position, normalized.

@@ -18,7 +18,7 @@ int	to_screen_space(t_display *display, float *pixel, float i, float j)
 {
 	pixel[0] = (2.0f * i / (float)display->width) - 1.0f;
 	pixel[1] = (2.0f * j / (float)display->height) - 1.0f;
-	pixel[2] = 0.0f;
+	pixel[2] = 1.0f;
 	pixel[3] = 1.0f;
 	return (0);
 }
@@ -46,6 +46,18 @@ int	init_ray(t_ray *ray)
 	return (0);
 }
 
+float	vector_length(float *vector, int size)
+{
+	int		i;
+	float	length;
+
+	i = -1;
+	length = 0.0f;
+	while (++i < size)
+		length += vector[i] * vector[i];
+	return (sqrtf(length));
+}
+
 //todo: perform ray intersection with all objects in the scene.
 int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,int y)
 {
@@ -55,62 +67,69 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,in
 	t_object	*object;
 	t_object	*closest;
 	t_ray		ray;
-	float		min_hit;
+	//float		min_hit;
 	float		hit_color[4];
 	float		hit_angle = 0.0f;
 	float		cx;
 	float		cy;
 	float		normal[4];
+	float		light_direction[4];
 
 	to_screen_space(minirt->display, point, x, y);
 	vmatmul(minirt->world_space, point, result);
-	//scale_vector(result, -1 / result[3], 3);
+	//scale_vector(result, 1 / result[3], 3);
 	//fprintf(stderr, "%f\n", result[2]);
-	result[3] = 1.0f;
-	vmatmul(camera->inverse_transform, result, point);
-	vmatmul(camera->transform, point, ray.direction);
-	i = -1;
-	min_hit = FLT_MAX;
+	result[3] = 0.0f;
+	//fprintf(stderr, "result %f %f %f\n", result[0], result[1], result[2]);
+	vmatmul(camera->inverse_view, result, point);
+	vmatmul(camera->view, point, ray.direction);
+	//fprintf(stderr, "direction %f %f %f\n", ray.direction[0], ray.direction[1], ray.direction[2]);
+	//vmatmul(camera->inverse_transform, minirt->light->direction, light_direction);
+	//min_hit = FLT_MAX;
 	minirt_pixel_put(display, x, y, 0x0);
-	ray.transform = camera->inverse_transform;
+	ray.transform = camera->inverse_view;
+	ray.inverse = camera->view;
 	closest = NULL;
 	cx = x;
 	cy = y;
-	static int count = 0;
+	float		direction[4];
+	direction[0] = ray.direction[0];
+	direction[1] = ray.direction[1];
+	direction[2] = ray.direction[2];
+	direction[3] = 0.0f;
+	i = -1;
+	ray.t = FLT_MAX;
+	ray.closest_t = FLT_MAX;
+	//float		min_hit = FLT_MAX;
+	vmatmul(camera->inverse_view, minirt->light->direction, light_direction);
 	while (++i < minirt->objects->size)
 	{
 		object = ft_darray_get(minirt->objects, i);
-		vmatmul(camera->inverse_transform, object->center, ray.object_center);
+		// ray.direction[0] = direction[0];
+		// ray.direction[1] = direction[1];
+		// ray.direction[2] = direction[2];
+		// ray.direction[3] = 0.0f;
+		vmatmul(camera->inverse_view, object->center, ray.object_center);
 		if (!object->intersect(object, &ray))
 			continue;
 		scale_vector(ray.direction, ray.t, 3);
-		if (ray.direction[2] < 0.0f || -ray.t >= min_hit)
-			continue;
+		// if (ray.direction[2] < 0.0f || ray.direction[2] > min_hit)
+		// 	continue;
+		ray.closest_t = ray.t;
 		add_vectors(ray.direction, ray.object_center, normal, 3);
-		min_hit =  -ray.t;
-		// if (!(count % 1))
-		// {
-		// 	//fprintf(stdout, "CLOSEST: %s %f %f %f\n", closest->name, ray.direction[0], ray.direction[1], min_hit);
-		// 	fprintf(stdout, "CLOSEST: %s %f\n", object->name, min_hit);
-		// }
-		hit_angle = dot_product(minirt->light->direction, normalize_vector(normal, 3), 3) * 0.7f + 0.3f;
+		hit_angle = dot_product(normalize_vector(normal, 3), light_direction, 3) * 0.5f + 0.5f;
+		//hit_angle = clamp(hit_angle, 0.0f, 1.0f);
 		closest = object;
-		//fprintf(stderr, "hit_color %f\n", hit_angle);
-		// scale_vector(result, 1 / result[3], 3);
-		// result[0] = ((result[0] + 1.0f) * (float)display->width) / 2.0f;
-		// result[1] = ((result[1] + 1.0f) * (float)display->height) / 2.0f;
-		//fprintf(stderr, "Color %f %f\n", object->color[0], object->color[1]);
 		cx = x;
 		cy = y;
+		ray.direction[0] = direction[0];
+		ray.direction[1] = direction[1];
+		ray.direction[2] = direction[2];
+		ray.direction[3] = 0.0f;
 	}
-	count++;
 	if (closest)
 	{
-		if (!(count % 1))
-		{
-			//fprintf(stdout, "CLOSEST: %s %f %f %f\n", closest->name, ray.direction[0], ray.direction[1], min_hit);
-			fprintf(stdout, "CLOSEST: %s %f %s %f\n", closest->name, min_hit, object->name, ray.direction[2]);
-		}
+		//fprintf(stdout, "closest %s %f\n", closest->name, min_hit);
 		hit_color[0] = hit_angle * minirt->light->brightness * minirt->light->color[0];
 		hit_color[1] = hit_angle * minirt->light->brightness * minirt->light->color[1];
 		hit_color[2] = hit_angle * minirt->light->brightness * minirt->light->color[2];
@@ -135,9 +154,7 @@ int	render(t_minirt *minirt)
 	{
 		j = -1;
 		while (++j < minirt->display->height)
-		{
 			draw_pixel(minirt, display, minirt->camera, i, j);
-		}
 	}
 	mlx_put_image_to_window(minirt->mlx, minirt->window, minirt->display->img, 0, 0);
 	return (0);

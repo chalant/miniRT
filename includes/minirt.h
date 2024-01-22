@@ -25,6 +25,8 @@ typedef struct	s_ray
 	float		object_direction[4];
 	float		direction[4];
 	t_matrix	*transform;
+	t_matrix	*inverse;
+	float		closest_t;
 	float		t;
 }				t_ray;
 
@@ -36,8 +38,8 @@ typedef struct	s_transform
 
 typedef struct	s_camera
 {
-	t_matrix		*transform;
-	t_matrix		*inverse_transform;
+	t_matrix		*view;
+	t_matrix		*inverse_view;
 	t_ray			*ray;
 	float			*orientation;
 	float			*ray_direction;
@@ -63,7 +65,6 @@ typedef struct	s_plane
 {
 	float		normal[4];
 	float		point[4];
-	float		color[4];
 }				t_plane;
 
 typedef struct	s_object
@@ -81,7 +82,7 @@ typedef struct	s_object
 	void			*shape;
 	float			*center;
 	int				(*intersect)(struct s_object *object, t_ray *ray);
-	int				(*transform)(struct s_object *object, t_matrix *transform);
+	int				(*transform)(struct s_object *object, t_matrix *transform, float *result);
 	float			color[4];
 	int				light;
 	float			base_color;

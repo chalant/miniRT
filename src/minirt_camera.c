@@ -44,34 +44,63 @@ float	*choose_vector(float vec1[3], float vec2[3], float vec3[3], float orientat
 		max = vec2;
 		max_v = v2;
 	}
-	if (max_v < fabsf(dot_product(vec2, orientation, 3) - 1.0f))
+	if (max_v < fabsf(dot_product(vec3, orientation, 3) - 1.0f))
 		max = vec3;
 	return (max);
+}
+
+int print_matrix2(t_matrix *matrix)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	while (++i < matrix->rows)
+	{
+		j = -1;
+		while (++j < matrix->cols)
+			fprintf(stderr, "%f ", matrix->points[i][j]);
+		fprintf(stderr, "\n");
+	}
+	return (0);
 }
 
 //todo: handle errors.
 int	set_camera_transform(t_camera *camera)
 {
 	t_matrix	*tmp;
-	float		*vec;
+	// float		*vec;
 	float		normal[3];
+	float		right[3];
+	float		up[3];
 
+	up[0] = 0;
+	up[1] = 1;
+	up[2] = 0;
 	if (homogeneous_matrix(&tmp, 3, 3) == -1)
 		return (-1);
 	set_diagonal(tmp, 1.0f);
 	normalize_vector(camera->orientation, 3);
-	vec = choose_vector(tmp->points[0], tmp->points[1], tmp->points[1], camera->orientation);
-	cross_product(vec, camera->orientation, normal);
-	if (homogeneous_matrix(&camera->inverse_transform, 3, 3) == -1)
+	// vec = choose_vector(tmp->points[0], tmp->points[1], tmp->points[1], camera->orientation);
+	cross_product(up, camera->orientation, right);
+	normalize_vector(right, 3);
+	cross_product(camera->orientation, right, normal);
+	if (homogeneous_matrix(&camera->inverse_view, 3, 3) == -1)
 		return (-1);
-	if (homogeneous_matrix(&camera->transform, 3, 3) == -1)
+	if (homogeneous_matrix(&camera->view, 3, 3) == -1)
 		return (-1);
-	set_col(camera->transform, vec, 0, 3);
-	set_col(camera->transform, normal, 1, 3);
-	set_col(camera->transform, camera->orientation, 2, 3);
-	camera->transform->points[1][1] = 1.0f;
-	set_vtranslate(camera->transform, camera->origin);
-	invert_matrix(camera->transform, camera->inverse_transform, tmp, 4);
+	set_col(camera->view, right, 0, 3);
+	// fprintf(stderr, "vec %f %f %f\n", vec[0], vec[1], vec[2]);
+	set_col(camera->view, normal, 1, 3);
+	fprintf(stderr, "normal %f %f %f\n", normal[0], normal[1], normal[2]);
+	set_col(camera->view, camera->orientation, 2, 3);
+	fprintf(stderr, "orientation %f %f %f\n", camera->orientation[0], camera->orientation[1], camera->orientation[2]);
+	set_vtranslate(camera->view, camera->origin);
+	camera->view->points[1][1] = 1.0f;
+	camera->view->points[2][2] = -1.0f;
+	invert_matrix(camera->view, camera->inverse_view, tmp, 4);
+	print_matrix2(camera->view);
+	print_matrix2(camera->inverse_view);
 	delete_matrix(tmp);
 	return (0);
 }

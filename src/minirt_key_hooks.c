@@ -33,9 +33,10 @@ void	set_translate(t_matrix *matrix, float x, float y, float z)
 
 int	rotate_around(t_minirt *fdf, t_matrix *rot)
 {
-	matmul(fdf->camera->transform, rot, fdf->tmp, 4);
-	matrix_copy(fdf->tmp, fdf->camera->transform, 4);
-	invert_matrix(fdf->camera->transform, fdf->camera->inverse_transform, fdf->tmp, 4);
+	matmul(fdf->camera->view, rot, fdf->tmp, 4);
+	matrix_copy(fdf->tmp, fdf->camera->view, 4);
+	//inplace_matmul(rot, fdf->camera->view, fdf->tmp, 3);
+	invert_matrix(fdf->camera->view, fdf->camera->inverse_view, fdf->tmp, 4);
 	return (0);
 }
 
@@ -43,47 +44,45 @@ int	key_press_hook(int code, t_minirt *fdf)
 {
 	if (code == RL)
 	{
-		rotate_around(fdf, fdf->rotations->y_axis);	
-		//rotate_around(fdf, fdf->rotations->y_axis);
+		rotate_around(fdf, fdf->rev_rotations->y_axis);	
 	}
 	else if (code == RR)
 	{
-		rotate_around(fdf, fdf->rev_rotations->y_axis);
-		//rotate_around(fdf, fdf->rev_rotations->y_axis);
+		rotate_around(fdf, fdf->rotations->y_axis);
 	}
 	else if (code == RU)
 	{
-		rotate_around(fdf, fdf->rotations->x_axis);
+		rotate_around(fdf, fdf->rev_rotations->x_axis);
 	}
 	else if (code == RD)
 	{
-		rotate_around(fdf, fdf->rev_rotations->x_axis);
+		rotate_around(fdf, fdf->rotations->x_axis);
 	}
 	else if (code == TL)
 	{
 		//rotate_around(fdf, fdf->rotations->z_axis);	
-		matmul(fdf->camera->transform, fdf->rev_translations->x_axis, fdf->tmp, 4);
-		matrix_copy(fdf->tmp, fdf->camera->transform, 4);
-		invert_matrix(fdf->camera->transform, fdf->camera->inverse_transform, fdf->tmp, 4);
+		matmul(fdf->camera->view, fdf->translations->x_axis, fdf->tmp, 4);
+		matrix_copy(fdf->tmp, fdf->camera->view, 4);
+		invert_matrix(fdf->camera->view, fdf->camera->inverse_view, fdf->tmp, 4);
 	}
 	else if (code == TR)
 	{
 		//rotate_around(fdf, fdf->rev_rotations->z_axis);	
-		matmul(fdf->camera->transform, fdf->translations->x_axis, fdf->tmp, 4);
-		matrix_copy(fdf->tmp, fdf->camera->transform, 4);
-		invert_matrix(fdf->camera->transform, fdf->camera->inverse_transform, fdf->tmp, 4);
+		matmul(fdf->camera->view, fdf->rev_translations->x_axis, fdf->tmp, 4);
+		matrix_copy(fdf->tmp, fdf->camera->view, 4);
+		invert_matrix(fdf->camera->view, fdf->camera->inverse_view, fdf->tmp, 4);
 	}
 	else if (code == TU)
 	{
-		matmul(fdf->camera->transform, fdf->rev_translations->z_axis, fdf->tmp, 4);
-		matrix_copy(fdf->tmp, fdf->camera->transform, 4);
-		invert_matrix(fdf->camera->transform, fdf->camera->inverse_transform, fdf->tmp, 4);
+		matmul(fdf->camera->view, fdf->translations->z_axis, fdf->tmp, 4);
+		matrix_copy(fdf->tmp, fdf->camera->view, 4);
+		invert_matrix(fdf->camera->view, fdf->camera->inverse_view, fdf->tmp, 4);
 	}
 	else if (code == TD)
 	{
-		matmul(fdf->camera->transform, fdf->translations->z_axis, fdf->tmp, 4);
-		matrix_copy(fdf->tmp, fdf->camera->transform, 4);
-		invert_matrix(fdf->camera->transform, fdf->camera->inverse_transform, fdf->tmp, 4);
+		matmul(fdf->camera->view, fdf->rev_translations->z_axis, fdf->tmp, 4);
+		matrix_copy(fdf->tmp, fdf->camera->view, 4);
+		invert_matrix(fdf->camera->view, fdf->camera->inverse_view, fdf->tmp, 4);
 	}
 	return (0);
 }

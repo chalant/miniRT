@@ -57,26 +57,18 @@ int	hit_plane(t_object *object, t_ray *ray)
 	float		denominator;
 	float		numerator;
 	float		t;
-	float		tmp[4];
-	float		tmp2[4];
 
 	plane = (t_plane *)object->shape;
-	vmatmul(ray->transform, plane->normal, tmp);
-	vmatmul(ray->inverse, plane->normal, tmp2);
-	normalize_vector(tmp, 3);
-	normalize_vector(tmp2, 3);
-	denominator = dot_product(tmp2, ray->direction, 3);
+	denominator = dot_product(plane->normal, ray->direction, 3);
 	if (fabsf(denominator) < 0.0001f)
 		return (0);
-	numerator = dot_product(tmp, ray->object_center, 3);
+	numerator = dot_product(plane->normal, ray->object_center, 3);
 	t = (numerator / denominator);
 	if (t < 0.0f)
 		return (0);
-	//fprintf(stderr, "t %f\n", t);
 	if (t > ray->closest_t)
 		return (0);
 	ray->t = t;
-	// delete_matrix(matrix);
 	return (1);
 }
 

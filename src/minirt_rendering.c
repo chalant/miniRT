@@ -73,16 +73,19 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,in
 	float		cx;
 	float		cy;
 	float		normal[4];
-	float		light_direction[4];
 
 	to_screen_space(minirt->display, point, x, y);
 	vmatmul(minirt->world_space, point, result);
-	//scale_vector(result, 1 / result[3], 3);
+	scale_vector(result, 1 / result[3], 3);
+	normalize_vector(result, 3);
 	//fprintf(stderr, "%f\n", result[2]);
 	result[3] = 0.0f;
 	//fprintf(stderr, "result %f %f %f\n", result[0], result[1], result[2]);
-	vmatmul(camera->inverse_view, result, point);
-	vmatmul(camera->view, point, ray.direction);
+	//puts it back to world space.
+	vmatmul(camera->inverse_view, result, ray.direction);
+	//moves point to world camera space (view space)
+	//todo: need to multiply the basis by the camera translation.
+	//vmatmul(camera->view, result, ray.direction);
 	//fprintf(stderr, "direction %f %f %f\n", ray.direction[0], ray.direction[1], ray.direction[2]);
 	//vmatmul(camera->inverse_transform, minirt->light->direction, light_direction);
 	//min_hit = FLT_MAX;
@@ -100,24 +103,23 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,in
 	i = -1;
 	ray.t = FLT_MAX;
 	ray.closest_t = FLT_MAX;
+	ray.origin = camera->origin;
 	//float		min_hit = FLT_MAX;
-	vmatmul(camera->inverse_view, minirt->light->direction, light_direction);
 	while (++i < minirt->objects->size)
 	{
 		object = ft_darray_get(minirt->objects, i);
-		// ray.direction[0] = direction[0];
-		// ray.direction[1] = direction[1];
-		// ray.direction[2] = direction[2];
-		// ray.direction[3] = 0.0f;
-		vmatmul(camera->inverse_view, object->center, ray.object_center);
+		//vmatmul(camera->inverse_view, object->center, ray.object_center);
+		subtract_vectors(camera->origin, object->center, ray.object_center, 3);
 		if (!object->intersect(object, &ray))
 			continue;
 		scale_vector(ray.direction, ray.t, 3);
 		// if (ray.direction[2] < 0.0f || ray.direction[2] > min_hit)
 		// 	continue;
 		ray.closest_t = ray.t;
-		add_vectors(ray.direction, ray.object_center, normal, 3);
-		hit_angle = dot_product(normalize_vector(normal, 3), light_direction, 3) * 0.5f + 0.5f;
+		//subtract_vectors(camera->origin, ray.direction, ray.direction, 3);
+		scale_vector(ray.direction, ray.t, 3);
+		subtract_vectors(ray.direction, object->center, normal, 3);
+		hit_angle = dot_product(normalize_vector(normal, 3), minirt->light->direction, 3) * 0.5f + 0.5f;
 		//hit_angle = clamp(hit_angle, 0.0f, 1.0f);
 		closest = object;
 		cx = x;

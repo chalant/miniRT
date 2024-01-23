@@ -20,10 +20,10 @@ typedef struct	s_light
 
 typedef struct	s_ray
 {
-	float		origin[4];
 	float		object_center[4];
 	float		object_direction[4];
 	float		direction[4];
+	float		*origin;
 	t_matrix	*transform;
 	t_matrix	*inverse;
 	float		closest_t;
@@ -38,6 +38,7 @@ typedef struct	s_transform
 
 typedef struct	s_camera
 {
+	t_matrix		*basis;
 	t_matrix		*view;
 	t_matrix		*inverse_view;
 	t_ray			*ray;
@@ -164,7 +165,9 @@ int		set_translations(t_minirt *fdf, float x, float y, float z);
 
 float	to_rad(float degrees);
 int		set_camera_transform(t_camera *camera);
+int		look_at(t_camera *camera, t_minirt *fdf);
 int		perspective_projector(t_matrix **matrix, t_display *display, t_camera *camera);
 int		render(t_minirt *minirt);
+void	set_translate(t_matrix *matrix, float x, float y, float z);
 
 #endif

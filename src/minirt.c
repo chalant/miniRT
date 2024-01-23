@@ -110,10 +110,10 @@ int	load_scene(t_minirt *minirt)
 	minirt->camera->orientation[2] = -1.0f;
 	minirt->camera->orientation[3] = 1.0f;
 	normalize_vector(minirt->camera->orientation, 3);
-	minirt->camera->origin = ft_calloc(3, sizeof(float));
 	minirt->camera->origin[0] = 0.0f;
 	minirt->camera->origin[1] = 0.0f;
 	minirt->camera->origin[2] = 1.0f;
+	minirt->camera->origin[3] = 1.0f;
 	minirt->camera->ray_direction = ft_calloc(4, sizeof(float));
 	minirt->camera->ray_direction[3] = 0.0f;
 	if (set_camera_transform(minirt->camera) == -1)

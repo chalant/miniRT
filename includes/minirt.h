@@ -43,8 +43,10 @@ typedef struct	s_camera
 	t_matrix		*inverse_view;
 	t_ray			*ray;
 	float			*orientation;
+	float			right[3];
+	float			up[3];
 	float			*ray_direction;
-	float			*origin;
+	float			origin[4];
 	float			fov;
 	float			near;
 	float			far;
@@ -144,6 +146,10 @@ typedef struct	s_minirt
 
 	t_display		*display;
 	t_camera		*camera;
+
+	float			x[4];
+	float			y[4];
+	float			z[4];
 
 	int				rendered;
 }				t_minirt;

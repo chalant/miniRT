@@ -67,27 +67,26 @@ int print_matrix2(t_matrix *matrix)
 
 int	look_at(t_camera *camera, t_minirt *fdf)
 {
-	float		normal[3];
-	float		right[3];
-	float		up[3];
+	//float		up[3];
+	float		tmp[4];
 
-	up[0] = 0;
-	up[1] = 1;
-	up[2] = 0;
-	normalize_vector(camera->orientation, 3);
-	// vec = choose_vector(tmp->points[0], tmp->points[1], tmp->points[1], camera->orientation);
-	cross_product(up, camera->orientation, right);
-	normalize_vector(right, 3);
-	cross_product(camera->orientation, right, normal);
-	normalize_vector(normal, 3);
-	fprintf(stderr, "%f %f\n", right[0], right[1]);
-	set_col(camera->view, right, 0, 3);
-	set_col(camera->view, normal, 1, 3);
-	set_col(camera->view, camera->orientation, 2, 3);
-	set_translate(camera->view, -camera->origin[0], -camera->origin[2], -camera->origin[3]);
+	// up[0] = 0;
+	// up[1] = 1;
+	// up[2] = 0;
+	// normalize_vector(camera->orientation, 3);
+	// // vec = choose_vector(tmp->points[0], tmp->points[1], tmp->points[1], camera->orientation);
+	// cross_product(up, camera->orientation, camera->right);
+	// normalize_vector(camera->right, 3);
+	// cross_product(camera->orientation, camera->right, camera->up);
+	// normalize_vector(camera->up, 3);
+	// // fprintf(stderr, "DOT %f %f\n", dot_product(camera->orientation, right, 3), dot_product(camera->orientation, normal, 3));
+	// set_col(camera->basis, camera->right, 0, 3);
+	// set_col(camera->basis, camera->up, 1, 3);
+	// set_col(camera->basis, camera->orientation, 2, 3);
+	vmatmul(camera->basis, camera->origin, tmp);
+	matrix_copy(camera->basis, camera->view, 3);
+	set_translate(camera->view, -camera->origin[0], -camera->origin[1], -camera->origin[2]);
 	invert_matrix(camera->view, camera->inverse_view, fdf->tmp, 4);
-	print_matrix2(camera->view);
-	print_matrix2(camera->inverse_view);
 	return (0);
 }
 
@@ -96,35 +95,31 @@ int	set_camera_transform(t_camera *camera)
 {
 	t_matrix	*tmp;
 	// float		*vec;
-	float		normal[3];
-	float		right[3];
 	float		up[3];
 
-	up[0] = 0;
-	up[1] = 1;
-	up[2] = 0;
+	up[0] = 0.0f;
+	up[1] = 1.0f;
+	up[2] = 0.0f;
 	if (homogeneous_matrix(&tmp, 3, 3) == -1)
 		return (-1);
 	set_diagonal(tmp, 1.0f);
 	normalize_vector(camera->orientation, 3);
 	// vec = choose_vector(tmp->points[0], tmp->points[1], tmp->points[1], camera->orientation);
-	cross_product(up, camera->orientation, right);
-	normalize_vector(right, 3);
-	cross_product(camera->orientation, right, normal);
-	normalize_vector(normal, 3);
+	cross_product(up, camera->orientation, camera->right);
+	normalize_vector(camera->right, 3);
+	cross_product(camera->orientation, camera->right, camera->up);
+	normalize_vector(camera->up, 3);
 	if (homogeneous_matrix(&camera->basis, 2, 2) == -1)
 		return (-1);
 	if (homogeneous_matrix(&camera->inverse_view, 3, 3) == -1)
 		return (-1);
 	if (homogeneous_matrix(&camera->view, 3, 3) == -1)
 		return (-1);
-	set_col(camera->basis, right, 0, 3);
-	set_col(camera->basis, normal, 1, 3);
+	set_col(camera->basis, camera->right, 0, 3);
+	set_col(camera->basis, camera->up, 1, 3);
 	set_col(camera->basis, camera->orientation, 2, 3);
 	matrix_copy(camera->basis, camera->view, 3);
-	set_translate(camera->view, -camera->origin[0], -camera->origin[2], -camera->origin[3]);
-	// camera->view->points[1][1] = 1.0f;
-	// camera->view->points[2][2] = -1.0f;
+	set_translate(camera->view, -camera->origin[0], -camera->origin[2], -camera->origin[2]);
 	invert_matrix(camera->view, camera->inverse_view, tmp, 4);
 	print_matrix2(camera->view);
 	print_matrix2(camera->inverse_view);

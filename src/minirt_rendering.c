@@ -155,8 +155,11 @@ int	render(t_minirt *minirt)
 	while (++i < minirt->display->width)
 	{
 		j = -1;
+		if ((i % 2))
+			continue;
 		while (++j < minirt->display->height)
-			draw_pixel(minirt, display, minirt->camera, i, j);
+			if (!(j % 2))
+				draw_pixel(minirt, display, minirt->camera, i, j);
 	}
 	mlx_put_image_to_window(minirt->mlx, minirt->window, minirt->display->img, 0, 0);
 	return (0);

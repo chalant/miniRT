@@ -79,6 +79,22 @@ int	print_matrix(t_matrix *matrix)
 	return (0);
 }
 
+int	normalize_col(t_matrix *matrix, int col)
+{
+	int		i;
+	int		mag;
+
+	i = -1;
+	mag = 0;
+	while (++i < matrix->rows)
+		mag += matrix->points[i][col] * matrix->points[i][col];
+	mag = sqrt(mag);
+	i = -1;
+	while (++i < matrix->rows)
+		matrix->points[i][col] /= mag;
+	return (0);
+}
+
 int	mouse_update(int x, int y, t_minirt *minirt)
 {
 	float	tmp[3];
@@ -86,23 +102,23 @@ int	mouse_update(int x, int y, t_minirt *minirt)
 	tmp[0] = (float)x - minirt->mouse.x;
 	tmp[1] = (float)y - minirt->mouse.y;
 	tmp[2] = 0.0f;
-	//normalize_vector(tmp, tmp, 3);
+	normalize_vector(tmp, tmp, 3);
 	//to_screen_space(minirt->display, tmp, x, y);
 	if (isnan(tmp[0]) || isnan(tmp[1]))
 		return (0);
 	printf("hello %f %f\n", tmp[0], tmp[1]);
 	homogeneous_matrix(&minirt->mouse.direction, 2, 2);
 	minirt->mouse.direction->points[0][0] = 1.0f;
-	if (tmp[1] < 0.0f)
-		minirt->mouse.direction->points[1][1] = -1.0f;
-	else
-		minirt->mouse.direction->points[1][1] = 1.0f;
+	minirt->mouse.direction->points[1][1] = tmp[1];
 	minirt->mouse.direction->points[2][2] = 1.0f;
 	//inplace_matmul(minirt->rotations->x_axis, minirt->mouse.direction, minirt->tmp, 3);
 	inplace_matmul(minirt->rotations->y_axis, minirt->mouse.direction, minirt->tmp, 3);
 	print_matrix(minirt->mouse.direction);
 	matmul(minirt->mouse.direction, minirt->camera->basis, minirt->tmp, 3);
 	matrix_copy(minirt->tmp, minirt->camera->basis, 3);
+	normalize_col(minirt->camera->basis, 0);
+	normalize_col(minirt->camera->basis, 1);
+	normalize_col(minirt->camera->basis, 2);
 	look_at(minirt->camera, minirt);
 	minirt->mouse.x = x;
 	minirt->mouse.y = y;

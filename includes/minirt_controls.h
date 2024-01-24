@@ -3,9 +3,9 @@
 
 typedef struct	s_mouse
 {
-	float	direction[2];
-	float	x;
-	float	y;
+	t_matrix	*direction;
+	float		x;
+	float		y;
 }	t_mouse;
 
 typedef struct	s_key

@@ -26,11 +26,11 @@ int	minirt_init(t_minirt *fdf)
 	fdf->transforms = NULL;
 	fdf->centering = NULL;
 	fdf->tmp = NULL;
-	fdf->zooming_in = NULL;
-	fdf->zooming_out = NULL;
 	fdf->target = NULL;
 	fdf->display = NULL;
 	fdf->objects = malloc(sizeof(t_darray));
+	fdf->mouse.x = 0;
+	fdf->mouse.y = 0;
 	if (!fdf->objects)
 		return (-1);
 	if (ft_darray_init(fdf->objects, sizeof(t_object), 10) < 0)

@@ -9,6 +9,7 @@
 # include "minirt_colors.h"
 # include "libft.h"
 # include <mlx.h>
+# include "minirt_controls.h"
 
 typedef struct	s_light
 {
@@ -32,9 +33,7 @@ typedef struct	s_camera
 	t_matrix		*basis;
 	t_matrix		*view;
 	t_matrix		*inverse_view;
-	t_ray			*ray;
 	float			*orientation;
-	float			*ray_direction;
 	float			right[3];
 	float			up[3];
 	float			origin[4];
@@ -127,8 +126,6 @@ typedef struct	s_minirt
 	t_matrix		*transforms;
 	t_matrix		*centering;
 	t_matrix		*tmp;
-	t_matrix		*zooming_in;
-	t_matrix		*zooming_out;
 
 	t_light			*light;
 	t_darray		*objects;
@@ -136,6 +133,7 @@ typedef struct	s_minirt
 
 	t_display		*display;
 	t_camera		*camera;
+	t_mouse			mouse;
 
 	float			x[4];
 	float			y[4];

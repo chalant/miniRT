@@ -56,7 +56,6 @@ int	rotate_around(t_minirt *fdf, t_matrix *rot)
 {
 	matmul(fdf->camera->basis, rot, fdf->tmp, 3);
 	matrix_copy(fdf->tmp, fdf->camera->basis, 3);
-	print_matrix3(fdf->camera->basis);
 	return (0);
 }
 
@@ -67,7 +66,7 @@ int	key_press_hook(int code, t_minirt *fdf)
 	if (code == RL)
 	{
 
-		rotate_around(fdf, fdf->rev_rotations->y_axis);
+		rotate_around(fdf, fdf->rotations->y_axis);
 		look_at(fdf->camera, fdf);
 	}
 	else if (code == RR)

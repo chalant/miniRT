@@ -63,8 +63,57 @@ int	mlx_setup(t_minirt *minirt)
 	return (1);
 }
 
+int	print_matrix(t_matrix *matrix)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	while (++i < matrix->rows)
+	{
+		j = -1;
+		while (++j < matrix->cols)
+			fprintf(stderr, "%f ", matrix->points[i][j]);
+		fprintf(stderr, "\n");
+	}
+	return (0);
+}
+
+int	mouse_update(int x, int y, t_minirt *minirt)
+{
+	float	tmp[3];
+
+	tmp[0] = (float)x - minirt->mouse.x;
+	tmp[1] = (float)y - minirt->mouse.y;
+	tmp[2] = 0.0f;
+	//normalize_vector(tmp, tmp, 3);
+	//to_screen_space(minirt->display, tmp, x, y);
+	if (isnan(tmp[0]) || isnan(tmp[1]))
+		return (0);
+	printf("hello %f %f\n", tmp[0], tmp[1]);
+	homogeneous_matrix(&minirt->mouse.direction, 2, 2);
+	minirt->mouse.direction->points[0][0] = 1.0f;
+	if (tmp[1] < 0.0f)
+		minirt->mouse.direction->points[1][1] = -1.0f;
+	else
+		minirt->mouse.direction->points[1][1] = 1.0f;
+	minirt->mouse.direction->points[2][2] = 1.0f;
+	//inplace_matmul(minirt->rotations->x_axis, minirt->mouse.direction, minirt->tmp, 3);
+	inplace_matmul(minirt->rotations->y_axis, minirt->mouse.direction, minirt->tmp, 3);
+	print_matrix(minirt->mouse.direction);
+	matmul(minirt->mouse.direction, minirt->camera->basis, minirt->tmp, 3);
+	matrix_copy(minirt->tmp, minirt->camera->basis, 3);
+	look_at(minirt->camera, minirt);
+	minirt->mouse.x = x;
+	minirt->mouse.y = y;
+	//fprintf(stderr, "hello %f %f\n", minirt->mouse.direction->points[0][0], minirt->mouse.direction->points[1][1]);
+	delete_matrix(minirt->mouse.direction);
+	return (0);
+}
+
 int	set_hooks(t_minirt *minirt)
 {
+	mlx_hook(minirt->window, 6, 0, mouse_update, minirt);
 	mlx_hook(minirt->window, 2, 1L << 0, key_press_hook, minirt);
 	mlx_hook(minirt->window, 3, 1L << 1, key_release_hook, minirt);
 	mlx_hook(minirt->window, 17, 0, close_program, minirt);
@@ -114,8 +163,6 @@ int	load_scene(t_minirt *minirt)
 	minirt->camera->origin[1] = 0.0f;
 	minirt->camera->origin[2] = 1.0f;
 	minirt->camera->origin[3] = 1.0f;
-	minirt->camera->ray_direction = ft_calloc(4, sizeof(float));
-	minirt->camera->ray_direction[3] = 0.0f;
 	if (set_camera_transform(minirt->camera) == -1)
 		return (-1);
 	create_sphere(&new, 0.3f, "red");
@@ -195,6 +242,8 @@ int	main(int argc, char *argv[])
 		return (0);
 	minirt_init(&minirt);
 	minirt.display = &display;
+	minirt.mouse.x = 0.0f;
+	minirt.mouse.y = 0.0f;
 	set_variables(&minirt);
 	mlx_setup(&minirt);
 	set_hooks(&minirt);

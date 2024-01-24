@@ -21,18 +21,11 @@ typedef struct	s_light
 typedef struct	s_ray
 {
 	float		object_center[4];
-	float		object_direction[4];
 	float		direction[4];
 	float		*origin;
 	float		closest_t;
 	float		t;
 }				t_ray;
-
-typedef struct	s_transform
-{
-	float	*t_origin;
-	float	*t_rev_origin;
-}	t_transform;
 
 typedef struct	s_camera
 {
@@ -41,9 +34,9 @@ typedef struct	s_camera
 	t_matrix		*inverse_view;
 	t_ray			*ray;
 	float			*orientation;
+	float			*ray_direction;
 	float			right[3];
 	float			up[3];
-	float			*ray_direction;
 	float			origin[4];
 	float			fov;
 	float			near;
@@ -70,31 +63,30 @@ typedef struct	s_plane
 
 typedef struct	s_object
 {
-	t_matrix		*transforms;
-	t_matrix		*rev_transforms;
 	t_matrix		*body;
 	t_matrix		*result;
-	t_matrix		*projection;
-	t_matrix		*t_center;
-	t_matrix		*rev_t_center;
 	t_matrix		*tmp;
 
 	const char		*name;
 	void			*shape;
 	float			*center;
+	int				id;
 	int				(*intersect)(struct s_object *object, t_ray *ray);
 	int				(*transform)(struct s_object *object, t_matrix *transform, float *result);
 	float			color[4];
-	int				light;
-	float			base_color;
-	float			intensity;
-	float			lightness;
-	float			light_base;
-	float			saturation;
-	float			sat_base;
 	int				width;
 	int				height;
 }				t_object;
+
+typedef struct	s_hit
+{
+	t_object	*object;
+	float		color[4];
+	float		normal[3];
+	float		point[3];
+	float		distance;
+	int			*screen_coords;
+}	t_hit;
 
 typedef struct	s_transforms_3d
 {

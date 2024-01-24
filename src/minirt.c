@@ -95,8 +95,8 @@ int	load_scene(t_minirt *minirt)
 	minirt->light->direction[2] = 0.0f;
 	minirt->light->direction[3] = 0.0f;
 	//scale_vector(minirt->light->direction, -1.0f, 3);
-	normalize_vector(minirt->light->direction, 3);
-	scale_vector(minirt->light->direction, -1.0f, 3);
+	normalize_vector(minirt->light->direction, minirt->light->direction, 3);
+	scale_vector(minirt->light->direction, -1.0f, minirt->light->direction, 3);
 	//todo: the light direction should be the negative of the position, normalized.
 	minirt->light->brightness = 1.0f;
 	to_color(0x00ffffff, minirt->light->color);
@@ -109,7 +109,7 @@ int	load_scene(t_minirt *minirt)
 	minirt->camera->orientation[1] = 0.0f;
 	minirt->camera->orientation[2] = -1.0f;
 	minirt->camera->orientation[3] = 1.0f;
-	normalize_vector(minirt->camera->orientation, 3);
+	normalize_vector(minirt->camera->orientation, minirt->camera->orientation, 3);
 	minirt->camera->origin[0] = 0.0f;
 	minirt->camera->origin[1] = 0.0f;
 	minirt->camera->origin[2] = 1.0f;

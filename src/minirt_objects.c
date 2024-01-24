@@ -92,7 +92,7 @@ int	create_plane(t_object *object, float normal[4])
 	plane->normal[1] = normal[1];
 	plane->normal[2] = -normal[2];
 	plane->normal[3] = 0.0f;
-	normalize_vector(plane->normal, 3);
+	normalize_vector(plane->normal, plane->normal, 3);
 	object->shape = plane;
 	object->intersect = hit_plane;
 	object->transform = transform_plane;

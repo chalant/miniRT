@@ -105,12 +105,12 @@ int	set_camera_transform(t_camera *camera)
 	if (homogeneous_matrix(&tmp, 3, 3) == -1)
 		return (-1);
 	set_diagonal(tmp, 1.0f);
-	normalize_vector(camera->orientation, 3);
+	normalize_vector(camera->orientation, camera->orientation, 3);
 	// vec = choose_vector(tmp->points[0], tmp->points[1], tmp->points[1], camera->orientation);
 	cross_product(up, camera->orientation, camera->right);
-	normalize_vector(camera->right, 3);
+	normalize_vector(camera->right, camera->right, 3);
 	cross_product(camera->orientation, camera->right, camera->up);
-	normalize_vector(camera->up, 3);
+	normalize_vector(camera->up, camera->up, 3);
 	if (homogeneous_matrix(&camera->basis, 2, 2) == -1)
 		return (-1);
 	if (homogeneous_matrix(&camera->inverse_view, 3, 3) == -1)

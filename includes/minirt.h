@@ -24,8 +24,6 @@ typedef struct	s_ray
 	float		object_direction[4];
 	float		direction[4];
 	float		*origin;
-	t_matrix	*transform;
-	t_matrix	*inverse;
 	float		closest_t;
 	float		t;
 }				t_ray;

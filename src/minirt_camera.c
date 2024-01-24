@@ -84,9 +84,11 @@ int	look_at(t_camera *camera, t_minirt *fdf)
 	// set_col(camera->basis, camera->up, 1, 3);
 	// set_col(camera->basis, camera->orientation, 2, 3);
 	vmatmul(camera->basis, camera->origin, tmp);
-	matrix_copy(camera->basis, camera->view, 3);
+	invert_matrix(camera->basis, camera->view, fdf->tmp, 3);
 	set_translate(camera->view, -camera->origin[0], -camera->origin[1], -camera->origin[2]);
-	invert_matrix(camera->view, camera->inverse_view, fdf->tmp, 4);
+	matrix_copy(camera->basis, camera->inverse_view, 3);
+	set_translate(camera->inverse_view, camera->origin[0], camera->origin[1], camera->origin[2]);
+	//invert_matrix(camera->view, camera->inverse_view, fdf->tmp, 4);
 	return (0);
 }
 

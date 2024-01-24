@@ -80,8 +80,6 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,in
 	normalize_vector(result, 3);
 	//fprintf(stderr, "%f\n", result[2]);
 	result[3] = 0.0f;
-	//fprintf(stderr, "result %f %f %f\n", result[0], result[1], result[2]);
-	//puts it back to world space.
 	vmatmul(camera->inverse_view, result, ray.direction);
 	//moves point to world camera space (view space)
 	//todo: need to multiply the basis by the camera translation.
@@ -90,8 +88,6 @@ int	draw_pixel(t_minirt *minirt, t_display *display, t_camera *camera, int x ,in
 	//vmatmul(camera->inverse_transform, minirt->light->direction, light_direction);
 	//min_hit = FLT_MAX;
 	minirt_pixel_put(display, x, y, 0x0);
-	ray.transform = camera->inverse_view;
-	ray.inverse = camera->view;
 	closest = NULL;
 	cx = x;
 	cy = y;

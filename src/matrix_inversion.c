@@ -24,7 +24,7 @@ void invert_matrix(t_matrix *matrix, t_matrix *result, t_matrix *identity, int n
 
 	set_matrix(identity, 0.0f);
 	set_diagonal(identity, 1.0f);
-	matrix_copy(matrix, result, 4);
+	matrix_copy(matrix, result, n);
 	i = -1;
 	while (++i < n) 
 	{

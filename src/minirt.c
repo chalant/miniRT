@@ -144,14 +144,22 @@ int	load_scene(t_minirt *minirt)
 	new.center[2] = -1.0f;
 	new.center[3] = 1.0f;
 	ft_darray_append(minirt->objects, &new);
-	create_plane(&new, (float[4]){0.0f, -1.0f, 0.0f, 0.0f});
+	create_plane(&new, (float[4]){0.0f, 1.0f, 0.0f, 0.0f});
 	new.center = ft_calloc(4, sizeof(float));
 	to_color(0x00ffffff, new.color);
 	new.center[0] = 0.0f;
-	new.center[1] = 1.0f;
-	new.center[2] = 2.0f;
+	new.center[1] = 2.0f;
+	new.center[2] = 0.0f;
 	new.center[3] = 1.0f;
 	ft_darray_append(minirt->objects, &new);
+	// create_plane(&new, (float[4]){1.0f, 0.0f, 0.0f, 0.0f});
+	// new.center = ft_calloc(4, sizeof(float));
+	// to_color(0x00ffff00, new.color);
+	// new.center[0] = 2.0f;
+	// new.center[1] = 0.0f;
+	// new.center[2] = 0.0f;
+	// new.center[3] = 1.0f;
+	// ft_darray_append(minirt->objects, &new);
 	return (1);
 }
 

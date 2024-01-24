@@ -67,12 +67,12 @@ int	key_press_hook(int code, t_minirt *fdf)
 	if (code == RL)
 	{
 
-		rotate_around(fdf, fdf->rotations->y_axis);
+		rotate_around(fdf, fdf->rev_rotations->y_axis);
 		look_at(fdf->camera, fdf);
 	}
 	else if (code == RR)
 	{
-		rotate_around(fdf, fdf->rev_rotations->y_axis);
+		rotate_around(fdf, fdf->rotations->y_axis);
 		look_at(fdf->camera, fdf);
 
 	}
@@ -92,15 +92,22 @@ int	key_press_hook(int code, t_minirt *fdf)
 	}
 	else if (code == TL)
 	{
-		vmatmul(fdf->rev_translations->x_axis, fdf->camera->origin, tmp);
-		copy_vector(tmp, fdf->camera->origin, 4);
+		tmp[0] = 1.0f;
+		tmp[1] = 0.0f;
+		tmp[2] = 0.0f;
+		vmatmul(fdf->camera->basis, tmp, fdf->camera->orientation);
+		//fdf->camera->orientation[0] = -1.0f * fdf->camera->orientation[0];
+		add_vectors(fdf->camera->origin, scale_vector(fdf->camera->orientation, 0.1f, 3), fdf->camera->origin, 3);
 		look_at(fdf->camera, fdf);
 
 	}
 	else if (code == TR)
 	{
-		vmatmul(fdf->translations->x_axis, fdf->camera->origin, tmp);
-		copy_vector(tmp, fdf->camera->origin, 4);
+		tmp[0] = -1.0f;
+		tmp[1] = 0.0f;
+		tmp[2] = 0.0f;
+		vmatmul(fdf->camera->basis, tmp, fdf->camera->orientation);
+		add_vectors(fdf->camera->origin, scale_vector(fdf->camera->orientation, 0.1f, 3), fdf->camera->origin, 3);
 		look_at(fdf->camera, fdf);
 	}
 	else if (code == TU)
@@ -108,13 +115,7 @@ int	key_press_hook(int code, t_minirt *fdf)
 		tmp[0] = 0.0f;
 		tmp[1] = 0.0f;
 		tmp[2] = 1.0f;
-		// copy_vector(fdf->camera->orientation, cam, 3);
-		// scale_vector(cam, 0.1f, 3);
-		// add_vectors(fdf->camera->origin, cam, fdf->camera->origin, 3);
-		//print_matrix3(fdf->camera->basis);
-		//fprintf(stderr, " ORIENTATION %f %f %f\n", fdf->camera->orientation[0], fdf->camera->orientation[1], fdf->camera->orientation[2]);
 		vmatmul(fdf->camera->basis, tmp, fdf->camera->orientation);
-		fdf->camera->orientation[0] = -1.0f * fdf->camera->orientation[0];
 		add_vectors(fdf->camera->origin, scale_vector(fdf->camera->orientation, 0.1f, 3), fdf->camera->origin, 3);
 		look_at(fdf->camera, fdf);
 	}
@@ -124,7 +125,6 @@ int	key_press_hook(int code, t_minirt *fdf)
 		tmp[1] = 0.0f;
 		tmp[2] = -1.0f;
 		vmatmul(fdf->camera->basis, tmp, fdf->camera->orientation);
-		fdf->camera->orientation[0] = -1.0f * fdf->camera->orientation[0];
 		add_vectors(fdf->camera->origin, scale_vector(fdf->camera->orientation, 0.1f, 3), fdf->camera->origin, 3);
 		look_at(fdf->camera, fdf);
 	}

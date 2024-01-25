@@ -46,6 +46,7 @@ int	set_hit_info(t_hit *hit, t_ray *ray)
 }
 
 //todo: perform ray intersection with all objects in the scene.
+//todo: should use an abstract data structure for this.
 int	ray_trace(t_minirt *minirt, t_ray *ray, t_hit *hit, int coords[2])
 {
 	int			i;
@@ -77,8 +78,12 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 	float		hit_angle;
 	t_ray		ray;
 	t_hit		hit;
+	int			bounces;
+	int			i;
 
+	i = -1;
 	hit_angle = 0.0f;
+	bounces = 2;
 	to_screen_space(minirt->display, point, coords[0], coords[1]);
 	vmatmul(minirt->world_space, point, result);
 	scale_vector(result, 1 / result[3], result, 3);
@@ -87,9 +92,12 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 	vmatmul(minirt->camera->inverse_view, result, ray.direction);
 	minirt_pixel_put(minirt->display, coords[0], coords[1], 0x0);
 	ray.origin = minirt->camera->origin;
-	ray_trace(minirt, &ray, &hit, coords);
-	if (hit.distance < 0.0f)
-		return (0);
+	while (++i < bounces)
+	{
+		ray_trace(minirt, &ray, &hit, coords);
+		if (hit.distance < 0.0f)
+			return (0);
+	}
 	//todo: we can call normalize on the object to get an optimized computation.
 	//hit.object->normalize(hit.object, hit.normal);
 	set_hit_info(&hit, &ray);

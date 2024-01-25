@@ -178,8 +178,8 @@ int	load_scene(t_minirt *minirt)
 	minirt->light = malloc(sizeof(t_light));
 	if (!minirt->light)
 		return (-1);
-	minirt->light->direction[0] = 0.0f;
-	minirt->light->direction[1] = 1.0f;
+	minirt->light->direction[0] = 100.0f;
+	minirt->light->direction[1] = 100.0f;
 	minirt->light->direction[2] = 100.0f;
 	minirt->light->direction[3] = 0.0f;
 	//scale_vector(minirt->light->direction, -1.0f, 3);
@@ -189,7 +189,7 @@ int	load_scene(t_minirt *minirt)
 	minirt->light->brightness = 1.0f;
 	to_color(0x00ffffff, minirt->light->color);
 	//todo: malloc protection
-	minirt->camera->fov = 90.0f;
+	minirt->camera->fov = 60.0f;
 	minirt->camera->near = -1.0f;
 	minirt->camera->far = 1.0f;
 	minirt->camera->orientation = ft_calloc(4, sizeof(float));
@@ -200,7 +200,7 @@ int	load_scene(t_minirt *minirt)
 	normalize_vector(minirt->camera->orientation, minirt->camera->orientation, 3);
 	minirt->camera->origin[0] = 0.0f;
 	minirt->camera->origin[1] = 0.0f;
-	minirt->camera->origin[2] = 1.0f;
+	minirt->camera->origin[2] = 3.0f;
 	minirt->camera->origin[3] = 1.0f;
 	if (set_camera_transform(minirt->camera) == -1)
 		return (-1);

@@ -65,7 +65,6 @@ int	key_press_hook(int code, t_minirt *fdf)
 
 	if (code == RL)
 	{
-
 		rotate_around(fdf, fdf->rotations->y_axis);
 		look_at(fdf->camera, fdf);
 	}

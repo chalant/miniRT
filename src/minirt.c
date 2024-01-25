@@ -97,39 +97,67 @@ int	normalize_col(t_matrix *matrix, int col)
 
 int	mouse_update(int x, int y, t_minirt *minirt)
 {
-	float	tmp[3];
+	float	cos_a;
+	float	sin_a;
+	float	dx;
+	float	dy;
 
-	tmp[0] = (float)x - minirt->mouse.x;
-	tmp[1] = (float)y - minirt->mouse.y;
-	tmp[2] = 0.0f;
-	normalize_vector(tmp, tmp, 3);
-	//to_screen_space(minirt->display, tmp, x, y);
-	if (isnan(tmp[0]) || isnan(tmp[1]))
+	//fprintf(stderr, "TODO %d %d\n", x, y);
+	dy = (y - minirt->mouse.y);
+	dx = (x - minirt->mouse.x);
+	if (dy == 0.0f && dx == 0.0f)
 		return (0);
-	printf("hello %f %f\n", tmp[0], tmp[1]);
-	homogeneous_matrix(&minirt->mouse.direction, 2, 2);
+	if (dy != 0.0f)
+		dy /= fabsf(dy);
+	if (dx != 0.0f)
+		dx /= fabsf(dx);
+	dx *= 0.009f;
+	dy *= 0.009f;
+	//res = sqrtf((y + x) * (y + x));
+	cos_a = cosf(dy);
+	sin_a = sinf(dy);
+	//mlx_mouse_get_pos(minirt->mlx, minirt->window)
 	minirt->mouse.direction->points[0][0] = 1.0f;
-	minirt->mouse.direction->points[1][1] = tmp[1];
-	minirt->mouse.direction->points[2][2] = 1.0f;
+	minirt->mouse.direction->points[1][1] = cos_a;
+	minirt->mouse.direction->points[2][1] = sin_a;
+	minirt->mouse.direction->points[1][2] = -sin_a;
+	minirt->mouse.direction->points[2][2] = cos_a;
 	//inplace_matmul(minirt->rotations->x_axis, minirt->mouse.direction, minirt->tmp, 3);
-	inplace_matmul(minirt->rotations->y_axis, minirt->mouse.direction, minirt->tmp, 3);
-	print_matrix(minirt->mouse.direction);
-	matmul(minirt->mouse.direction, minirt->camera->basis, minirt->tmp, 3);
+	//inplace_matmul(minirt->rotations->y_axis, minirt->mouse.direction, minirt->tmp, 3);
+	matmul(minirt->camera->basis, minirt->mouse.direction, minirt->tmp, 3);
 	matrix_copy(minirt->tmp, minirt->camera->basis, 3);
-	normalize_col(minirt->camera->basis, 0);
-	normalize_col(minirt->camera->basis, 1);
-	normalize_col(minirt->camera->basis, 2);
+	if (dx == 0.0f)
+		return (0);
+	cos_a = cosf(dx);
+	sin_a = sinf(dx);
+	minirt->mouse.direction->points[0][0] = 0.0f;
+	minirt->mouse.direction->points[1][1] = 0.0f;
+	minirt->mouse.direction->points[2][1] = 0.0f;
+	minirt->mouse.direction->points[1][2] = 0.0f;
+	minirt->mouse.direction->points[2][2] = 0.0f;
+
+	minirt->mouse.direction->points[0][0] = cos_a;
+	minirt->mouse.direction->points[0][2] = -sin_a;
+	minirt->mouse.direction->points[1][1] = 1.0f;
+	minirt->mouse.direction->points[2][0] = sin_a;
+	minirt->mouse.direction->points[2][2] = cos_a;
+	matmul(minirt->camera->basis, minirt->mouse.direction, minirt->tmp, 3);
+	matrix_copy(minirt->tmp, minirt->camera->basis, 3);
 	look_at(minirt->camera, minirt);
 	minirt->mouse.x = x;
 	minirt->mouse.y = y;
-	//fprintf(stderr, "hello %f %f\n", minirt->mouse.direction->points[0][0], minirt->mouse.direction->points[1][1]);
-	delete_matrix(minirt->mouse.direction);
+	minirt->mouse.direction->points[0][0] = 0.0f;
+	minirt->mouse.direction->points[0][2] = 0.0f;
+	minirt->mouse.direction->points[1][1] = 0.0f;
+	minirt->mouse.direction->points[2][0] = 0.0f;
+	minirt->mouse.direction->points[2][2] = 0.0f;
 	return (0);
 }
 
 int	set_hooks(t_minirt *minirt)
 {
-	mlx_hook(minirt->window, 6, 0, mouse_update, minirt);
+	mlx_hook(minirt->window, 6, 1L << 6, mouse_update, minirt);
+	//mlx_mouse_hook(minirt->window, mouse_update, minirt);
 	mlx_hook(minirt->window, 2, 1L << 0, key_press_hook, minirt);
 	mlx_hook(minirt->window, 3, 1L << 1, key_release_hook, minirt);
 	mlx_hook(minirt->window, 17, 0, close_program, minirt);

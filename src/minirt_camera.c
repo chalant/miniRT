@@ -67,22 +67,8 @@ int print_matrix2(t_matrix *matrix)
 
 int	look_at(t_camera *camera, t_minirt *fdf)
 {
-	//float		up[3];
 	float		tmp[4];
 
-	// up[0] = 0;
-	// up[1] = 1;
-	// up[2] = 0;
-	// normalize_vector(camera->orientation, 3);
-	// // vec = choose_vector(tmp->points[0], tmp->points[1], tmp->points[1], camera->orientation);
-	// cross_product(up, camera->orientation, camera->right);
-	// normalize_vector(camera->right, 3);
-	// cross_product(camera->orientation, camera->right, camera->up);
-	// normalize_vector(camera->up, 3);
-	// // fprintf(stderr, "DOT %f %f\n", dot_product(camera->orientation, right, 3), dot_product(camera->orientation, normal, 3));
-	// set_col(camera->basis, camera->right, 0, 3);
-	// set_col(camera->basis, camera->up, 1, 3);
-	// set_col(camera->basis, camera->orientation, 2, 3);
 	vmatmul(camera->basis, camera->origin, tmp);
 	invert_matrix(camera->basis, camera->view, fdf->tmp, 3);
 	set_translate(camera->view, -camera->origin[0], -camera->origin[1], -camera->origin[2]);

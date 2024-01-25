@@ -105,7 +105,7 @@ int	render(t_minirt *minirt)
 	while (++coords[0] < minirt->display->width)
 	{
 		coords[1] = -1;
-		if ((coords[0] % 2))
+		if ((coords[0] % 3))
 			continue;
 		while (++coords[1] < minirt->display->height)
 			if (!(coords[1] % 2))

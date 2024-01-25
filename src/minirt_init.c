@@ -31,6 +31,7 @@ int	minirt_init(t_minirt *fdf)
 	fdf->objects = malloc(sizeof(t_darray));
 	fdf->mouse.x = 0;
 	fdf->mouse.y = 0;
+	homogeneous_matrix(&fdf->mouse.direction, 3, 3);
 	if (!fdf->objects)
 		return (-1);
 	if (ft_darray_init(fdf->objects, sizeof(t_object), 10) < 0)

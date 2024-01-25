@@ -8,7 +8,7 @@
 # include "minirt_bindings.h"
 # include "minirt_colors.h"
 # include "libft.h"
-# include <mlx.h>
+# include "../minilibx_mac/mlx.h"
 # include "minirt_controls.h"
 
 typedef struct	s_light

@@ -2,7 +2,8 @@ INCLUDES_DIR = ./includes
 SRC_DIR = ./src
 OBJ_DIR = ./obj
 LIBFT_DIR = ./libft
-MLX_DIR = ./minilibx
+MLX_DIR_LINUX = ./minilibx
+MLX_DIR_MAC = ./minilibx_mac
 
 INCLUDES_FILES = minirt.h \
 		         minirt_bindings.h \
@@ -36,26 +37,31 @@ NAME = minirt
 LINUX = lin
 
 LIBFT = $(LIBFT_DIR)/libft.a
-MINILIBX = $(MLX_DIR)/libmlx_Linux.a
+MINILIBX_LINUX = $(MLX_DIR_LINUX)/libmlx_Linux.a
+MLX_MAC = $(MLX_DIR_MAC)/libmlx.a
 
-# C_FLAGS = -O3 -I$(MLX_DIR) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror -MMD -MP
-C_FLAGS = -g -O3 -I$(MLX_DIR) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror -MMD -MP
+# C_FLAGS = -O3 -I$(MLX_DIR_LINUX) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror -MMD -MP
+C_FLAGS = -g -O3 -I$(MLX_DIR_LINUX) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror
+C_FLAGS_MAC = -g -O3 -I$(MLX_DIR_MAC) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror
 
 all:
 	mkdir -p $(OBJ_DIR)
 	make $(NAME)
 
-$(NAME): $(OBJ) $(LIBFT)
-	cc $(C_FLAGS) $(OBJ) $(LIBFT) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+$(NAME): $(OBJ) $(LIBFT) $(MLX_MAC)
+	cc $(C_FLAGS_MAC) $(OBJ) $(LIBFT) $(MLX_MAC) -framework OpenGL -framework AppKit -o $(NAME)
 
-$(LINUX): $(OBJ) $(LIBFT) $(MINILIBX)
-	cc $(C_FLAGS) $(OBJ) $(LIBFT) $(MINILIBX) -lXext -lX11 -lm -o $(NAME)
+$(LINUX): $(OBJ) $(LIBFT) $(MINILIBX_LINUX)
+	cc $(C_FLAGS) $(OBJ) $(LIBFT) $(MINILIBX_LINUX) -lXext -lX11 -lm -o $(NAME)
 
-$(MINILIBX):
-	make -C $(MLX_DIR)
+$(MINILIBX_LINUX):
+	make -C $(MLX_DIR_LINUX)
 
 $(LIBFT):
 	make -C $(LIBFT_DIR)
+
+$(MLX_MAC):
+	make -C $(MLX_DIR_MAC)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCLUDES)
 	cc $(C_FLAGS) -c $< -o $@

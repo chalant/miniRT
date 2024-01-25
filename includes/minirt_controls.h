@@ -4,6 +4,7 @@
 typedef struct	s_mouse
 {
 	t_matrix	*direction;
+	int			capture;
 	float		x;
 	float		y;
 }	t_mouse;

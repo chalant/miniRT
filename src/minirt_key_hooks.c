@@ -65,6 +65,16 @@ int	key_press_hook(int code, t_minirt *fdf)
 
 	if (code == RL)
 	{
+		if (!fdf->mouse.capture)
+		{
+			mlx_mouse_hide();
+			fdf->mouse.capture = 1;
+		}
+		else
+		{
+			mlx_mouse_show();
+			fdf->mouse.capture = 0;
+		}
 		rotate_around(fdf, fdf->rotations->y_axis);
 		look_at(fdf->camera, fdf);
 	}

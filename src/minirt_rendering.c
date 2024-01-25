@@ -35,8 +35,18 @@ float	vector_length(float *vector, int size)
 	return (sqrtf(length));
 }
 
+int	set_hit_info(t_hit *hit, t_ray *ray)
+{
+	float		direction[4];
+
+	scale_vector(ray->direction, hit->distance, direction, 3);
+	add_vectors(direction, ray->object_center, hit->normal, 3);
+	normalize_vector(hit->normal, hit->normal, 3);
+	return (0);
+}
+
 //todo: perform ray intersection with all objects in the scene.
-int	hit_objects(t_minirt *minirt, t_ray *ray, t_hit *hit, int coords[2])
+int	ray_trace(t_minirt *minirt, t_ray *ray, t_hit *hit, int coords[2])
 {
 	int			i;
 	t_object	*object;
@@ -59,11 +69,10 @@ int	hit_objects(t_minirt *minirt, t_ray *ray, t_hit *hit, int coords[2])
 	return (1);
 }
 
-int	trace_ray(t_minirt *minirt, int coords[2])
+int	shade_pixel(t_minirt *minirt, int coords[2])
 {
 	float		point[4];
 	float		result[4];
-	float		direction[4];
 	float		hit_color[4];
 	float		hit_angle;
 	t_ray		ray;
@@ -78,14 +87,13 @@ int	trace_ray(t_minirt *minirt, int coords[2])
 	vmatmul(minirt->camera->inverse_view, result, ray.direction);
 	minirt_pixel_put(minirt->display, coords[0], coords[1], 0x0);
 	ray.origin = minirt->camera->origin;
-	hit_objects(minirt, &ray, &hit, coords);
+	ray_trace(minirt, &ray, &hit, coords);
 	if (hit.distance < 0.0f)
 		return (0);
-	scale_vector(ray.direction, hit.distance, direction, 3);
-	add_vectors(direction, ray.object_center, hit.normal, 3);
 	//todo: we can call normalize on the object to get an optimized computation.
 	//hit.object->normalize(hit.object, hit.normal);
-	hit_angle = dot_product(normalize_vector(hit.normal, hit.normal, 3), minirt->light->direction, 3) * 0.5f + 0.5f;
+	set_hit_info(&hit, &ray);
+	hit_angle = dot_product(hit.normal, minirt->light->direction, 3) * 0.5f + 0.5f;
 	hit_color[0] = hit_angle * minirt->light->brightness * minirt->light->color[0];
 	hit_color[1] = hit_angle * minirt->light->brightness * minirt->light->color[1];
 	hit_color[2] = hit_angle * minirt->light->brightness * minirt->light->color[2];
@@ -105,11 +113,11 @@ int	render(t_minirt *minirt)
 	while (++coords[0] < minirt->display->width)
 	{
 		coords[1] = -1;
-		if ((coords[0] % 3))
+		if ((coords[0] % 2))
 			continue;
 		while (++coords[1] < minirt->display->height)
 			if (!(coords[1] % 2))
-				trace_ray(minirt, coords);
+				shade_pixel(minirt, coords);
 	}
 	mlx_put_image_to_window(minirt->mlx, minirt->window, minirt->display->img, 0, 0);
 	return (0);

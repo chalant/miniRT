@@ -60,12 +60,12 @@ int	hit_plane(t_object *object, t_ray *ray)
 	float		result[3];
 
 	plane = (t_plane *)object->shape;
-	denominator = dot_product(plane->normal, ray->direction, 3);
+	denominator = -dot_product(plane->normal, ray->direction, 3);
 	if (fabsf(denominator) < 0.0001f)
 		return (0);
 	add_vectors(ray->origin, object->center, result, 3);
 	numerator = dot_product(plane->normal, result, 3);
-	t = -(numerator / denominator);
+	t = (numerator / denominator);
 	if (t < 0.0f)
 		return (0);
 	if (t > ray->closest_t)
@@ -92,7 +92,7 @@ int	create_plane(t_object *object, float normal[4])
 		return (-1);
 	plane->normal[0] = normal[0];
 	plane->normal[1] = normal[1];
-	plane->normal[2] = -normal[2];
+	plane->normal[2] = normal[2];
 	plane->normal[3] = 0.0f;
 	normalize_vector(plane->normal, plane->normal, 3);
 	object->shape = plane;

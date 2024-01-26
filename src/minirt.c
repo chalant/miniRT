@@ -179,8 +179,8 @@ int	load_scene(t_minirt *minirt)
 	if (!minirt->light)
 		return (-1);
 	minirt->light->direction[0] = 100.0f;
-	minirt->light->direction[1] = 100.0f;
-	minirt->light->direction[2] = 100.0f;
+	minirt->light->direction[1] = -10.0f;
+	minirt->light->direction[2] = 10.0f;
 	minirt->light->direction[3] = 0.0f;
 	//scale_vector(minirt->light->direction, -1.0f, 3);
 	normalize_vector(minirt->light->direction, minirt->light->direction, 3);
@@ -209,19 +209,19 @@ int	load_scene(t_minirt *minirt)
 	new.name = "red";
 	new.center = ft_calloc(4, sizeof(float));
 	new.center[0] = 0.0f;
-	new.center[1] = -1.2f;
+	new.center[1] = 1.0f;
 	new.center[2] = 0.0f;
 	new.center[3] = 1.0f;
 	ft_darray_append(minirt->objects, &new);
-	// create_sphere(&new, 0.4f, "blue");
-	// to_color(0x003261e3, new.color);
-	// new.name = "blue";
-	// new.center = ft_calloc(4, sizeof(float));
-	// new.center[0] = 0.5f;
-	// new.center[1] = 1.0f;
-	// new.center[2] = -0.0f;
-	// new.center[3] = 1.0f;
-	// ft_darray_append(minirt->objects, &new);
+	create_sphere(&new, 0.4f, "blue");
+	to_color(0x003261e3, new.color);
+	new.name = "blue";
+	new.center = ft_calloc(4, sizeof(float));
+	new.center[0] = 0.5f;
+	new.center[1] = -1.0f;
+	new.center[2] = 0.0f;
+	new.center[3] = 1.0f;
+	ft_darray_append(minirt->objects, &new);
 	// create_sphere(&new, 0.5f, "green");
 	// to_color(0x11aaea8c, new.color);
 	// new.center = ft_calloc(4, sizeof(float));
@@ -230,14 +230,14 @@ int	load_scene(t_minirt *minirt)
 	// new.center[2] = -1.0f;
 	// new.center[3] = 1.0f;
 	// ft_darray_append(minirt->objects, &new);
-	create_plane(&new, (float[4]){0.0f, 1.0f, 0.0f, 0.0f});
-	new.center = ft_calloc(4, sizeof(float));
-	to_color(0x00ffffff, new.color);
-	new.center[0] = 0.0f;
-	new.center[1] = 2.0f;
-	new.center[2] = 0.0f;
-	new.center[3] = 1.0f;
-	ft_darray_append(minirt->objects, &new);
+	// create_plane(&new, (float[4]){0.0f, 1.0f, 0.0f, 0.0f});
+	// new.center = ft_calloc(4, sizeof(float));
+	// to_color(0x00ffffff, new.color);
+	// new.center[0] = 0.0f;
+	// new.center[1] = 2.0f;
+	// new.center[2] = 0.0f;
+	// new.center[3] = 1.0f;
+	// ft_darray_append(minirt->objects, &new);
 	// create_plane(&new, (float[4]){1.0f, 0.0f, 0.0f, 0.0f});
 	// new.center = ft_calloc(4, sizeof(float));
 	// to_color(0x00ffff00, new.color);
@@ -272,27 +272,6 @@ int	load_scene(t_minirt *minirt)
 	// ft_darray_append(minirt->objects, &new);
 	return (1);
 }
-
-int	screen_space(t_matrix **matrix, t_display *display)
-{
-	homogeneous_matrix(matrix, 3, 3);
-	set_diagonal(*matrix, 1.0f);
-	(*matrix)->points[0][0] = (float)display->width / 2.0f;
-	(*matrix)->points[1][1] = (float)display->height / 2.0f;
-	(*matrix)->points[2][2] = 0.0f;
-	(*matrix)->points[2][3] = 0.0f;
-	(*matrix)->points[3][3] = 0.0f;
-	(*matrix)->points[2][2] = 0.0f;
-	(*matrix)->points[2][3] = 0.0f;
-	(*matrix)->points[3][3] = 0.0f;
-	(*matrix)->points[0][3] = display->width / 2.0f + 0.5f;
-	(*matrix)->points[1][3] = display->height / 2.0f + 0.5f; 
-	(*matrix)->points[2][3] = 0.0f;
-	(*matrix)->points[2][2] = 0.0f;
-	return (0);
-}
-
-
 
 int	main(int argc, char *argv[])
 {

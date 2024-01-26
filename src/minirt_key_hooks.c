@@ -75,7 +75,7 @@ int	key_press_hook(int code, t_minirt *fdf)
 			mlx_mouse_show();
 			fdf->mouse.capture = 0;
 		}
-		rotate_around(fdf, fdf->rotations->y_axis);
+		rotate_around(fdf, fdf->rev_rotations->y_axis);
 		look_at(fdf->camera, fdf);
 	}
 	else if (code == RR)

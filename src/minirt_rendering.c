@@ -37,11 +37,11 @@ float	vector_length(float *vector, int size)
 
 int	set_hit_info(t_hit *hit, t_ray *ray)
 {
-	float		direction[4];
-
-	scale_vector(ray->direction, hit->distance, direction, 3);
-	add_vectors(direction, ray->object_center, hit->normal, 3);
+	subtract_vectors(ray->origin, hit->object->center, ray->object_center, 3);
+	scale_vector(ray->direction, hit->distance, hit->point, 3);
+	add_vectors(hit->point, ray->object_center, hit->normal, 3);
 	normalize_vector(hit->normal, hit->normal, 3);
+	add_vectors(hit->point, hit->object->center, hit->point, 3);
 	return (0);
 }
 
@@ -54,7 +54,6 @@ int	ray_trace(t_minirt *minirt, t_ray *ray, t_hit *hit, int coords[2])
 
 	i = -1;
 	hit->distance = -1.0f;
-	ray->t = FLT_MAX;
 	ray->closest_t = FLT_MAX;
 	while (++i < minirt->objects->size)
 	{
@@ -70,6 +69,16 @@ int	ray_trace(t_minirt *minirt, t_ray *ray, t_hit *hit, int coords[2])
 	return (1);
 }
 
+//result = I - 2.0 * dot(N, I) * N.
+float	*reflect(float incident[3], float normal[3], float result[3])
+{
+	float	tmp[3];
+
+	scale_vector(normal, 2.0f * dot_product(incident, normal, 3), tmp, 3);
+	subtract_vectors(incident, tmp, result, 3);
+	return (result);
+}
+
 int	shade_pixel(t_minirt *minirt, int coords[2])
 {
 	float		point[4];
@@ -80,6 +89,9 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 	t_hit		hit;
 	int			bounces;
 	int			i;
+	float		epsilon[3];
+	float		origin[3];
+	float		sky_color[3];
 
 	i = -1;
 	hit_angle = 0.0f;
@@ -90,25 +102,37 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 	normalize_vector(result, result, 3);
 	result[3] = 0.0f;
 	vmatmul(minirt->camera->inverse_view, result, ray.direction);
+	to_color(0x000000, hit_color);
 	minirt_pixel_put(minirt->display, coords[0], coords[1], 0x0);
-	ray.origin = minirt->camera->origin;
+	origin[0] =  minirt->camera->origin[0];
+	origin[1] =  minirt->camera->origin[1];
+	origin[2] =  minirt->camera->origin[2];
+	hit.screen_coords = coords;
+	ray.origin = origin;
+	float	multiplier = 1.0f;
+	sky_color[0] = 0.0f;
+	sky_color[1] = 0.0f;
+	sky_color[2] = 0.0f;
 	while (++i < bounces)
 	{
 		ray_trace(minirt, &ray, &hit, coords);
 		if (hit.distance < 0.0f)
-			return (0);
+		{
+			hit_color[0] += sky_color[0] * multiplier;
+			hit_color[1] += sky_color[1] * multiplier;
+			hit_color[2] += sky_color[2] * multiplier;
+			break;
+		}
+		set_hit_info(&hit, &ray);
+		hit_angle = dot_product(hit.normal, minirt->light->direction, 3) * 0.5f + 0.5f;
+		hit_color[0] += hit_angle * minirt->light->brightness * minirt->light->color[0] * hit.object->color[0] * multiplier;
+		hit_color[1] += hit_angle * minirt->light->brightness * minirt->light->color[1] * hit.object->color[1] * multiplier;
+		hit_color[2] += hit_angle * minirt->light->brightness * minirt->light->color[2] * hit.object->color[2] * multiplier;
+		hit_color[3] = 0.0f;
+		add_vectors(hit.point, scale_vector(hit.normal, 0.1f, epsilon, 3), ray.origin, 3);
+		reflect(ray.direction, hit.normal, ray.direction);
+		multiplier *= 0.7f;
 	}
-	//todo: we can call normalize on the object to get an optimized computation.
-	//hit.object->normalize(hit.object, hit.normal);
-	set_hit_info(&hit, &ray);
-	hit_angle = dot_product(hit.normal, minirt->light->direction, 3) * 0.5f + 0.5f;
-	hit_color[0] = hit_angle * minirt->light->brightness * minirt->light->color[0];
-	hit_color[1] = hit_angle * minirt->light->brightness * minirt->light->color[1];
-	hit_color[2] = hit_angle * minirt->light->brightness * minirt->light->color[2];
-	hit_color[3] = 0.0f;
-	hit_color[0] *= hit.object->color[0];
-	hit_color[1] *= hit.object->color[1];
-	hit_color[2] *= hit.object->color[2];
 	minirt_pixel_put(minirt->display, hit.screen_coords[0], hit.screen_coords[1], to_argb(hit_color));
 	return (1);
 }

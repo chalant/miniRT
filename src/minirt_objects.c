@@ -36,6 +36,17 @@ int	hit_sphere(t_object *object, t_ray *ray)
 	return (1);
 }
 
+float	*sphere_normal(t_object *object, t_hit *hit)
+{
+	float		center[3];
+
+	(void)object;
+	subtract_vectors(hit->ray_origin, hit->object->center, center, 3);
+	add_vectors(hit->point, center, hit->normal, 3);
+	normalize_vector(hit->normal, hit->normal, 3);
+	return (hit->normal);
+}
+
 int create_sphere(t_object *object, float radius, const char *name)
 {
 	t_sphere	*sphere;
@@ -48,6 +59,7 @@ int create_sphere(t_object *object, float radius, const char *name)
 	object->shape = sphere;
 	object->intersect = hit_sphere;
 	object->transform = do_nothing;
+	object->normal = sphere_normal;
 	return (0);
 }
 
@@ -74,6 +86,17 @@ int	hit_plane(t_object *object, t_ray *ray)
 	return (1);
 }
 
+float	*plane_normal(t_object *object, t_hit *hit)
+{
+	t_plane	*plane;
+
+	plane = (t_plane *)object->shape;
+	hit->normal[0] = plane->normal[0];
+	hit->normal[1] = plane->normal[1];
+	hit->normal[2] = plane->normal[2];
+	return (hit->normal);
+}
+
 int	transform_plane(t_object *object, t_matrix *transform, float *result)
 {
 	t_plane		*plane;
@@ -98,5 +121,6 @@ int	create_plane(t_object *object, float normal[4])
 	object->shape = plane;
 	object->intersect = hit_plane;
 	object->transform = transform_plane;
+	object->normal = plane_normal;
 	return (0);
 }

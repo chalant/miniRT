@@ -37,10 +37,9 @@ float	vector_length(float *vector, int size)
 
 int	set_hit_info(t_hit *hit, t_ray *ray)
 {
-	subtract_vectors(ray->origin, hit->object->center, ray->object_center, 3);
+	hit->ray_origin = ray->origin;
 	scale_vector(ray->direction, hit->distance, hit->point, 3);
-	add_vectors(hit->point, ray->object_center, hit->normal, 3);
-	normalize_vector(hit->normal, hit->normal, 3);
+	hit->object->normal(hit->object, hit);
 	add_vectors(hit->point, hit->object->center, hit->point, 3);
 	return (0);
 }
@@ -124,14 +123,14 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 			break;
 		}
 		set_hit_info(&hit, &ray);
-		hit_angle = dot_product(hit.normal, minirt->light->direction, 3) * 0.5f + 0.5f;
+		hit_angle = dot_product(hit.normal, minirt->light->direction, 3);
 		hit_color[0] += hit_angle * minirt->light->brightness * minirt->light->color[0] * hit.object->color[0] * multiplier;
 		hit_color[1] += hit_angle * minirt->light->brightness * minirt->light->color[1] * hit.object->color[1] * multiplier;
 		hit_color[2] += hit_angle * minirt->light->brightness * minirt->light->color[2] * hit.object->color[2] * multiplier;
 		hit_color[3] = 0.0f;
-		add_vectors(hit.point, scale_vector(hit.normal, 0.1f, epsilon, 3), ray.origin, 3);
+		add_vectors(ray.origin, scale_vector(hit.normal, 0.0001f, epsilon, 3), ray.origin, 3);
 		reflect(ray.direction, hit.normal, ray.direction);
-		multiplier *= 0.7f;
+		multiplier *= 0.5f;
 	}
 	minirt_pixel_put(minirt->display, hit.screen_coords[0], hit.screen_coords[1], to_argb(hit_color));
 	return (1);

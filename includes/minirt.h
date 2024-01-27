@@ -8,7 +8,7 @@
 # include "minirt_bindings.h"
 # include "minirt_colors.h"
 # include "libft.h"
-# include "../minilibx_mac/mlx.h"
+# include "mlx.h"
 # include "minirt_controls.h"
 
 typedef struct	s_light
@@ -60,6 +60,17 @@ typedef struct	s_plane
 	float		point[4];
 }				t_plane;
 
+typedef struct	s_hit
+{
+	struct	s_object	*object;
+	float				*ray_origin;
+	float				color[4];
+	float				normal[3];
+	float				point[3];
+	float				distance;
+	int					*screen_coords;
+}	t_hit;
+
 typedef struct	s_object
 {
 	t_matrix		*body;
@@ -72,20 +83,11 @@ typedef struct	s_object
 	int				id;
 	int				(*intersect)(struct s_object *object, t_ray *ray);
 	int				(*transform)(struct s_object *object, t_matrix *transform, float *result);
+	float			*(*normal)(struct s_object *object, t_hit *hit);
 	float			color[4];
 	int				width;
 	int				height;
 }				t_object;
-
-typedef struct	s_hit
-{
-	t_object	*object;
-	float		color[4];
-	float		normal[3];
-	float		point[3];
-	float		distance;
-	int			*screen_coords;
-}	t_hit;
 
 typedef struct	s_transforms_3d
 {

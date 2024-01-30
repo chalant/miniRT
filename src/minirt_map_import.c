@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 14:24:32 by alexphil          #+#    #+#             */
-/*   Updated: 2024/01/30 17:22:18 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/01/30 17:29:23 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,9 @@ int	read_map(t_import *import)
 		line = get_next_line(import->fd);
 		if (!line)
 			break ;
-		if (!is_blank(line))
+		if (is_blank(line))
+			continue ;
+		else
 			import->elements++;
 		infos = ft_split(line, ' ');
 		if (!infos)
@@ -120,11 +122,14 @@ int	read_map(t_import *import)
 	return (0);	
 }
 
+int	import_map(t_minirt *minirt, t_import *import)
+{
+	;
+}
+
 int	import_map(t_minirt *minirt, char **av)
 {
 	t_import	import;
-
-	(void)minirt;
 	
 	if (check_extension(av[1], ".rt"))
 		return (1);
@@ -132,6 +137,8 @@ int	import_map(t_minirt *minirt, char **av)
 		return (1);
 	if (read_map(&import))
 		return (1);
+	if (import_map(minirt, import))
+		return (1)
 	return (0);
 }
 

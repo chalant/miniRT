@@ -14,10 +14,10 @@
 typedef struct	s_light
 {
 	float	color[4];
-	float	position[4];
 	float	direction[4];
+	float	position[4];
 	float	brightness;
-}				t_light;
+}	t_light;
 
 typedef struct	s_ray
 {
@@ -71,19 +71,33 @@ typedef struct	s_hit
 	int					*screen_coords;
 }	t_hit;
 
+typedef struct	s_material
+{
+	float	diffuse_reflection;
+	float	ambient_reflection;
+	float	shininess;
+	float	color[4];
+	float	dark_color[4];
+	float	roughness;
+	float	emission;
+}	t_material;
+
 typedef struct	s_object
 {
 	t_matrix		*body;
 	t_matrix		*result;
 	t_matrix		*tmp;
+	t_material		*material;
 
 	const char		*name;
 	void			*shape;
 	float			*center;
+	float			albedo;
 	int				id;
-	int				(*intersect)(struct s_object *object, t_ray *ray);
-	int				(*transform)(struct s_object *object, t_matrix *transform, float *result);
-	float			*(*normal)(struct s_object *object, t_hit *hit);
+	int				(*intersect)(struct s_object*, t_ray*);
+	int				(*transform)(struct s_object*, t_matrix*, float*);
+	float			*(*normal)(struct s_object*, t_hit*);
+	float			*(*uv_coord)(struct s_object, t_hit*);
 	float			color[4];
 	int				width;
 	int				height;
@@ -130,6 +144,9 @@ typedef struct	s_minirt
 	t_matrix		*tmp;
 
 	t_light			*light;
+	t_light			diffuse;
+	t_light			ambient;
+	t_darray		*spot_lights;
 	t_darray		*objects;
 	t_object		*target;
 

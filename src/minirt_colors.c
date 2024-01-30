@@ -69,7 +69,7 @@ unsigned int	to_argb(float color[4])
 	unsigned int	rgb;
 
 	rgb = 0;
-	rgb |= (unsigned int)(clamp(color[3], 0.0f, 1.0f) * 255.0f) << 24;
+	rgb |= (unsigned int)(clamp(color[3], 0.0f, color[3]) * 255.0f) << 24;
 	rgb |= (unsigned int)(clamp(color[0], 0.0f, 1.0f) * 255.0f) << 16;
 	rgb |= (unsigned int)(clamp(color[1], 0.0f, 1.0f) * 255.0f) << 8;
 	rgb |= (unsigned int)(clamp(color[2], 0.0f, 1.0f) * 255.0f);

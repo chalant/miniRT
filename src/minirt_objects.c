@@ -17,11 +17,13 @@ int	hit_sphere(t_object *object, t_ray *ray)
     float		c;
     float		discriminant;
 	float		t;
+	float		center[3];
 
 	sphere = (t_sphere *)object->shape;
+	subtract_vectors(ray->origin, object->center, center, 3);
 	a = dot_product(ray->direction, ray->direction, 3);
-	b = 2.0f * dot_product(ray->object_center, ray->direction, 3);
-	c = dot_product(ray->object_center, ray->object_center, 3) - sphere->radius * sphere->radius;
+	b = 2.0f * dot_product(center, ray->direction, 3);
+	c = dot_product(center, center, 3) - sphere->radius * sphere->radius;
 	discriminant = b * b - 4 * a * c;
     if (discriminant < 0.0f)
 		return (0);
@@ -39,11 +41,13 @@ int	hit_sphere(t_object *object, t_ray *ray)
 float	*sphere_normal(t_object *object, t_hit *hit)
 {
 	float		center[3];
+	t_sphere	*sphere;
 
-	(void)object;
+	sphere = object->shape;
 	subtract_vectors(hit->ray_origin, hit->object->center, center, 3);
 	add_vectors(hit->point, center, hit->normal, 3);
-	normalize_vector(hit->normal, hit->normal, 3);
+	scale_vector(hit->normal, 1 / sphere->radius, hit->normal, 3);
+	//normalize_vector(hit->normal, hit->normal, 3);
 	return (hit->normal);
 }
 
@@ -71,11 +75,11 @@ int	hit_plane(t_object *object, t_ray *ray)
 	float		t;
 	float		result[3];
 
-	plane = (t_plane *)object->shape;
+	plane = object->shape;
 	denominator = -dot_product(plane->normal, ray->direction, 3);
 	if (fabsf(denominator) < 0.0001f)
 		return (0);
-	add_vectors(ray->origin, object->center, result, 3);
+	subtract_vectors(ray->origin, object->center, result, 3);
 	numerator = dot_product(plane->normal, result, 3);
 	t = (numerator / denominator);
 	if (t < 0.0f)
@@ -90,7 +94,7 @@ float	*plane_normal(t_object *object, t_hit *hit)
 {
 	t_plane	*plane;
 
-	plane = (t_plane *)object->shape;
+	plane = object->shape;
 	hit->normal[0] = plane->normal[0];
 	hit->normal[1] = plane->normal[1];
 	hit->normal[2] = plane->normal[2];
@@ -101,7 +105,7 @@ int	transform_plane(t_object *object, t_matrix *transform, float *result)
 {
 	t_plane		*plane;
 
-	plane = (t_plane *)object->shape;
+	plane = object->shape;
 	vmatmul(transform,  plane->normal, result);
 	return (0);
 }

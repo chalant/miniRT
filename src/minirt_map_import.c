@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 14:24:32 by alexphil          #+#    #+#             */
-/*   Updated: 2024/01/31 13:13:30 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/01/31 13:25:39 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ typedef	struct	s_import
 	t_minirt	*minirt;
 	int			fd;
 	int			elements;
-	int			A;
-	int			C;
-	int			L;
+	int			ambient;
+	int			camera;
+	int			light;
 }	t_import;
 
 int	check_extension(char *filename, char *extension)
@@ -49,9 +49,9 @@ int	init_import(t_import *import, t_minirt *minirt, char *map)
 	if (import->fd == -1)
 		return (perror("Error: Open() failure."), 1);
 	import->elements = 0;
-	import->A = 0;
-	import->C = 0;
-	import->L = 0;
+	import->ambient = 0;
+	import->camera = 0;
+	import->light = 0;
 	return (0);
 }
 
@@ -86,13 +86,13 @@ int	seen_type(t_import *import, char **line)
 
 	type = line[0];
 	if (ft_strcmp(type, "A"))
-		if (++import->A && import->A > 1)
+		if (++import->ambient && import->ambient > 1)
 			return (1);
 	if (ft_strcmp(type, "C"))
-		if (++import->C && import->C > 1)
+		if (++import->camera && import->camera > 1)
 			return (1);
 	if (ft_strcmp(type, "L"))
-		if (++import->L && import->L > 1)
+		if (++import->light && import->light > 1)
 			return (1);
 	return (0);
 }
@@ -123,7 +123,7 @@ int	read_map(t_import *import)
 		ft_clear_ds(infos);
 		free(line);
 	}
-	return (0);	
+	return (0);
 }
 
 int	check_scene(t_import *import)
@@ -136,7 +136,7 @@ int	check_scene(t_import *import)
 int	import_map(t_minirt *minirt, char **av)
 {
 	t_import	import;
-	
+
 	if (check_extension(av[1], ".rt"))
 		return (1);
 	if (init_import(&import, minirt, av[1]))

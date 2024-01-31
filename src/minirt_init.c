@@ -12,30 +12,29 @@
 
 #include "minirt.h"
 
-int	minirt_init(t_minirt *fdf)
+int	minirt_init(t_minirt *minirt)
 {
-	fdf->rendered = 0;
-	fdf->mlx = NULL;
-	fdf->window = NULL;
-	fdf->rotations = NULL;
-	fdf->translations = NULL;
-	fdf->rev_rotations = NULL;
-	fdf->rev_translations = NULL;
-	fdf->scalings = NULL;
-	fdf->rev_scalings = NULL;
-	fdf->transforms = NULL;
-	fdf->centering = NULL;
-	fdf->tmp = NULL;
-	fdf->selected_object = NULL;
-	fdf->display = NULL;
-	fdf->objects = malloc(sizeof(t_darray));
-	fdf->mouse.x = 0;
-	fdf->mouse.y = 0;
-	homogeneous_matrix(&fdf->mouse.direction, 3, 3);
-	if (!fdf->objects)
+	minirt->rendered = 0;
+	minirt->mlx = NULL;
+	minirt->window = NULL;
+	minirt->rotations = NULL;
+	minirt->translations = NULL;
+	minirt->rev_rotations = NULL;
+	minirt->rev_translations = NULL;
+	minirt->scalings = NULL;
+	minirt->rev_scalings = NULL;
+	minirt->transforms = NULL;
+	minirt->centering = NULL;
+	minirt->tmp = NULL;
+	minirt->selected_object = NULL;
+	minirt->mouse.x = 0;
+	minirt->mouse.y = 0;
+	homogeneous_matrix(&minirt->mouse.direction, 3, 3);
+	if (ft_darray_init(&minirt->objects, sizeof(t_object), 10) < 0)
 		return (-1);
-	if (ft_darray_init(fdf->objects, sizeof(t_object), 10) < 0)
+	if (ft_darray_init(&minirt->materials, sizeof(t_material), 10) < 0)
 		return (-1);
-	fdf->camera = NULL;
+	if (ft_darray_init(&minirt->spot_lights, sizeof(t_light), 10) < 0)
+		return (-1);
 	return (1);
 }

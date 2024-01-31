@@ -37,7 +37,7 @@ int	mlx_setup(t_minirt *minirt)
 {
 	t_display	*display;
 
-	display = minirt->display;
+	display = &minirt->display;
 	//todo: malloc protection
 	display->origin = ft_calloc(4, sizeof(float));
 	display->origin[0] = 0.0f;
@@ -105,8 +105,8 @@ int	mouse_update(int x, int y, t_minirt *minirt)
 
 	if (!minirt->mouse.capture)
 		return (0);
-	dy = (y - minirt->display->height / 2);
-	dx = (x - minirt->display->width / 2);
+	dy = (y - minirt->display.height / 2);
+	dx = (x - minirt->display.width / 2);
 	if (dy == 0.0f && dx == 0.0f)
 		return (0);
 	if (dy != 0.0f)
@@ -122,8 +122,8 @@ int	mouse_update(int x, int y, t_minirt *minirt)
 	minirt->mouse.direction->points[2][1] = sin_a;
 	minirt->mouse.direction->points[1][2] = -sin_a;
 	minirt->mouse.direction->points[2][2] = cos_a;
-	matmul(minirt->camera->basis, minirt->mouse.direction, minirt->tmp, 3);
-	matrix_copy(minirt->tmp, minirt->camera->basis, 3);
+	matmul(minirt->camera.basis, minirt->mouse.direction, minirt->tmp, 3);
+	matrix_copy(minirt->tmp, minirt->camera.basis, 3);
 	if (dx == 0.0f)
 		return (0);
 	cos_a = cosf(dx);
@@ -138,9 +138,9 @@ int	mouse_update(int x, int y, t_minirt *minirt)
 	minirt->mouse.direction->points[1][1] = 1.0f;
 	minirt->mouse.direction->points[2][0] = sin_a;
 	minirt->mouse.direction->points[2][2] = cos_a;
-	matmul(minirt->camera->basis, minirt->mouse.direction, minirt->tmp, 3);
-	matrix_copy(minirt->tmp, minirt->camera->basis, 3);
-	look_at(minirt->camera, minirt);
+	matmul(minirt->camera.basis, minirt->mouse.direction, minirt->tmp, 3);
+	matrix_copy(minirt->tmp, minirt->camera.basis, 3);
+	look_at(&minirt->camera, minirt);
 	minirt->mouse.direction->points[0][0] = 0.0f;
 	minirt->mouse.direction->points[0][2] = 0.0f;
 	minirt->mouse.direction->points[1][1] = 0.0f;
@@ -163,8 +163,8 @@ int	set_hooks(t_minirt *minirt)
 
 int	set_variables(t_minirt *minirt)
 {
-	minirt->display->height = 700;
-	minirt->display->width = 800;
+	minirt->display.height = 600;
+	minirt->display.width = 800;
 	return (1);
 }
 
@@ -173,18 +173,10 @@ int	load_scene(t_minirt *minirt)
 	t_object	new;
 	t_material	material;
 
-	minirt->materials = malloc(sizeof(t_darray));
-	if (!minirt->materials)
-		return (-1);
-	if (ft_darray_init(minirt->materials, sizeof(t_material), 10) < 0)
-		return (-1);
-	material.ambient_reflection = 0.1f;
+	material.ambient_reflection = 0.5f;
 	material.diffuse_reflection = 0.9f;
 	material.shininess = 0.0f;
-	ft_darray_append(minirt->materials, &material);
-	minirt->camera = malloc(sizeof(t_camera));
-	if (!minirt->camera)
-		return (-1);
+	ft_darray_append(&minirt->materials, &material);
 	minirt->diffuse.direction[0] = 1.0f;
 	minirt->diffuse.direction[1] = -1.0f;
 	minirt->diffuse.direction[2] = -1.0f;
@@ -193,25 +185,25 @@ int	load_scene(t_minirt *minirt)
 	normalize_vector(minirt->diffuse.direction, minirt->diffuse.direction, 3);
 	scale_vector(minirt->diffuse.direction, -1.0f, minirt->diffuse.direction, 3);
 	//todo: the light direction should be the negative of the position, normalized.
-	minirt->diffuse.brightness = 1.0f;
+	minirt->diffuse.brightness = 0.8f;
 	to_color(0x00ffffff, minirt->diffuse.color);
-	minirt->ambient.brightness = 1.0f;
+	minirt->ambient.brightness = 0.2f;
 	to_color(0x00ffffff, minirt->ambient.color);
 	//todo: malloc protection
-	minirt->camera->fov = 60.0f;
-	minirt->camera->near = -1.0f;
-	minirt->camera->far = 1.0f;
-	minirt->camera->orientation = ft_calloc(4, sizeof(float));
-	minirt->camera->orientation[0] = 0.0f;
-	minirt->camera->orientation[1] = 0.0f;
-	minirt->camera->orientation[2] = -1.0f;
-	minirt->camera->orientation[3] = 1.0f;
-	normalize_vector(minirt->camera->orientation, minirt->camera->orientation, 3);
-	minirt->camera->origin[0] = 0.0f;
-	minirt->camera->origin[1] = 0.0f;
-	minirt->camera->origin[2] = 3.0f;
-	minirt->camera->origin[3] = 1.0f;
-	if (set_camera_transform(minirt->camera) == -1)
+	minirt->camera.fov = 90.0f;
+	minirt->camera.near = -1.0f;
+	minirt->camera.far = 1.0f;
+	minirt->camera.orientation = ft_calloc(4, sizeof(float));
+	minirt->camera.orientation[0] = 0.0f;
+	minirt->camera.orientation[1] = 0.0f;
+	minirt->camera.orientation[2] = -1.0f;
+	minirt->camera.orientation[3] = 1.0f;
+	normalize_vector(minirt->camera.orientation, minirt->camera.orientation, 3);
+	minirt->camera.origin[0] = 0.0f;
+	minirt->camera.origin[1] = 0.0f;
+	minirt->camera.origin[2] = 3.0f;
+	minirt->camera.origin[3] = 1.0f;
+	if (set_camera_transform(&minirt->camera) == -1)
 		return (-1);
 	create_sphere(&new, 1.5f, "red");
 	to_color(0x00f94449, new.color);
@@ -221,8 +213,8 @@ int	load_scene(t_minirt *minirt)
 	new.center[1] = -0.2f;
 	new.center[2] = 0.0f;
 	new.center[3] = 1.0f;
-	new.material = ft_darray_get(minirt->materials, 0);
-	ft_darray_append(minirt->objects, &new);
+	new.material = ft_darray_get(&minirt->materials, 0);
+	ft_darray_append(&minirt->objects, &new);
 	create_sphere(&new, 0.4f, "blue");
 	to_color(0x003261e3, new.color);
 	new.name = "blue";
@@ -232,7 +224,7 @@ int	load_scene(t_minirt *minirt)
 	new.center[2] = 0.0f;
 	new.center[3] = 1.0f;
 	//new.material = ft_darray_get(minirt->materials, 0);
-	ft_darray_append(minirt->objects, &new);
+	ft_darray_append(&minirt->objects, &new);
 	// create_sphere(&new, 0.5f, "green");
 	// to_color(0x11aaea8c, new.color);
 	// new.center = ft_calloc(4, sizeof(float));
@@ -248,22 +240,20 @@ int	load_scene(t_minirt *minirt)
 	new.center[1] = -2.0f;
 	new.center[2] = 0.0f;
 	new.center[3] = 1.0f;
-	new.material = ft_darray_get(minirt->materials, 0);
-	ft_darray_append(minirt->objects, &new);
+	new.material = ft_darray_get(&minirt->materials, 0);
+	ft_darray_append(&minirt->objects, &new);
 	return (1);
 }
 
 int	main(int argc, char *argv[])
 {
 	t_minirt	minirt;
-	t_display	display;
 
 	//todo: use a cache for this.
 	(void)argv;
 	if (argc - 1 < 0 || argc - 1 > 1)
 		return (0);
 	minirt_init(&minirt);
-	minirt.display = &display;
 	minirt.mouse.x = 0.0f;
 	minirt.mouse.y = 0.0f;
 	set_variables(&minirt);
@@ -272,9 +262,9 @@ int	main(int argc, char *argv[])
 	set_minirt_transforms(&minirt);
 	homogeneous_matrix(&minirt.tmp, 3, 3);
 	load_scene(&minirt);
-	perspective_projector(&minirt.world_space, minirt.display, minirt.camera);
+	perspective_projector(&minirt.world_space, &minirt.display, &minirt.camera);
 	invert_matrix(minirt.world_space, minirt.world_space, minirt.tmp, 4);
-	perspective_projector(&minirt.view_matrix, minirt.display, minirt.camera);
+	perspective_projector(&minirt.view_matrix, &minirt.display, &minirt.camera);
 	mlx_loop(minirt.mlx);
 	return (0);
 }

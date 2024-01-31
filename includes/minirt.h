@@ -145,12 +145,12 @@ typedef struct	s_minirt
 
 	t_light			diffuse;
 	t_light			ambient;
-	t_darray		*spot_lights;
-	t_darray		*objects;
-	t_darray		*materials;
+	t_darray		spot_lights;
+	t_darray		objects;
+	t_darray		materials;
 
-	t_display		*display;
-	t_camera		*camera;
+	t_display		display;
+	t_camera		camera;
 	t_mouse			mouse;
 
 	float			x[4];

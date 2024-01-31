@@ -14,8 +14,8 @@
 
 void	free_mlx(t_minirt *fdf)
 {
-	if (fdf->display->img)
-		mlx_destroy_image(fdf->mlx, fdf->display->img);
+	if (fdf->display.img)
+		mlx_destroy_image(fdf->mlx, fdf->display.img);
 	if (fdf->window)
 		mlx_destroy_window(fdf->mlx, fdf->window);
 }

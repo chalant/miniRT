@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 14:24:32 by alexphil          #+#    #+#             */
-/*   Updated: 2024/01/30 17:29:23 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/01/31 12:42:33 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,12 @@
 
 typedef	struct	s_import
 {
-	FILE	*fd;
-	int		elements;
-	int		A;
-	int		C;
-	int		L;
+	t_minirt	*minirt;
+	int			fd;
+	int			elements;
+	int			A;
+	int			C;
+	int			L;
 }	t_import;
 
 int	check_extension(char *filename, char *extension)
@@ -41,8 +42,9 @@ int	check_extension(char *filename, char *extension)
 	return (1);
 }
 
-int	init_import(t_import *import, char *map)
+int	init_import(t_import *import, t_minirt *minirt, char *map)
 {
+	import->minirt = minirt;
 	import->fd = open(map, O_RDONLY);
 	if (import->fd == -1)
 		return (perror("Error: Open() failure."), 1);
@@ -55,10 +57,10 @@ int	init_import(t_import *import, char *map)
 
 int	is_blank(char *line)
 {
-	if (!line || line[0] == '\0' || line[0] == '\n')
+	if (!line || *line == '\0' || *line == '\n')
 		return (1);
 	while (*line == ' ')
-		*line++;
+		line++;
 	if (*line == '\0' || *line == '\n')
 		return (1);
 	else
@@ -112,19 +114,23 @@ int	read_map(t_import *import)
 		infos = ft_split(line, ' ');
 		if (!infos)
 			return (free(line), ft_clear_ds(infos), 1);
-		if (ft_count_strings(infos) != expected_infos(infos[0]))
+		if ((int)ft_count_strings(infos) != expected_infos(infos[0]))
 			return (free(line), ft_clear_ds(infos), 1);
 		if (seen_type(import, infos))
 			return (free(line), ft_clear_ds(infos), 1);
+		// if (spawn_element(import, infos)) // TODO: spawn_element()
+		// 	return (free(line), ft_clear_ds(infos), destroy_elements(import)); // TODO: destroy_elements()
 		ft_clear_ds(infos);
 		free(line);
 	}
 	return (0);	
 }
 
-int	import_map(t_minirt *minirt, t_import *import)
+int	check_scene(t_import *import)
 {
-	;
+	if (!import->A || !import->C || import->L)
+		return (1);
+	return (0);
 }
 
 int	import_map(t_minirt *minirt, char **av)
@@ -133,12 +139,12 @@ int	import_map(t_minirt *minirt, char **av)
 	
 	if (check_extension(av[1], ".rt"))
 		return (1);
-	if (init_import(&import, av[1]))
+	if (init_import(&import, minirt, av[1]))
 		return (1);
 	if (read_map(&import))
 		return (1);
-	if (import_map(minirt, import))
-		return (1)
+	if (check_scene(&import))
+		return (1);
 	return (0);
 }
 
@@ -147,7 +153,7 @@ int	import_map(t_minirt *minirt, char **av)
 // [X] Read the map line per line with GNL and count the number of elements
 // [X] Split each line against blanks and check if it's n-sized as expected PER type
 // [X] If A, C or L type, check if already seen in the map (can be declared only once)
-// [ ] If map is correct, process each element data into memory for rendering (where and how, ask Yves)
+// [ ] If map is correct, process each element data into memory for rendering (where and how, see w/ Yves)
 
 // COMPILATION:
 // [ ] Incorporate GNL and ft_printf into Yves's Libft Makefile for compilation

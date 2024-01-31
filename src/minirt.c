@@ -172,10 +172,39 @@ int	load_scene(t_minirt *minirt)
 {
 	t_object	new;
 	t_material	material;
+	t_light		spot_light;
 
-	material.ambient_reflection = 0.5f;
+	spot_light.position[0] = -3.0f;
+	spot_light.position[1] = 2.0f;
+	spot_light.position[2] = -3.0f;
+
+	spot_light.direction[0] = 1.0f;
+	spot_light.direction[1] = 1.0f;
+	spot_light.direction[2] = 1.0f;
+
+	normalize_vector(spot_light.direction, spot_light.direction, 3);
+
+	spot_light.brightness = 0.9f;
+	to_color(0x00ff00ff, spot_light.color);
+	ft_darray_append(&minirt->spot_lights, &spot_light);
+
+	spot_light.position[0] = 3.0f;
+	spot_light.position[1] = 2.0f;
+	spot_light.position[2] = 3.0f;
+
+	spot_light.direction[0] = 1.0f;
+	spot_light.direction[1] = 1.0f;
+	spot_light.direction[2] = 1.0f;
+
+	normalize_vector(spot_light.direction, spot_light.direction, 3);
+
+	spot_light.brightness = 0.9f;
+	to_color(0x00ffffff, spot_light.color);
+	ft_darray_append(&minirt->spot_lights, &spot_light);
+
+	material.ambient_reflection = 0.18f;
 	material.diffuse_reflection = 0.9f;
-	material.shininess = 0.0f;
+	material.shininess = 10.9f;
 	ft_darray_append(&minirt->materials, &material);
 	minirt->diffuse.direction[0] = 1.0f;
 	minirt->diffuse.direction[1] = -1.0f;
@@ -190,7 +219,7 @@ int	load_scene(t_minirt *minirt)
 	minirt->ambient.brightness = 0.2f;
 	to_color(0x00ffffff, minirt->ambient.color);
 	//todo: malloc protection
-	minirt->camera.fov = 90.0f;
+	minirt->camera.fov = 70.0f;
 	minirt->camera.near = -1.0f;
 	minirt->camera.far = 1.0f;
 	minirt->camera.orientation = ft_calloc(4, sizeof(float));

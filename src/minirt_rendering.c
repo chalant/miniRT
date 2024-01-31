@@ -107,25 +107,27 @@ float	get_specular_light(t_light *light, t_hit *hit, float *view)
 	return (powf(dot_product(reflection, view, 3), hit->object->material->shininess) * light->brightness);
 }
 
-void	add_spot_lights(t_minirt *minirt, t_hit *hit, float *view)
+void	add_spot_lights(t_minirt *minirt, t_hit *hit, float view[3])
 {
 	int			i;
 	int			j;
 	float		specular_power;
 	float		reflection[3];
 	t_light		*light;
+	float		direction[3];
 
 	i = -1;
-	j = -1;
 	while (++i < minirt->spot_lights.size)
 	{
-		//compute light direction relative to its position.
+		j = -1;
 		light = ft_darray_get(&minirt->spot_lights, i);
-		reflect(light->direction, hit->normal, dot_product(light->direction, hit->normal, 3), reflection);
-		specular_power = powf(dot_product(reflection, view, 3),
+		subtract_vectors(hit->point, light->position, direction, 3);
+		normalize_vector(direction, direction, 3);
+		reflect(direction, hit->normal, dot_product(direction, hit->normal, 3), reflection);
+		specular_power = powf(fmaxf(0.0f, dot_product(reflection, view, 3)),
 			hit->object->material->shininess) * light->brightness;
 		while (++j < 3)
-			hit->color[j] += specular_power * light->color[j];
+			hit->color[j] += 1.0f * specular_power * light->color[j];
 	}
 }
 
@@ -139,19 +141,19 @@ int	add_lights(t_minirt *minirt, t_ray *ray, t_hit *hit, float multiplier)
 
 	copy_vector(ray->origin, lray.origin, 3);
 	hit_angle = dot_product(hit->normal, minirt->diffuse.direction, 3);
-	subtract_vectors(minirt->camera.origin, hit->point, view, 3);
-	normalize_vector(view, view, 3);
 	copy_vector(minirt->diffuse.direction, lray.direction, 3);
-	i = -1;
 	vis = 1;
 	if (shadow_ray(minirt, &lray))
 		vis = 0;
+	i = -1;
 	while (++i < 3)
 	{
 		hit->color[i] += minirt->ambient.brightness * minirt->ambient.color[i] * hit->object->color[i] * hit->object->material->ambient_reflection * multiplier;
 		hit->color[i] += vis * hit_angle * minirt->diffuse.brightness * minirt->diffuse.color[i] * hit->object->color[i] * hit->object->material->diffuse_reflection * multiplier;
 	}
-	//add_spot_lights(minirt, hit, view);
+	subtract_vectors(minirt->camera.origin, hit->point, view, 3);
+	normalize_vector(view, view, 3);
+	add_spot_lights(minirt, hit, view);
 	return (0);
 }
 
@@ -197,7 +199,7 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 		set_hit_info(&hit, &ray);
 		add_vectors(hit.point, scale_vector(hit.normal, 0.0001f, epsilon, 3), ray.origin, 3);
 		add_lights(minirt, &ray, &hit, multiplier);
-		reflect(ray.direction, hit.normal, dot_product(ray.direction, hit.normal, 3), ray.direction);
+		//reflect(ray.direction, hit.normal, dot_product(ray.direction, hit.normal, 3), ray.direction);
 		//todo: need shadows
 		multiplier *= 0.6f;
 	}

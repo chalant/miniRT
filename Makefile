@@ -12,6 +12,7 @@ INCLUDES_FILES = minirt.h \
 				 minirt_colors.h
 
 SRC_FILES =	minirt.c \
+			minirt_map_import.c \
 			minirt_key_hooks.c \
 			matrix.c \
 			matrix_operations.c \

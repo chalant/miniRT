@@ -23,7 +23,7 @@ typedef struct	s_ray
 {
 	float		object_center[4];
 	float		direction[4];
-	float		*origin;
+	float		origin[3];
 	float		closest_t;
 	float		t;
 }				t_ray;
@@ -76,10 +76,10 @@ typedef struct	s_material
 	float	diffuse_reflection;
 	float	ambient_reflection;
 	float	shininess;
+	float	emission;
 	float	color[4];
 	float	dark_color[4];
-	float	roughness;
-	float	emission;
+	float	*(*get_color)(struct s_material, float *uv_coords[2]);
 }	t_material;
 
 typedef struct	s_object
@@ -92,7 +92,6 @@ typedef struct	s_object
 	const char		*name;
 	void			*shape;
 	float			*center;
-	float			albedo;
 	int				id;
 	int				(*intersect)(struct s_object*, t_ray*);
 	int				(*transform)(struct s_object*, t_matrix*, float*);
@@ -142,13 +141,13 @@ typedef struct	s_minirt
 	t_matrix		*transforms;
 	t_matrix		*centering;
 	t_matrix		*tmp;
+	t_object		*selected_object;
 
-	t_light			*light;
 	t_light			diffuse;
 	t_light			ambient;
 	t_darray		*spot_lights;
 	t_darray		*objects;
-	t_object		*target;
+	t_darray		*materials;
 
 	t_display		*display;
 	t_camera		*camera;
@@ -169,7 +168,6 @@ int		update_view(t_minirt *minirt);
 int		key_release_hook(int code, t_minirt *minirt);
 int		key_press_hook(int code, t_minirt *minirt);
 void	fdf_control_key(int code, t_minirt *fdf);
-int		color_hook(int code, t_minirt *fdf);
 void	movement_hook(int code, t_minirt *fdf);
 
 int		set_rotations(t_minirt *fdf, float x, float y, float z);

@@ -171,7 +171,17 @@ int	set_variables(t_minirt *minirt)
 int	load_scene(t_minirt *minirt)
 {
 	t_object	new;
+	t_material	material;
 
+	minirt->materials = malloc(sizeof(t_darray));
+	if (!minirt->materials)
+		return (-1);
+	if (ft_darray_init(minirt->materials, sizeof(t_material), 10) < 0)
+		return (-1);
+	material.ambient_reflection = 0.1f;
+	material.diffuse_reflection = 0.9f;
+	material.shininess = 0.0f;
+	ft_darray_append(minirt->materials, &material);
 	minirt->camera = malloc(sizeof(t_camera));
 	if (!minirt->camera)
 		return (-1);
@@ -185,6 +195,8 @@ int	load_scene(t_minirt *minirt)
 	//todo: the light direction should be the negative of the position, normalized.
 	minirt->diffuse.brightness = 1.0f;
 	to_color(0x00ffffff, minirt->diffuse.color);
+	minirt->ambient.brightness = 1.0f;
+	to_color(0x00ffffff, minirt->ambient.color);
 	//todo: malloc protection
 	minirt->camera->fov = 60.0f;
 	minirt->camera->near = -1.0f;
@@ -201,35 +213,34 @@ int	load_scene(t_minirt *minirt)
 	minirt->camera->origin[3] = 1.0f;
 	if (set_camera_transform(minirt->camera) == -1)
 		return (-1);
-	create_sphere(&new, 0.7f, "red");
+	create_sphere(&new, 1.5f, "red");
 	to_color(0x00f94449, new.color);
 	new.name = "red";
 	new.center = ft_calloc(4, sizeof(float));
 	new.center[0] = 0.8f;
-	new.center[1] = -1.2f;
+	new.center[1] = -0.2f;
 	new.center[2] = 0.0f;
 	new.center[3] = 1.0f;
-	new.albedo = 0.5f;
+	new.material = ft_darray_get(minirt->materials, 0);
 	ft_darray_append(minirt->objects, &new);
 	create_sphere(&new, 0.4f, "blue");
 	to_color(0x003261e3, new.color);
 	new.name = "blue";
 	new.center = ft_calloc(4, sizeof(float));
-	new.center[0] = 0.0f;
+	new.center[0] = -2.0f;
 	new.center[1] = -0.3f;
 	new.center[2] = 0.0f;
 	new.center[3] = 1.0f;
-	new.albedo = 0.9f;
+	//new.material = ft_darray_get(minirt->materials, 0);
 	ft_darray_append(minirt->objects, &new);
-	create_sphere(&new, 0.5f, "green");
-	to_color(0x11aaea8c, new.color);
-	new.center = ft_calloc(4, sizeof(float));
-	new.center[0] = -0.5f;
-	new.center[1] = -1.4f;
-	new.center[2] = -0.0f;
-	new.center[3] = 0.0f;
-	new.albedo = 0.5f;
-	ft_darray_append(minirt->objects, &new);
+	// create_sphere(&new, 0.5f, "green");
+	// to_color(0x11aaea8c, new.color);
+	// new.center = ft_calloc(4, sizeof(float));
+	// new.center[0] = -0.5f;
+	// new.center[1] = -1.4f;
+	// new.center[2] = -0.0f;
+	// new.center[3] = 0.0f;
+	// ft_darray_append(minirt->objects, &new);
 	create_plane(&new, (float[4]){0.0f, 1.0f, 0.0f, 0.0f});
 	new.center = ft_calloc(4, sizeof(float));
 	to_color(0x00ffffff, new.color);
@@ -237,40 +248,8 @@ int	load_scene(t_minirt *minirt)
 	new.center[1] = -2.0f;
 	new.center[2] = 0.0f;
 	new.center[3] = 1.0f;
-	new.albedo = 1.0f;
+	new.material = ft_darray_get(minirt->materials, 0);
 	ft_darray_append(minirt->objects, &new);
-	// create_plane(&new, (float[4]){1.0f, 0.0f, 0.0f, 0.0f});
-	// new.center = ft_calloc(4, sizeof(float));
-	// to_color(0x00ffff00, new.color);
-	// new.center[0] = 2.0f;
-	// new.center[1] = 0.0f;
-	// new.center[2] = 0.0f;
-	// new.center[3] = 1.0f;
-	// ft_darray_append(minirt->objects, &new);
-	// create_plane(&new, (float[4]){0.0f, 0.0f, 1.0f, 0.0f});
-	// new.center = ft_calloc(4, sizeof(float));
-	// to_color(0x00ffff00, new.color);
-	// new.center[0] = 0.0f;
-	// new.center[1] = 0.0f;
-	// new.center[2] = 2.0f;
-	// new.center[3] = 1.0f;
-	// ft_darray_append(minirt->objects, &new);
-	// create_plane(&new, (float[4]){0.0f, 1.0f, 0.0f, 0.0f});
-	// new.center = ft_calloc(4, sizeof(float));
-	// to_color(0x00ffffff, new.color);
-	// new.center[0] = 0.0f;
-	// new.center[1] = -2.0f;
-	// new.center[2] = 0.0f;
-	// new.center[3] = 1.0f;
-	// ft_darray_append(minirt->objects, &new);
-	// create_plane(&new, (float[4]){1.0f, 0.0f, 0.0f, 0.0f});
-	// new.center = ft_calloc(4, sizeof(float));
-	// to_color(0x00ffff00, new.color);
-	// new.center[0] = -2.0f;
-	// new.center[1] = 0.0f;
-	// new.center[2] = 0.0f;
-	// new.center[3] = 1.0f;
-	// ft_darray_append(minirt->objects, &new);
 	return (1);
 }
 

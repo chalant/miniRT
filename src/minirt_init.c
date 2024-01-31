@@ -26,7 +26,7 @@ int	minirt_init(t_minirt *fdf)
 	fdf->transforms = NULL;
 	fdf->centering = NULL;
 	fdf->tmp = NULL;
-	fdf->target = NULL;
+	fdf->selected_object = NULL;
 	fdf->display = NULL;
 	fdf->objects = malloc(sizeof(t_darray));
 	fdf->mouse.x = 0;

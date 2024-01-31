@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 14:24:32 by alexphil          #+#    #+#             */
-/*   Updated: 2024/01/31 12:42:33 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/01/31 13:13:30 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,12 @@ int	init_import(t_import *import, t_minirt *minirt, char *map)
 
 int	is_blank(char *line)
 {
-	if (!line || *line == '\0' || *line == '\n')
-		return (1);
+	if (!line || *line == '\n' || *line == '\0')
+		return (free(line), 1);
 	while (*line == ' ')
 		line++;
-	if (*line == '\0' || *line == '\n')
-		return (1);
+	if (*line == '\n' || *line == '\0')
+		return (free(line), 1);
 	else
 		return (0);
 }
@@ -145,6 +145,8 @@ int	import_map(t_minirt *minirt, char **av)
 		return (1);
 	if (check_scene(&import))
 		return (1);
+	// if (spawn_element(import, infos)) // TODO: spawn_element()
+		// 	return (free(line), ft_clear_ds(infos), destroy_elements(import)); // TODO: destroy_elements()
 	return (0);
 }
 

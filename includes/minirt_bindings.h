@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt_bindings.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
+/*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:54:53 by ychalant          #+#    #+#             */
-/*   Updated: 2024/01/09 10:39:27 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/01/31 16:01:46 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@
 
 # define ZI 24
 # define ZO 27
-
-# define LIGHT 37
 
 # define SHIFT 257
 # define CTRL 259

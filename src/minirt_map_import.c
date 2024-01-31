@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 14:24:32 by alexphil          #+#    #+#             */
-/*   Updated: 2024/01/31 15:05:42 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/01/31 16:36:05 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	expected_infos(char *type)
 	else if (!ft_strcmp(type, "C") || !ft_strcmp(type, "L")
 		|| !ft_strcmp(type, "sp") || !ft_strcmp(type, "pl"))
 		return (4);
-	else if (!ft_strcmp(type, "cy"))
+	else if (!ft_strcmp(type, "cy") || !ft_strcmp(type, "cn"))
 		return (6);
 	else
 		return (-1);
@@ -97,20 +97,109 @@ int	seen_type(t_import *import, char **line)
 	return (0);
 }
 
-// Prototyping
-// int get_element(t_import *import, char **infos)
-// {
-// 	t_object	new;
-// 	t_sphere	*sphere;
+enum	e_ranges
+{
+	LIGHT,
+	RGB,
+	NORMAL,
+	FOV,
+}	t_ranges;
 
-	
-// 	if (ft_strcmp("sp", infos[0]))
-// 	{
-// 		sphere->radius;
-// 	}
-// 	new.shape = sphere;
-// 	if (ft_darray_append(import->minirt->objects, &new))
+int	check_range(float value, int type) // Extend responsabilities to aleviate the processing functions (tokenize, verify size..)
+{
+	if (type == LIGHT && value >= 0.0 && value <= 1.0)
+		return (0);
+	if (type == RGB && (int)value >= 0 && (int)value <= 255)
+		return (0);
+	if (type == NORMAL && value >= -1.0 && value <= 1.0)
+		return (0);
+	if (type == FOV && (int)value >= 0 && (int)value <= 180)
+		return (0);
+	else
+		return (1);
+}
+
+int	process_ambient(t_import *import, char **infos)
+{
+	t_light		ambient;
+	char		**colors;
+	int			i;
+
+	colors = ft_split(infos[2], ',');
+	if (!colors)
+		return (1);
+	if (ft_lstsize(colors) != 3)
+		return (1);
+	i = -1;
+	while (++i < 3)
+		if (check_range(ft_atoi(colors[i]), RGB))
+			return (ft_clear_ds(colors), 1);
+	ambient.color[0] = ft_atoi(colors[0]);
+	ambient.color[1] = ft_atoi(colors[1]);
+	ambient.color[2] = ft_atoi(colors[2]);
+	ambient.color[3] = 0;
+	import->minirt->ambient = ambient;
+	ft_clear_ds(colors);
+	return (0);
+}
+
+// int	process_camera(t_import *import, char **infos)
+// {
+// 	t_camera	camera;
+
+// 	vector_magnitude()
 // }
+
+// int	process_light(t_import *import, char **infos)
+// {
+// 	t_object	obj;
+// 	t_light		light;
+// }
+
+// int	process_sphere(t_import *import, char **infos)
+// {
+// 	t_object	obj;
+// 	t_sphere	sphere;
+// }
+
+// int	process_plane(t_import *import, char **infos)
+// {
+// 	t_object	obj;
+// 	t_plane		plane;
+// }
+
+// int	process_cylinder(t_import *import, char **infos)
+// {
+// 	t_object	obj;
+// 	t_cylinsder	cylinder;
+// }
+
+// int	process_cone(t_import *import, char **infos)	TODO: T_CONE STRUCT
+// {
+// 	t_object	obj;
+// 	t_cone		cone;
+// }
+
+// [ ] TODO: Manage array deletion if an error occur
+int	process_element(t_import *import, char **infos)
+{
+	if (ft_strcmp(infos[0], "A"))
+		return (process_ambient(import, infos));
+	if (ft_strcmp(infos[0], "C"))
+		process_camera(import, infos);
+	// if (ft_strcmp(infos[0], "L"))
+	// 	process_light(import, infos);
+	// if (ft_strcmp(infos[0], "sp"))
+	// 	process_sphere(import, infos);
+	// if (ft_strcmp(infos[0], "pl"))
+	// 	process_plane(import, infos);
+	// if (ft_strcmp(infos[0], "cy"))
+	// 	process_cylinder(import, infos);
+	// if (ft_strcmp(infos[0], "cn"))
+	// 	process_cone(import, infos);
+	else
+		return (1); // ft_darray_delete if something already exits, othwewise just ret 1
+}
 
 int	read_map(t_import *import)
 {
@@ -131,8 +220,8 @@ int	read_map(t_import *import)
 			return (free(line), ft_clear_ds(infos), 1);
 		if (seen_type(import, infos))
 			return (free(line), ft_clear_ds(infos), 1);
-		// if (get_element(import, infos)) // DOING
-		// 	return (free(line), ft_clear_ds(infos), destroy_elements(import)); // TODO
+		if (process_element(import, infos))
+			return (free(line), ft_clear_ds(infos), 1);
 		ft_clear_ds(infos);
 		free(line);
 	}
@@ -166,7 +255,9 @@ int	import_map(t_minirt *minirt, char **av)
 // [X] Read the map line per line with GNL and count the number of elements
 // [X] Split each line against blanks and check if it's n-sized as expected PER type
 // [X] If A, C or L type, check if already seen in the map (can be declared only once)
-// [ ] If map is correct, process each element data into memory for rendering (where and how, see w/ Yves)
+// [ ] If map is correct, process each element data into memory for rendering
+// [ ] Verify that each part of the informations from an element is correct per the subject specifications (RGB, Normalization, Light Range..)
+// [ ] Manage floats with either custom atoi or by splitting and calculing 
 
 // COMPILATION:
 // [X] Incorporate GNL and ft_printf into Yves's Libft Makefile for compilation
@@ -179,3 +270,18 @@ int	import_map(t_minirt *minirt, char **av)
 // pl: 4
 // cn: 5
 // cy: 6
+
+// Prototyping 
+// int get_element(t_import *import, char **infos)
+// {
+// 	t_object	new;
+// 	t_sphere	*sphere;
+
+	
+// 	if (ft_strcmp("sp", infos[0]))
+// 	{
+// 		sphere->radius;
+// 	}
+// 	new.shape = sphere;
+// 	if (ft_darray_append(import->minirt->objects, &new))
+// }

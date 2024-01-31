@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   matrix.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
+/*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:54:53 by ychalant          #+#    #+#             */
-/*   Updated: 2024/01/05 15:22:19 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:47:41 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ float	*subtract_vectors(float *v1, float *v2, float *result, int n);
 float	*cross_product(float v1[3], float v2[3], float result[3]);
 float	*scale_vector(float *vector, float scale, float *result, int n);
 float	*normalize_vector(float *vector, float *result, int n);
+float	vector_magnitude(float *vector, int n);
 float	**get_points(t_matrix *matrix);
 float	get_point(t_matrix *matrix, int i, int j);
 void	set_point(t_matrix *matrix, int i, int j, float value);

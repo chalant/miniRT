@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 14:24:32 by alexphil          #+#    #+#             */
-/*   Updated: 2024/01/31 13:25:39 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/01/31 13:28:05 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ int	read_map(t_import *import)
 
 int	check_scene(t_import *import)
 {
-	if (!import->A || !import->C || import->L)
+	if (!import->ambient || !import->camera || import->light)
 		return (1);
 	return (0);
 }

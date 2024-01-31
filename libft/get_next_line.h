@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:54:53 by ychalant          #+#    #+#             */
-/*   Updated: 2024/01/31 12:36:44 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/01/31 14:27:40 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <fcntl.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include "libft.h"
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1024
@@ -40,6 +41,7 @@ typedef struct s_read_state
 
 char			*get_next_line(int fd);
 char			*ft_join(char *s1, char const *buffer, t_read_state rs);
+char			*ft_strndup(const char *s, int n);
 
 t_read_state	append(char **line, char *buffer, t_read_state rs);
 t_read_state	next_chunk(int fd, char **line, char *buffer, t_read_state rs);

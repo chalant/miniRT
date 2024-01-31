@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
+/*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:53:50 by ychalant          #+#    #+#             */
-/*   Updated: 2023/08/29 15:53:50 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/01/31 14:27:13 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,19 @@ char	*ft_join(char *s1, char const *buffer, t_read_state rs)
 	free(s1);
 	line[i] = '\0';
 	return (line);
+}
+
+char	*ft_strndup(const char *s, int n)
+{
+	char	*ptr;
+
+	ptr = malloc(sizeof(char) * (n + 1));
+	if (!ptr)
+		return (NULL);
+	ptr[n] = '\0';
+	while (n--)
+		ptr[n] = s[n];
+	return (ptr);
 }
 
 t_read_state	append(char **line, char *buffer, t_read_state rs)

@@ -1,4 +1,4 @@
-C_FLAGS = -O3 -Wall -Wextra -Werror -Wno-unused-result
+C_FLAGS = -O3 -Wall -Wextra -Werror -Wno-unused-result -I.
 SRC_FILES = ft_atoi.c \
 			ft_bzero.c \
 			ft_calloc.c \
@@ -40,7 +40,9 @@ SRC_FILES = ft_atoi.c \
 			ft_darray_interface.c \
 			ft_darray_operations.c \
 			ft_stack.c \
-			ft_count.c
+			ft_count.c \
+			get_next_line.c \
+			get_next_line_utils.c
 
 BONUS_FILES = ft_lstnew_bonus.c \
 			  ft_lstadd_front_bonus.c \

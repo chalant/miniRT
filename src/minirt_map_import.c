@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 14:24:32 by alexphil          #+#    #+#             */
-/*   Updated: 2024/01/31 13:28:05 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:05:42 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ typedef	struct	s_import
 {
 	t_minirt	*minirt;
 	int			fd;
-	int			elements;
 	int			ambient;
 	int			camera;
 	int			light;
@@ -48,7 +47,6 @@ int	init_import(t_import *import, t_minirt *minirt, char *map)
 	import->fd = open(map, O_RDONLY);
 	if (import->fd == -1)
 		return (perror("Error: Open() failure."), 1);
-	import->elements = 0;
 	import->ambient = 0;
 	import->camera = 0;
 	import->light = 0;
@@ -57,7 +55,9 @@ int	init_import(t_import *import, t_minirt *minirt, char *map)
 
 int	is_blank(char *line)
 {
-	if (!line || *line == '\n' || *line == '\0')
+	if (!line)
+		return (1);
+	if (*line == '\n' || *line == '\0')
 		return (free(line), 1);
 	while (*line == ' ')
 		line++;
@@ -97,6 +97,21 @@ int	seen_type(t_import *import, char **line)
 	return (0);
 }
 
+// Prototyping
+// int get_element(t_import *import, char **infos)
+// {
+// 	t_object	new;
+// 	t_sphere	*sphere;
+
+	
+// 	if (ft_strcmp("sp", infos[0]))
+// 	{
+// 		sphere->radius;
+// 	}
+// 	new.shape = sphere;
+// 	if (ft_darray_append(import->minirt->objects, &new))
+// }
+
 int	read_map(t_import *import)
 {
 	char	*line;
@@ -109,8 +124,6 @@ int	read_map(t_import *import)
 			break ;
 		if (is_blank(line))
 			continue ;
-		else
-			import->elements++;
 		infos = ft_split(line, ' ');
 		if (!infos)
 			return (free(line), ft_clear_ds(infos), 1);
@@ -118,8 +131,8 @@ int	read_map(t_import *import)
 			return (free(line), ft_clear_ds(infos), 1);
 		if (seen_type(import, infos))
 			return (free(line), ft_clear_ds(infos), 1);
-		// if (spawn_element(import, infos)) // TODO: spawn_element()
-		// 	return (free(line), ft_clear_ds(infos), destroy_elements(import)); // TODO: destroy_elements()
+		// if (get_element(import, infos)) // DOING
+		// 	return (free(line), ft_clear_ds(infos), destroy_elements(import)); // TODO
 		ft_clear_ds(infos);
 		free(line);
 	}
@@ -145,8 +158,6 @@ int	import_map(t_minirt *minirt, char **av)
 		return (1);
 	if (check_scene(&import))
 		return (1);
-	// if (spawn_element(import, infos)) // TODO: spawn_element()
-		// 	return (free(line), ft_clear_ds(infos), destroy_elements(import)); // TODO: destroy_elements()
 	return (0);
 }
 
@@ -158,12 +169,13 @@ int	import_map(t_minirt *minirt, char **av)
 // [ ] If map is correct, process each element data into memory for rendering (where and how, see w/ Yves)
 
 // COMPILATION:
-// [ ] Incorporate GNL and ft_printf into Yves's Libft Makefile for compilation
+// [X] Incorporate GNL and ft_printf into Yves's Libft Makefile for compilation
 
-// Expected elements per type:
+// Object types and expected elements per type:
 // A: 3
 // C: 4
 // L: 4
 // sp: 4
 // pl: 4
+// cn: 5
 // cy: 6

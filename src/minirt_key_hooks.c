@@ -24,12 +24,6 @@ void	fdf_control_key(int code, t_minirt *fdf)
 	(void)fdf;
 }
 
-void	copy_vector(float *source, float *dest, int n)
-{
-	while (--n > -1)
-		dest[n] = source[n];
-}
-
 void	set_translate(t_matrix *matrix, float x, float y, float z)
 {
 	matrix->points[0][matrix->cols - 1] = x;

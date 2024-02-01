@@ -6,7 +6,7 @@ int	perspective_projector(t_matrix **matrix, t_display *display, t_camera *camer
 
 	t = 1 / tanf(to_rad(camera->fov) / 2.0f);
 	homogeneous_matrix(matrix, 3, 3);
-	(*matrix)->points[0][0] = 1.0f / display->aspect_ratio * t;
+	(*matrix)->points[0][0] = t / display->aspect_ratio;
 	(*matrix)->points[1][1] = t;
 	(*matrix)->points[2][2] = camera->far / (camera->far - camera->near);
 	(*matrix)->points[2][3] = (camera->far * camera->near) / (camera->far - camera->near);

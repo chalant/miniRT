@@ -51,6 +51,40 @@ float	*sphere_normal(t_object *object, t_hit *hit)
 	return (hit->normal);
 }
 
+float	*sphere_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
+{
+	t_sphere	*sphere;
+	float		theta;
+	float		phi;
+
+	sphere = object->shape;
+	phi = atan2f(hit->point[2] - object->center[2], hit->point[0] - object->center[0]);
+	theta = acosf(hit->point[1] / sphere->radius);
+	uv_coords[0] = 0.5f + phi / (2.0f * M_PI);
+	uv_coords[1] = 0.5f + (1.0f - theta) / M_PI;
+	return (uv_coords);
+}
+
+float	*plane_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
+{
+	t_plane		*plane;
+	float		vector[3];
+	float		result[3];
+	float		u[3];
+
+	plane = object->shape;
+	vector[0] = 0.0f;
+	vector[1] = 0.0f;
+	vector[2] = 1.0f;
+	cross_product(plane->normal, vector, result);
+	normalize_vector(result, result, 3);
+	cross_product(plane->normal, result, u);
+	normalize_vector(u, u, 3);
+	uv_coords[0] = hit->point[0] + 0.001f;
+	uv_coords[1] = hit->point[1] + 0.001f;
+	return (uv_coords);
+}
+
 int create_sphere(t_object *object, float radius, const char *name)
 {
 	t_sphere	*sphere;
@@ -64,6 +98,7 @@ int create_sphere(t_object *object, float radius, const char *name)
 	object->intersect = hit_sphere;
 	object->transform = do_nothing;
 	object->normal = sphere_normal;
+	object->uv_coords = sphere_uv_coords;
 	return (0);
 }
 
@@ -126,5 +161,6 @@ int	create_plane(t_object *object, float normal[4])
 	object->intersect = hit_plane;
 	object->transform = transform_plane;
 	object->normal = plane_normal;
+	object->uv_coords = plane_uv_coords;
 	return (0);
 }

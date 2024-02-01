@@ -28,7 +28,8 @@ SRC_FILES =	minirt.c \
 			minirt_rendering.c \
 			minirt_camera.c \
 			minirt_projection.c \
-			minirt_colors.c
+			minirt_colors.c \
+			procedural_textures.c
 
 
 INCLUDES = $(addprefix $(INCLUDES_DIR)/, $(INCLUDES_FILES))

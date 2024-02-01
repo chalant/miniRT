@@ -136,24 +136,34 @@ int	add_lights(t_minirt *minirt, t_ray *ray, t_hit *hit, float multiplier)
 	int			i;
 	float		view[3];
 	float		hit_angle;
+	float		direction[3];
+	float		reflection[3];
+	float		specular_power;
 	int			vis;
 	t_ray		lray;
 
 	copy_vector(ray->origin, lray.origin, 3);
-	hit_angle = dot_product(hit->normal, minirt->diffuse.direction, 3);
-	copy_vector(minirt->diffuse.direction, lray.direction, 3);
+	subtract_vectors(minirt->diffuse.position, hit->point, direction, 3);
+	normalize_vector(direction, direction, 3);
+	hit_angle = dot_product(hit->normal, direction, 3);
+	copy_vector(direction, lray.direction, 3);
 	vis = 1;
 	if (shadow_ray(minirt, &lray))
 		vis = 0;
+	subtract_vectors(minirt->camera.origin, hit->point, view, 3);
+	normalize_vector(view, view, 3);
+	scale_vector(direction, -1.0f, direction, 3);
+	reflect(direction, hit->normal, dot_product(direction, hit->normal, 3), reflection) ;
+	specular_power = powf(fmaxf(0.0f, dot_product(reflection, view, 3)),
+		hit->object->material->shininess) * minirt->diffuse.brightness;
 	i = -1;
 	while (++i < 3)
 	{
 		hit->color[i] += minirt->ambient.brightness * minirt->ambient.color[i] * hit->object->color[i] * hit->object->material->ambient_reflection * multiplier;
 		hit->color[i] += vis * hit_angle * minirt->diffuse.brightness * minirt->diffuse.color[i] * hit->object->color[i] * hit->object->material->diffuse_reflection * multiplier;
+		hit->color[i] += 1.0f * vis * specular_power * minirt->diffuse.color[i] * multiplier;
 	}
-	subtract_vectors(minirt->camera.origin, hit->point, view, 3);
-	normalize_vector(view, view, 3);
-	add_spot_lights(minirt, hit, view);
+	//add_spot_lights(minirt, hit, view);
 	return (0);
 }
 
@@ -169,7 +179,7 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 	float		sky_color[3];
 
 	i = -1;
-	bounces = 1;
+	bounces = 3;
 	to_screen_space(&minirt->display, point, coords[0], coords[1]);
 	vmatmul(minirt->world_space, point, result);
 	scale_vector(result, 1 / result[3], result, 3);
@@ -181,9 +191,9 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 	copy_vector(minirt->camera.origin, ray.origin, 3);
 	hit.screen_coords = coords;
 	float	multiplier = 1.0f;
-	sky_color[0] = 0.0f;
-	sky_color[1] = 0.0f;
-	sky_color[2] = 0.0f;
+	sky_color[0] = 0.1f;
+	sky_color[1] = 0.1f;
+	sky_color[2] = 0.1f;
 	hit.color[3] = 0.0f;
 	//int	shadow = 0;
 	while (++i < bounces)
@@ -191,17 +201,17 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 		ray_trace(minirt, &ray, &hit, coords);
 		if (hit.distance < 0.0f)
 		{
-			hit.color[0] += sky_color[0] * multiplier;
-			hit.color[1] += sky_color[1] * multiplier;
-			hit.color[2] += sky_color[2] * multiplier;
+			hit.color[0] += sky_color[0];
+			hit.color[1] += sky_color[1];
+			hit.color[2] += sky_color[2];
 			break;
 		}
 		set_hit_info(&hit, &ray);
 		add_vectors(hit.point, scale_vector(hit.normal, 0.0001f, epsilon, 3), ray.origin, 3);
 		add_lights(minirt, &ray, &hit, multiplier);
-		//reflect(ray.direction, hit.normal, dot_product(ray.direction, hit.normal, 3), ray.direction);
+		reflect(ray.direction, hit.normal, dot_product(ray.direction, hit.normal, 3), ray.direction);
 		//todo: need shadows
-		multiplier *= 0.6f;
+		multiplier *= 0.3f;
 	}
 	minirt_pixel_put(&minirt->display, hit.screen_coords[0], hit.screen_coords[1], to_argb(hit.color));
 	return (1);
@@ -218,7 +228,7 @@ int	render(t_minirt *minirt)
 		// if ((coords[0] % 2))
 		// 	continue;
 		while (++coords[1] < minirt->display.height)
-			// if (!(coords[1] % 2))
+			//if (!(coords[1] % 2))
 				shade_pixel(minirt, coords);
 	}
 	mlx_put_image_to_window(minirt->mlx, minirt->window, minirt->display.img, 0, 0);

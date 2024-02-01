@@ -26,7 +26,7 @@ typedef struct	s_ray
 	float		origin[3];
 	float		closest_t;
 	float		t;
-}				t_ray;
+}	t_ray;
 
 typedef struct	s_camera
 {
@@ -77,6 +77,7 @@ typedef struct	s_material
 	float	ambient_reflection;
 	float	shininess;
 	float	emission;
+	float	smoothness;
 	float	color[4];
 	float	dark_color[4];
 	float	*(*get_color)(struct s_material, float *uv_coords[2]);

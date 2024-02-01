@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:26:34 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/01 15:39:33 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:39:29 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ int	check_decimal(char *nbr)
 	decimal = 0;
 	while (nbr)
 	{
+		if (!ft_isdigit(*nbr) && *nbr != '.')
+			return (1);
 		if (*nbr == '.')
 			if (++dot && dot > 1)
 				return (1);

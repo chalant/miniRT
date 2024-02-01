@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:30:29 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/01 15:38:10 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/01 18:40:42 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 # define MAP_H
 
 # include "minirt.h"
-#include "get_next_line.h"
-#include <fcntl.h>
+# include "get_next_line.h"
+# include <fcntl.h>
 
-typedef	struct	s_import
+typedef struct s_import
 {
 	t_minirt	*minirt;
 	int			fd;
@@ -26,7 +26,7 @@ typedef	struct	s_import
 	int			light;
 }	t_import;
 
-enum	e_ranges
+typedef enum e_ranges
 {
 	LIGHT,
 	XYZ,

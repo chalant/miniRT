@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 14:24:32 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/01 15:37:19 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/01 18:38:11 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ int	import_map(t_minirt *minirt, char **av)
 // [ ] If map is correct, process each element data into memory for rendering
 // [ ] Verify that each part of the informations from an element is correct per the subject specifications (RGB, Normalization, Light Range..)
 // [ ] Manage floats with either custom atoi or by splitting and calculing 
+
+// [WIP] check_ranges(), check_ranges()
 
 // COMPILATION:
 // [X] Incorporate GNL and ft_printf into Yves's Libft Makefile for compilation

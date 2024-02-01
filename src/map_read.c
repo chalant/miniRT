@@ -6,22 +6,22 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:29:20 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/01 15:36:50 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/01 18:38:17 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "map.h"
 
-int	is_blank(char *line)
+int	is_blank(char **line)
 {
-	if (!line)
+	if (!*line)
 		return (1);
-	if (*line == '\n' || *line == '\0')
-		return (free(line), 1);
-	while (*line == ' ')
-		line++;
-	if (*line == '\n' || *line == '\0')
-		return (free(line), 1);
+	if (**line == '\n' || **line == '\0')
+		return (free(*line), 1);
+	while (**line == ' ')
+		*line++;
+	if (**line == '\n' || **line == '\0')
+		return (free(*line), 1);
 	else
 		return (0);
 }
@@ -66,7 +66,7 @@ int	read_map(t_import *import)
 		line = get_next_line(import->fd);
 		if (!line)
 			break ;
-		if (is_blank(line))
+		if (is_blank(&line))
 			continue ;
 		infos = ft_split(line, ' ');
 		if (!infos)

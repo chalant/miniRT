@@ -172,42 +172,17 @@ int	load_scene(t_minirt *minirt)
 {
 	t_object	new;
 	t_material	material;
-	t_light		spot_light;
 
-	spot_light.position[0] = -3.0f;
-	spot_light.position[1] = 2.0f;
-	spot_light.position[2] = -3.0f;
-
-	spot_light.direction[0] = 1.0f;
-	spot_light.direction[1] = 1.0f;
-	spot_light.direction[2] = 1.0f;
-
-	normalize_vector(spot_light.direction, spot_light.direction, 3);
-
-	spot_light.brightness = 0.9f;
-	to_color(0x00ff00ff, spot_light.color);
-	ft_darray_append(&minirt->spot_lights, &spot_light);
-
-	spot_light.position[0] = 3.0f;
-	spot_light.position[1] = 2.0f;
-	spot_light.position[2] = 3.0f;
-
-	spot_light.direction[0] = 1.0f;
-	spot_light.direction[1] = 1.0f;
-	spot_light.direction[2] = 1.0f;
-
-	normalize_vector(spot_light.direction, spot_light.direction, 3);
-
-	spot_light.brightness = 0.9f;
-	to_color(0x00ffffff, spot_light.color);
-	ft_darray_append(&minirt->spot_lights, &spot_light);
-
-	material.ambient_reflection = 0.2f;
+	//todo: need to load the bump map file...
+	//the file could be specified in the rt file, and would load the
+	//bump map file when parsing.
+	material.ambient_reflection = 0.8f;
 	material.diffuse_reflection = 0.8f;
 	material.shininess = 100.5f;
-	material.light_absorption = 0.5f;
+	material.reflectiveness = 0.0f;
+	material.repeat_pattern = 20.0f;
 	material.get_texture = checkerboard;
-	to_color(0x00f94449, material.dark_color);
+	//to_color(0x00f94449, material.dark_color);
 	to_color(0x00ffffff, material.color);
 	ft_darray_append(&minirt->materials, &material);
 	minirt->diffuse.position[0] = -40.0f;
@@ -226,7 +201,7 @@ int	load_scene(t_minirt *minirt)
 	minirt->ambient.brightness = 0.2f;
 	to_color(0x00ffffff, minirt->ambient.color);
 	//todo: malloc protection
-	minirt->camera.fov = 50.0f;
+	minirt->camera.fov = 90.0f;
 	minirt->camera.near = -1.0f;
 	minirt->camera.far = 1.0f;
 	minirt->camera.orientation = ft_calloc(4, sizeof(float));
@@ -251,28 +226,28 @@ int	load_scene(t_minirt *minirt)
 	new.center[3] = 1.0f;
 	new.material = ft_darray_get(&minirt->materials, 0);
 	ft_darray_append(&minirt->objects, &new);
-	// create_sphere(&new, 0.4f, "blue");
-	// to_color(0x003261e3, new.color);
-	// new.name = "blue";
-	// new.center = ft_calloc(4, sizeof(float));
-	// new.center[0] = -2.0f;
-	// new.center[1] = -0.3f;
-	// new.center[2] = 0.0f;
-	// new.center[3] = 1.0f;
-	// //new.material = ft_darray_get(minirt->materials, 0);
-	// ft_darray_append(&minirt->objects, &new);
-	// create_sphere(&new, 0.5f, "green");
-	// to_color(0x11aaea8c, new.color);
-	// new.center = ft_calloc(4, sizeof(float));
-	// new.center[0] = -0.9f;
-	// new.center[1] = -1.4f;
-	// new.center[2] = -0.0f;
-	// new.center[3] = 0.0f;
-	// new.material = ft_darray_get(&minirt->materials, 0);
-	// ft_darray_append(&minirt->objects, &new);
+	create_sphere(&new, 0.4f, "blue");
+	to_color(0x003261e3, new.color);
+	new.name = "blue";
+	new.center = ft_calloc(4, sizeof(float));
+	new.center[0] = -2.0f;
+	new.center[1] = -0.3f;
+	new.center[2] = 0.0f;
+	new.center[3] = 1.0f;
+	//new.material = ft_darray_get(minirt->materials, 0);
+	ft_darray_append(&minirt->objects, &new);
+	create_sphere(&new, 0.5f, "green");
+	to_color(0x11aaea8c, new.color);
+	new.center = ft_calloc(4, sizeof(float));
+	new.center[0] = -0.9f;
+	new.center[1] = -1.4f;
+	new.center[2] = -0.0f;
+	new.center[3] = 0.0f;
+	new.material = ft_darray_get(&minirt->materials, 0);
+	ft_darray_append(&minirt->objects, &new);
 	create_plane(&new, (float[4]){0.0f, 1.0f, 0.0f, 0.0f});
 	new.center = ft_calloc(4, sizeof(float));
-	to_color(0x00ffffff, new.color);
+	to_color(0x00000000, new.color);
 	new.center[0] = 0.0f;
 	new.center[1] = -2.0f;
 	new.center[2] = 0.0f;

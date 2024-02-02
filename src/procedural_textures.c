@@ -1,14 +1,16 @@
 #include "minirt.h"
 
-float	*checkerboard(t_material *material, float uv_coords[2], float color[4])
+float	*checkerboard(t_object *object, float uv_coords[2], float color[4])
 {
-	//fprintf(stderr, "XOR %f\n", (uv_coords[0] * 10));
-	if ((int)(uv_coords[0] * 10) % 2 == 0 ^ (int)(uv_coords[1] * 10) % 2 == 0)
+	t_material	*material;
+
+	material = object->material;
+	if (((int)(roundf(uv_coords[0] * material->repeat_pattern)) % 2 == 0) ^ ((int)(roundf(uv_coords[1] * material->repeat_pattern)) % 2 == 0))
 	{
-		color[0] = material->dark_color[0];
-		color[1] = material->dark_color[1];
-		color[2] = material->dark_color[2];
-		color[3] = material->dark_color[3];
+		color[0] = object->color[0];
+		color[1] = object->color[1];
+		color[2] = object->color[2];
+		color[3] = object->color[3];
 	}
 	else
 	{

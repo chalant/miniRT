@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:32:43 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/01 18:41:53 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/02 15:05:07 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,30 +25,34 @@ int	check_integer(char *value, int type)
 	int	i;
 	int	integer;
 
-	i = 0;
+	if (value[0] != '-' && !ft_isdigit(value[0]))
+		return (1);
+	i = 1;
 	while (value[i])
-		if (!ft_isdigit(value[i]))
+		if (!ft_isdigit(value[i++]))
 			return (1);
 	integer = ft_atoi(value);
-	if (type == XYZ || type == DIMENSION)
-		return (0);
 	if (type == RGB && integer >= 0 && integer <= 255)
 		return (0);
-	if (type == FOV && integer >= 0 && integer <= 180)
+	else if (type == FOV && integer >= 0 && integer <= 180)
 		return (0);
 	else
 		return (1);
 }
 
-// !!! TODO: Support other types than LIGHT and NORMAL !!!
 int	check_decimal(char *value, int type)
 {
 	float	decimal;
+	int		bad;
 
-	decimal = ft_atof(value);
-	if (type == LIGHT && decimal >= 0.0 && decimal <= 1.0)
+	decimal = ft_atof(value, &bad);
+	if (bad)
+		return (1);
+	else if (type == LIGHT && decimal >= 0.0 && decimal <= 1.0)
 		return (0);
-	if (type == NORMAL && decimal >= -1.0 && decimal <= 1.0)
+	else if (type == NORMAL && decimal >= -1.0 && decimal <= 1.0)
+		return (0);
+	else if (type == XYZ || type == DIMENSION)
 		return (0);
 	else
 		return (1);
@@ -64,8 +68,9 @@ char	**check_ranges(char *values, int type)
 	tab = ft_split(values, ',');
 	if (!tab)
 		return (NULL);
-	if (ft_lstsize(values) != expected_values(type))
+	if (ft_count_strings(values) != expected_values(type))
 		return (ft_clear_ds(tab), NULL);
+	i = 0;
 	while (tab[i])
 	{
 		if (type == RGB || type == FOV)
@@ -79,7 +84,6 @@ char	**check_ranges(char *values, int type)
 	return (tab);
 }
 
-// Plug-in the check_ranges() function
 int	process_ambient(t_import *import, char **infos)
 {
 	t_light		ambient;
@@ -140,8 +144,8 @@ int	process_element(t_import *import, char **infos)
 {
 	if (ft_strcmp(infos[0], "A"))
 		return (process_ambient(import, infos));
-	if (ft_strcmp(infos[0], "C"))
-		process_camera(import, infos);
+	// if (ft_strcmp(infos[0], "C"))
+	// 	process_camera(import, infos);
 	// if (ft_strcmp(infos[0], "L"))
 	// 	process_light(import, infos);
 	// if (ft_strcmp(infos[0], "sp"))

@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 14:24:32 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/01 18:38:11 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/02 15:26:14 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,14 +69,16 @@ int	import_map(t_minirt *minirt, char **av)
 // [X] Read the map line per line with GNL and count the number of elements
 // [X] Split each line against blanks and check if it's n-sized as expected PER type
 // [X] If A, C or L type, check if already seen in the map (can be declared only once)
-// [ ] If map is correct, process each element data into memory for rendering
-// [ ] Verify that each part of the informations from an element is correct per the subject specifications (RGB, Normalization, Light Range..)
-// [ ] Manage floats with either custom atoi or by splitting and calculing 
-
-// [WIP] check_ranges(), check_ranges()
-
-// COMPILATION:
-// [X] Incorporate GNL and ft_printf into Yves's Libft Makefile for compilation
+// [WIP] If map is correct, process each element data into memory for rendering
+// 	[X] Verify that each part of the informations from an element is correct per the subject specifications (RGB, Normalization, Light Range..)
+// 	[X] Manage floats with a home made atof + Manage negatives float too!
+// 	[X] Process Ambient
+//  [ ] Process Camera
+//  [ ] Process Light
+//  [ ] Process Sphere
+//  [ ] Process Plane
+//  [ ] Process Cylinder
+//  [ ] Process Cone
 
 // Object types and expected elements per type:
 // A: 3
@@ -92,8 +94,8 @@ int	import_map(t_minirt *minirt, char **av)
 // {
 // 	t_object	new;
 // 	t_sphere	*sphere;
-
-	
+// 
+//
 // 	if (ft_strcmp("sp", infos[0]))
 // 	{
 // 		sphere->radius;

@@ -6,19 +6,22 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:26:34 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/01 16:39:29 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/02 15:10:50 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "map.h"
 
-int	check_decimal(char *nbr)
+int	check_input(char *nbr)
 {
 	int	dot;
 	int	decimal;
 
 	dot = 0;
 	decimal = 0;
+	if ((nbr[0] != '-' && !ft_isdigit(nbr[0])) || nbr[0] == '.')
+		return (1);
+	nbr++;
 	while (nbr)
 	{
 		if (!ft_isdigit(*nbr) && *nbr != '.')
@@ -33,30 +36,38 @@ int	check_decimal(char *nbr)
 	return (0);
 }
 
-float	ft_atof(int *fail, char *nbr)
+int	check_sign(char *nbr)
+{
+	if (nbr[0] == '-')
+		return (-1);
+	else
+		return (1);
+}
+
+float	ft_atof(char *nbr, int *bad)
 {
 	char	**decimal;
-	int		res;
+	float	res;
+	int		sign;
 	int		power;
 	int		left_len;
 
-	if (check_decimal(nbr))
-	{
-		fail = 1;
+	*bad = check_input(nbr);
+	if (*bad)
 		return (-1);
-	}
-	power = 1;
 	res = 0;
+	power = 1;
+	sign = check_sign(nbr);
 	decimal = ft_split(nbr, '.');
 	if (decimal)
 		return (-1);
 	left_len = ft_strlen(decimal[0]);
-	while (left_len)
+	while (left_len > (sign == -1))
 	{
-		res += decimal[0][left_len - 1] * power;
+		res += decimal[0][left_len - 1] - '0' * power;
 		power *= 10;
 		left_len--;
 	}
-	res += decimal[1][0] * -10;
-	return (ft_clear_ds(decimal), res);
+	res += decimal[1][0] - '0' * -10;
+	return (ft_clear_ds(decimal), sign * res);
 }

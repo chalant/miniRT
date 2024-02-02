@@ -57,8 +57,8 @@ int	import_map(t_minirt *minirt, char **av)
 		return (1);
 	if (init_import(&import, minirt, av[1]))
 		return (1);
-	if (read_map(&import))
-		return (1);
+	// if (read_map(&import))
+	// 	return (1);
 	if (check_scene(&import))
 		return (1);
 	return (0);

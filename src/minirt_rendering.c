@@ -142,6 +142,7 @@ int	add_lights(t_minirt *minirt, t_ray *ray, t_hit *hit, float multiplier)
 	float		uv_coords[2];
 	float		color[4];
 	float		bump[3];
+	float		normal[3];
 	int			vis;
 	t_ray		lray;
 
@@ -150,16 +151,17 @@ int	add_lights(t_minirt *minirt, t_ray *ray, t_hit *hit, float multiplier)
 	normalize_vector(direction, direction, 3);
 	hit->object->uv_coords(hit->object, hit, uv_coords);
 	hit->object->material->get_bump(hit->object, uv_coords, bump);
-	add_vectors(hit->normal, bump, hit->normal, 3);
-	hit_angle = dot_product(hit->normal, direction, 3);
+	add_vectors(hit->normal, bump, normal, 3);
+	normalize_vector(normal, normal, 3);
+	hit_angle = dot_product(normal, direction, 3);
 	copy_vector(direction, lray.direction, 3);
-	vis = 1;
+	vis = 1.0f;
 	if (shadow_ray(minirt, &lray))
-		vis = 0;
+		vis = 0.0f;
 	subtract_vectors(minirt->camera.origin, hit->point, view, 3);
 	normalize_vector(view, view, 3);
 	scale_vector(direction, -1.0f, direction, 3);
-	reflect(direction, hit->normal, dot_product(direction, hit->normal, 3), reflection) ;
+	reflect(direction, normal, dot_product(direction, normal, 3), reflection) ;
 	specular_power = powf(fmaxf(0.0f, dot_product(reflection, view, 3)),
 		hit->object->material->shininess) * minirt->diffuse.brightness;
 	i = -1;
@@ -167,8 +169,8 @@ int	add_lights(t_minirt *minirt, t_ray *ray, t_hit *hit, float multiplier)
 	while (++i < 3)
 	{
 		hit->color[i] += minirt->ambient.brightness * minirt->ambient.color[i] * color[i] * hit->object->material->ambient_reflection * multiplier;
-		hit->color[i] += vis * hit_angle * minirt->diffuse.brightness * minirt->diffuse.color[i] * color[i] * hit->object->material->diffuse_reflection * multiplier;
-		hit->color[i] += 0.5f * vis * specular_power * minirt->diffuse.color[i] * multiplier;
+		hit->color[i] += hit_angle * minirt->diffuse.brightness * minirt->diffuse.color[i] * color[i] * hit->object->material->diffuse_reflection * multiplier;
+		hit->color[i] += 0.9f * specular_power * minirt->diffuse.color[i] * multiplier;
 	}
 	return (0);
 }

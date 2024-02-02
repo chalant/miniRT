@@ -216,7 +216,7 @@ int	load_scene(t_minirt *minirt)
 	material.diffuse_reflection = 0.8f;
 	material.shininess = 100.5f;
 	material.reflectivity = 0.0f;
-	material.repeat_pattern = 5.0f;
+	material.repeat_pattern = 6.0f;
 	material.get_texture = checkerboard;
 	material.get_bump = bump_perturbation;
 	load_bmap(&material, "resources/gravel.bmap");

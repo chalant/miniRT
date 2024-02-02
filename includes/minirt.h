@@ -74,16 +74,17 @@ typedef struct	s_hit
 
 typedef struct	s_material
 {
-	float	diffuse_reflection;
-	float	ambient_reflection;
-	float	specular_coefficient;
-	float	shininess;
-	float	emission;
-	float	light_absorption;
-	float	color[4];
-	float	dark_color[4];
-	float	*(*get_texture)(struct s_material*, float uv_coords[2], float color[4]);
-	float	*(*get_bump)(struct s_material*, float uv_coords[2], float bump[3]);
+	float		diffuse_reflection;
+	float		ambient_reflection;
+	float		specular_coefficient;
+	float		shininess;
+	float		emission;
+	float		reflectiveness;
+	float		color[4];
+	float		repeat_pattern;
+	t_matrix	*bump_map;
+	float		*(*get_texture)(struct s_object*, float uv_coords[2], float color[4]);
+	float		*(*get_bump)(struct s_object*, float uv_coords[2], float bump[3]);
 }	t_material;
 
 typedef struct	s_object
@@ -184,6 +185,6 @@ int		look_at(t_camera *camera, t_minirt *fdf);
 int		perspective_projector(t_matrix **matrix, t_display *display, t_camera *camera);
 int		render(t_minirt *minirt);
 void	set_translate(t_matrix *matrix, float x, float y, float z);
-float   *checkerboard(t_material *material, float uv_coords[2], float color[4]);
+float   *checkerboard(t_object *object, float uv_coords[2], float color[4]);
 
 #endif

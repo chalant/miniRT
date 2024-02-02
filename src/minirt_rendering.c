@@ -159,7 +159,7 @@ int	add_lights(t_minirt *minirt, t_ray *ray, t_hit *hit, float multiplier)
 	specular_power = powf(fmaxf(0.0f, dot_product(reflection, view, 3)),
 		hit->object->material->shininess) * minirt->diffuse.brightness;
 	i = -1;
-	hit->object->material->get_texture(hit->object->material, hit->object->uv_coords(hit->object, hit, uv_coords), color);
+	hit->object->material->get_texture(hit->object, hit->object->uv_coords(hit->object, hit, uv_coords), color);
 	while (++i < 3)
 	{
 		hit->color[i] += minirt->ambient.brightness * minirt->ambient.color[i] * color[i] * hit->object->material->ambient_reflection * multiplier;
@@ -181,7 +181,7 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 	float		sky_color[3];
 
 	i = -1;
-	bounces = 2;
+	bounces = 3;
 	to_screen_space(&minirt->display, point, coords[0], coords[1]);
 	vmatmul(minirt->world_space, point, result);
 	scale_vector(result, 1 / result[3], result, 3);
@@ -210,7 +210,7 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 		add_vectors(hit.point, scale_vector(hit.normal, 0.0001f, epsilon, 3), ray.origin, 3);
 		add_lights(minirt, &ray, &hit, multiplier);
 		reflect(ray.direction, hit.normal, dot_product(ray.direction, hit.normal, 3), ray.direction);
-		multiplier *= hit.object->material->light_absorption;
+		multiplier *= hit.object->material->reflectiveness;
 	}
 	minirt_pixel_put(&minirt->display, hit.screen_coords[0], hit.screen_coords[1], to_argb(hit.color));
 	return (1);
@@ -224,10 +224,10 @@ int	render(t_minirt *minirt)
 	while (++coords[0] < minirt->display.width)
 	{
 		coords[1] = -1;
-		if ((coords[0] % 2))
-			continue;
+		// if ((coords[0] % 2))
+		// 	continue;
 		while (++coords[1] < minirt->display.height)
-			if (!(coords[1] % 2))
+			//if (!(coords[1] % 2))
 				shade_pixel(minirt, coords);
 	}
 	mlx_put_image_to_window(minirt->mlx, minirt->window, minirt->display.img, 0, 0);

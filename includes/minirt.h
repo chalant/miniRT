@@ -4,12 +4,14 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <math.h>
+# include <fcntl.h>
 # include "matrix.h"
 # include "minirt_bindings.h"
 # include "minirt_colors.h"
 # include "libft.h"
 # include "mlx.h"
 # include "minirt_controls.h"
+# include "get_next_line.h"
 
 typedef struct	s_light
 {
@@ -79,10 +81,11 @@ typedef struct	s_material
 	float		specular_coefficient;
 	float		shininess;
 	float		emission;
-	float		reflectiveness;
+	float		reflectivity;
 	float		color[4];
 	float		repeat_pattern;
-	t_matrix	*bump_map;
+	t_matrix	texture_map;
+	t_matrix	bump_map;
 	float		*(*get_texture)(struct s_object*, float uv_coords[2], float color[4]);
 	float		*(*get_bump)(struct s_object*, float uv_coords[2], float bump[3]);
 }	t_material;
@@ -186,5 +189,6 @@ int		perspective_projector(t_matrix **matrix, t_display *display, t_camera *came
 int		render(t_minirt *minirt);
 void	set_translate(t_matrix *matrix, float x, float y, float z);
 float   *checkerboard(t_object *object, float uv_coords[2], float color[4]);
+float	*bump_perturbation(t_object *object, float uv_coords[2], float bump[3]);
 
 #endif

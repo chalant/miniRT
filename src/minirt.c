@@ -168,6 +168,42 @@ int	set_variables(t_minirt *minirt)
 	return (1);
 }
 
+int	load_bmap(t_material *material, char *file_path)
+{
+	int		fd;
+	char	*line;
+	char	**res;
+	int		height;
+	int		width;
+	int		i;
+
+	fd = open(file_path, O_RDONLY);
+	line  = get_next_line(fd);
+	res = ft_split(line, ' ');
+	free(line);
+	height = ft_atoi(res[0]);
+	width = ft_atoi(res[1]);
+	ft_clear_ds(res);
+	create_matrix(&material->bump_map, height, width);
+	init_matrix(&material->bump_map, 0.0f);
+	i = -1;
+	int	j = 0;
+	line  = get_next_line(fd);
+	while (line)
+	{
+		res = ft_split(line, ' ');
+		i = -1;
+		while (++i < width)
+			material->bump_map.points[j][i] = ft_atoi(res[i]);
+		ft_clear_ds(res);
+		free(line);
+		line = get_next_line(fd);
+		j++;
+	}
+	free(line);
+	return (0);
+}
+
 int	load_scene(t_minirt *minirt)
 {
 	t_object	new;
@@ -179,9 +215,11 @@ int	load_scene(t_minirt *minirt)
 	material.ambient_reflection = 0.8f;
 	material.diffuse_reflection = 0.8f;
 	material.shininess = 100.5f;
-	material.reflectiveness = 0.0f;
-	material.repeat_pattern = 20.0f;
+	material.reflectivity = 0.0f;
+	material.repeat_pattern = 5.0f;
 	material.get_texture = checkerboard;
+	material.get_bump = bump_perturbation;
+	load_bmap(&material, "resources/gravel.bmap");
 	//to_color(0x00f94449, material.dark_color);
 	to_color(0x00ffffff, material.color);
 	ft_darray_append(&minirt->materials, &material);
@@ -201,7 +239,7 @@ int	load_scene(t_minirt *minirt)
 	minirt->ambient.brightness = 0.2f;
 	to_color(0x00ffffff, minirt->ambient.color);
 	//todo: malloc protection
-	minirt->camera.fov = 90.0f;
+	minirt->camera.fov = 60.0f;
 	minirt->camera.near = -1.0f;
 	minirt->camera.far = 1.0f;
 	minirt->camera.orientation = ft_calloc(4, sizeof(float));
@@ -245,15 +283,15 @@ int	load_scene(t_minirt *minirt)
 	new.center[3] = 0.0f;
 	new.material = ft_darray_get(&minirt->materials, 0);
 	ft_darray_append(&minirt->objects, &new);
-	create_plane(&new, (float[4]){0.0f, 1.0f, 0.0f, 0.0f});
-	new.center = ft_calloc(4, sizeof(float));
-	to_color(0x00000000, new.color);
-	new.center[0] = 0.0f;
-	new.center[1] = -2.0f;
-	new.center[2] = 0.0f;
-	new.center[3] = 1.0f;
-	new.material = ft_darray_get(&minirt->materials, 0);
-	ft_darray_append(&minirt->objects, &new);
+	// create_plane(&new, (float[4]){0.0f, 1.0f, 0.0f, 0.0f});
+	// new.center = ft_calloc(4, sizeof(float));
+	// to_color(0x00ffffff, new.color);
+	// new.center[0] = 0.0f;
+	// new.center[1] = -2.0f;
+	// new.center[2] = 0.0f;
+	// new.center[3] = 1.0f;
+	// new.material = ft_darray_get(&minirt->materials, 0);
+	// ft_darray_append(&minirt->objects, &new);
 	return (1);
 }
 

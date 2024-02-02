@@ -13,6 +13,9 @@ INCLUDES_FILES = minirt.h \
 
 SRC_FILES =	minirt.c \
 			map.c \
+			map_read.c \
+			map_process.c \
+			map_atof.c \
 			minirt_key_hooks.c \
 			matrix.c \
 			matrix_operations.c \

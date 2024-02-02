@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:29:20 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/01 18:38:17 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/02 16:09:09 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	is_blank(char **line)
 	if (**line == '\n' || **line == '\0')
 		return (free(*line), 1);
 	while (**line == ' ')
-		*line++;
+		(*line)++;
 	if (**line == '\n' || **line == '\0')
 		return (free(*line), 1);
 	else

@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:32:43 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/02 15:05:07 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/02 16:11:56 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,21 +61,21 @@ int	check_decimal(char *value, int type)
 char	**check_ranges(char *values, int type)
 {
 	char	**tab;
-	int		integer;
-	float	decimal;
 	int		i;
 
 	tab = ft_split(values, ',');
 	if (!tab)
 		return (NULL);
-	if (ft_count_strings(values) != expected_values(type))
+	if ((int)ft_count_strings(tab) != expected_values(type))
 		return (ft_clear_ds(tab), NULL);
 	i = 0;
 	while (tab[i])
 	{
 		if (type == RGB || type == FOV)
+		{
 			if (check_integer(tab[i], type))
-				return (ft_clear_ds(tab), NULL);
+				return (ft_clear_ds(tab), NULL);	
+		}
 		else
 			if (check_decimal(tab[i], type))
 				return (ft_clear_ds(tab), NULL);
@@ -88,7 +88,6 @@ int	process_ambient(t_import *import, char **infos)
 {
 	t_light		ambient;
 	char		**rgb;
-	int			i;
 
 	rgb = check_ranges(infos[2], RGB);
 	if (!rgb)

@@ -99,7 +99,7 @@ typedef struct	s_material
 	t_matrix	texture_map;
 	t_matrix	bump_map;
 	float		*(*get_texture)(struct s_object*, float uv_coords[2], float color[4]);
-	float		*(*get_bump)(struct s_object*, float uv_coords[2], float bump[3]);
+	float		*(*normal_perturb)(struct s_object*, float uv_coords[2], float bump[3]);
 }	t_material;
 
 typedef struct	s_object
@@ -201,6 +201,6 @@ int		perspective_projector(t_matrix **matrix, t_display *display, t_camera *came
 int		render(t_minirt *minirt);
 void	set_translate(t_matrix *matrix, float x, float y, float z);
 float   *checkerboard(t_object *object, float uv_coords[2], float color[4]);
-float	*bump_perturbation(t_object *object, float uv_coords[2], float bump[3]);
+float	*compute_bump(t_object *object, float uv_coords[2], float bump[3]);
 
 #endif

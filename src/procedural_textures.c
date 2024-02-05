@@ -22,13 +22,13 @@ float	*checkerboard(t_object *object, float uv_coords[2], float color[4])
 	return (color);
 }
 
-float	*bump_perturbation(t_object *object, float uv_coords[2], float bump[3])
+float	*compute_bump(t_object *object, float uv_coords[2], float bump[3])
 {
 	float		**bump_map;
 
 	bump_map = object->material->bump_map.points;
 
-	float epsilon = 0.001f;  // Small offset for finite difference
+	float epsilon = 0.001f;
 	int u_e = abs((int)((uv_coords[0] + epsilon) * (object->material->bump_map.cols - 1)) % object->material->bump_map.cols);
 	int v_e = abs((int)((uv_coords[1] + epsilon) * (object->material->bump_map.rows - 1)) % object->material->bump_map.rows);
 	int u = abs((int)(uv_coords[0] * (object->material->bump_map.cols - 1)) % object->material->bump_map.cols);
@@ -54,7 +54,8 @@ float	*bump_perturbation(t_object *object, float uv_coords[2], float bump[3])
 
     float bump_strength = 0.00001f;  // Adjust this value based on your preference
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) 
+	{
         bump[i] = bump_strength * gradient_object_space[i];
     }
 	return (bump);

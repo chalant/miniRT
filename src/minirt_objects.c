@@ -59,10 +59,10 @@ float	*sphere_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 	sphere = object->shape;
 	phi = atan2f(hit->point[2] - object->center[2], hit->point[0] - object->center[0]);
 	theta = acosf((hit->point[1] - object->center[1]) / sphere->radius);
-	uv_coords[0] = fmodf((phi + M_PI), (2.0f * M_PI)) / (2.0f * M_PI);
-    uv_coords[1] = 1.0f - fminf(fmaxf(theta / M_PI, 0.0f), 1.0f);
-	uv_coords[0] = fminf(fmaxf(uv_coords[0], 0.0f), 1.0f);
-    uv_coords[1] = fminf(fmaxf(uv_coords[1], 0.0f), 1.0f);
+	uv_coords[0] = (phi + M_PI) / (2.0f * M_PI);
+    uv_coords[1] = 1.0f - theta / M_PI;
+	// uv_coords[0] = fminf(fmaxf(uv_coords[0], 0.0f), 1.0f);
+    // uv_coords[1] = fminf(fmaxf(uv_coords[1], 0.0f), 1.0f);
 	return (uv_coords);
 }
 
@@ -78,7 +78,7 @@ float	*plane_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 	}
 	else if (fabsf(plane->normal[1]) > fabsf(plane->normal[0]) && fabsf(plane->normal[1]) > fabsf(plane->normal[2]))
 	{
-		uv_coords[0] = hit->point[0] - object->center[0];
+		uv_coords[0] = -hit->point[0] + object->center[0];
 		uv_coords[1] = hit->point[2] - object->center[2];
 	}
 	else

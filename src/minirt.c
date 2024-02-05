@@ -215,11 +215,11 @@ int	load_scene(t_minirt *minirt)
 	material.ambient_reflection = 0.8f;
 	material.diffuse_reflection = 0.8f;
 	material.shininess = 100.5f;
-	material.reflectivity = 0.0f;
+	material.reflectivity = 0.5f;
 	material.repeat_pattern = 6.0f;
 	material.get_texture = checkerboard;
 	material.get_bump = bump_perturbation;
-	load_bmap(&material, "resources/gravel.bmap");
+	load_bmap(&material, "resources/mesh.bmap");
 	//to_color(0x00f94449, material.dark_color);
 	to_color(0x00ffffff, material.color);
 	ft_darray_append(&minirt->materials, &material);
@@ -283,15 +283,15 @@ int	load_scene(t_minirt *minirt)
 	new.center[3] = 0.0f;
 	new.material = ft_darray_get(&minirt->materials, 0);
 	ft_darray_append(&minirt->objects, &new);
-	// create_plane(&new, (float[4]){0.0f, 1.0f, 0.0f, 0.0f});
-	// new.center = ft_calloc(4, sizeof(float));
-	// to_color(0x00ffffff, new.color);
-	// new.center[0] = 0.0f;
-	// new.center[1] = -2.0f;
-	// new.center[2] = 0.0f;
-	// new.center[3] = 1.0f;
-	// new.material = ft_darray_get(&minirt->materials, 0);
-	// ft_darray_append(&minirt->objects, &new);
+	create_plane(&new, (float[4]){0.0f, 1.0f, 0.0f, 0.0f});
+	new.center = ft_calloc(4, sizeof(float));
+	to_color(0x00ffff00, new.color);
+	new.center[0] = 0.0f;
+	new.center[1] = -2.0f;
+	new.center[2] = 0.0f;
+	new.center[3] = 1.0f;
+	new.material = ft_darray_get(&minirt->materials, 0);
+	ft_darray_append(&minirt->objects, &new);
 	return (1);
 }
 

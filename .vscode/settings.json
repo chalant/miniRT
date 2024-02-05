@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "*.h": "c",
+        "*.c": "c",
+        "__locale": "c",
+        "__tuple": "c",
+        "algorithm": "c",
+        "atomic": "c",
+        "locale": "c",
+        "memory": "c"
+    }
+}

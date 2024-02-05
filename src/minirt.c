@@ -216,7 +216,7 @@ int	load_scene(t_minirt *minirt)
 	material.diffuse_reflection = 0.8f;
 	material.shininess = 100.5f;
 	material.reflectivity = 0.0f;
-	material.repeat_pattern = 6.0f;
+	material.repeat_pattern = 5.0f;
 	material.get_texture = checkerboard;
 	material.normal_perturb = compute_bump;
 	load_bmap(&material, "resources/mesh.bmap");

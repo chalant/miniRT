@@ -70,7 +70,6 @@ typedef struct	s_cylinder
 
 typedef struct	s_plane
 {
-	float		normal[4];
 	float		point[4];
 }				t_plane;
 
@@ -84,7 +83,7 @@ typedef struct	s_hit
 	float				distance;
 	int					object_index;
 	int					*screen_coords;
-}	t_hit;
+}		t_hit;
 
 typedef struct	s_material
 {
@@ -104,9 +103,6 @@ typedef struct	s_material
 
 typedef struct	s_object
 {
-	t_matrix		*body;
-	t_matrix		*result;
-	t_matrix		*tmp;
 	t_material		*material;
 
 	const char		*name;
@@ -118,8 +114,8 @@ typedef struct	s_object
 	float			*(*normal)(struct s_object*, t_hit*);
 	float			*(*uv_coords)(struct s_object*, t_hit*, float coords[2]);
 	float			color[4];
-	int				width;
-	int				height;
+	float			orientation[3];
+	float			size[3];
 }				t_object;
 
 typedef struct	s_transforms_3d

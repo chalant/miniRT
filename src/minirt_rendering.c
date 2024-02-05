@@ -102,14 +102,6 @@ float	*reflect(float incident[3], float normal[3], float hit_angle, float result
 	return (result);
 }
 
-float	get_specular_light(t_light *light, t_hit *hit, float *view)
-{
-	float		reflection[3];
-
-	reflect(light->direction, hit->normal, dot_product(light->direction, hit->normal, 3), reflection);
-	return (powf(dot_product(reflection, view, 3), hit->object->material->shininess) * light->brightness);
-}
-
 void	add_spot_lights(t_minirt *minirt, t_hit *hit, float view[3])
 {
 	int			i;

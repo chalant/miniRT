@@ -5,9 +5,11 @@ int	sphere_hover(t_object *object, float position[3])
 {
 	float	result[3];
 
+	dot_product(result, result, 3);
 	subtract_vectors(position, object->center, result, 3);
-	printf("MAG %f %f\n", vector_magnitude(result, 3), object->size[0]);
-	return (vector_magnitude(result, 3) <= object->size[0]);
+	printf("MAG %f %f %f %f\n", position[0], position[1], position[2], position[3]);
+	printf("MAG %f %f %f %f\n", object->center[0], object->center[1], object->center[2], object->center[3]);
+	return (dot_product(result, result, 3) < object->size[0] * object->size[0]);
 }
 
 int	hit_sphere(t_object *object, t_ray *ray)

@@ -30,7 +30,7 @@ int	mouse_update(int x, int y, t_minirt *minirt)
 	// float	dx;
 	// float	dy;
 	float		coords[4];
-	float		result[4];
+	float		position[4];
 	int			i;
 	t_object	*object;
 	static int	iterations = 0;
@@ -39,11 +39,15 @@ int	mouse_update(int x, int y, t_minirt *minirt)
 	if (x < 0 || y < 0 || x > minirt->display.width || y > minirt->display.height)
 		return (0);
 	to_screen_space(&minirt->display, coords, x, y);
-	to_world_space(minirt, coords, result);
-	//vmatmul(minirt->camera.view, result, coords);
+	vmatmul(minirt->world_space, coords, position);
+	scale_vector(position, 1 / position[3], position, 3);
+	position[3] = 0.0f;
+	vmatmul(minirt->camera.inverse_view, position, coords);
+	add_vectors(minirt->camera.origin, coords, coords, 3);
 	while (++i < minirt->objects.size)
 	{
 		object = ft_darray_get(&minirt->objects, i);
+		printf("Position %f %f %f %d %d\n", coords[0], coords[1], coords[2], x, y);
 		if (object->hover && object->hover(object, coords))
 			printf("INSIDE! %s %d\n", object->name, iterations);
 	}

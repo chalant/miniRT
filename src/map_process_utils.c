@@ -6,20 +6,20 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 13:19:18 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/06 16:06:48 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:31:20 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "map.h"
 
-int	set_light(float *light, char *info)
+int	set_light(float light, char *info)
 {
 	char	**tab;
 
 	tab = check_ranges(info, LIGHT);
 	if (!tab)
 		return (1);
-	if (ft_atof(tab[0], light))
+	if (ft_atof(tab[0], &light))
 		return (ft_clear_ds(tab), 1);
 	return (ft_clear_ds(tab), 0);
 }

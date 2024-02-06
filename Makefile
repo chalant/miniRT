@@ -15,6 +15,7 @@ SRC_FILES =	minirt.c \
 			map.c \
 			map_read.c \
 			map_process.c \
+			map_process_utils.c \
 			map_atof.c \
 			minirt_key_hooks.c \
 			matrix.c \

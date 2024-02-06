@@ -6,11 +6,12 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:29:20 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/02 16:09:09 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/06 12:53:15 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "map.h"
+
 
 int	is_blank(char **line)
 {
@@ -44,13 +45,13 @@ int	seen_type(t_import *import, char **line)
 	char	*type;
 
 	type = line[0];
-	if (ft_strcmp(type, "A"))
+	if (!ft_strcmp(type, "A"))
 		if (++import->ambient && import->ambient > 1)
 			return (1);
-	if (ft_strcmp(type, "C"))
+	if (!ft_strcmp(type, "C"))
 		if (++import->camera && import->camera > 1)
 			return (1);
-	if (ft_strcmp(type, "L"))
+	if (!ft_strcmp(type, "L"))
 		if (++import->light && import->light > 1)
 			return (1);
 	return (0);

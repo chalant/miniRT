@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:30:29 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/02 16:05:33 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:31:29 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,16 @@ int		process_ambient(t_import *import, char **infos);
 // int	process_cylinder(t_import *import, char **infos);
 // int	process_cone(t_import *import, char **infos)
 
+// Process Utils
+int		set_light(float light, char *info);
+int		set_rgb(int *rgb, char *info);
+int		set_xyz(float *xyz, char *info);
+int		set_normal(float *normal, char *info);
+int		set_fov(int	fov, char *info);
+
 // Argument to float
 int		check_input(char *nbr);
-int		check_sign(char *nbr);
-float	ft_atof(char *nbr, int *bad);
+float	check_sign(char *nbr);
+int		ft_atof(char *nbr, float *res);
 
 #endif

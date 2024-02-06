@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 14:24:32 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/02 15:26:14 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/06 14:39:10 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,12 @@ int	import_map(t_minirt *minirt, char **av)
 		return (1);
 	if (init_import(&import, minirt, av[1]))
 		return (1);
-	// if (read_map(&import))
+	if (read_map(&import))
+		return (printf("Bad map!\n"), 1);
+	else
+		return (printf("Good map!\n"), 0);
+	// if (check_scene(&import))
 	// 	return (1);
-	if (check_scene(&import))
-		return (1);
 	return (0);
 }
 
@@ -79,6 +81,8 @@ int	import_map(t_minirt *minirt, char **av)
 //  [ ] Process Plane
 //  [ ] Process Cylinder
 //  [ ] Process Cone
+
+// [ ] Map is considered bad when newline vs no newline at end of map
 
 // Object types and expected elements per type:
 // A: 3

@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:32:43 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/02 16:14:53 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:05:42 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@ int	check_integer(char *value, int type)
 int	check_decimal(char *value, int type)
 {
 	float	decimal;
-	int		bad;
+	int		fail;
 
-	decimal = ft_atof(value, &bad);
-	if (bad)
+	decimal = ft_atof(value, &fail);
+	if (fail)
 		return (1);
 	else if (type == LIGHT && decimal >= 0.0 && decimal <= 1.0)
 		return (0);
@@ -74,7 +74,7 @@ char	**check_ranges(char *values, int type)
 		if (type == RGB || type == FOV)
 		{
 			if (check_integer(tab[i], type))
-				return (ft_clear_ds(tab), NULL);	
+				return (ft_clear_ds(tab), NULL);
 		}
 		else
 			if (check_decimal(tab[i], type))
@@ -87,31 +87,32 @@ char	**check_ranges(char *values, int type)
 int	process_ambient(t_import *import, char **infos)
 {
 	t_light		ambient;
-	char		**rgb;
 
-	rgb = check_ranges(infos[2], RGB);
-	if (!rgb)
+	if (set_light(ambient.brightness, infos[1]))
 		return (1);
-	ambient.color[0] = ft_atoi(rgb[0]);
-	ambient.color[1] = ft_atoi(rgb[1]);
-	ambient.color[2] = ft_atoi(rgb[2]);
-	ambient.color[3] = 0;
+	if (set_rgb(ambient.color, infos[2]))
+		return (1);
 	import->minirt->ambient = ambient;
-	ft_clear_ds(rgb);
 	return (0);
 }
 
-// int	process_camera(t_import *import, char **infos)
-// {
-// 	t_camera	camera;
+int	process_camera(t_import *import, char **infos)
+{
+	t_camera	camera;
 
-// 	vector_magnitude()
-// }
+	if (set_xyz(camera.origin, infos[1]))
+		return (1);
+	if (set_normal(camera.orientation, infos[2]))
+		return (1);
+	if (set_fov(camera.fov, infos[3]))
+		return (1);
+	import->minirt->camera = camera;
+	return (0);
+}
 
 // int	process_light(t_import *import, char **infos)
 // {
-// 	t_object	obj;
-// 	t_light		light;
+// 	t_light	light;	
 // }
 
 // int	process_sphere(t_import *import, char **infos)
@@ -141,20 +142,20 @@ int	process_ambient(t_import *import, char **infos)
 // [ ] TODO: Manage array deletion if an error occur
 int	process_element(t_import *import, char **infos)
 {
-	if (ft_strcmp(infos[0], "A"))
+	if (!ft_strcmp(infos[0], "A"))
 		return (process_ambient(import, infos));
-	// if (ft_strcmp(infos[0], "C"))
+	// if (!ft_strcmp(infos[0], "C"))
 	// 	process_camera(import, infos);
-	// if (ft_strcmp(infos[0], "L"))
-	// 	process_light(import, infos);
-	// if (ft_strcmp(infos[0], "sp"))
-	// 	process_sphere(import, infos);
-	// if (ft_strcmp(infos[0], "pl"))
-	// 	process_plane(import, infos);
-	// if (ft_strcmp(infos[0], "cy"))
-	// 	process_cylinder(import, infos);
-	// if (ft_strcmp(infos[0], "cn"))
-	// 	process_cone(import, infos);
+// 	// if (!ft_strcmp(infos[0], "L"))
+// 	// 	process_light(import, infos);
+// 	// if (!ft_strcmp(infos[0], "sp"))
+// 	// 	process_sphere(import, infos);
+// 	// if (!ft_strcmp(infos[0], "pl"))
+// 	// 	process_plane(import, infos);
+// 	// if (!ft_strcmp(infos[0], "cy"))
+// 	// 	process_cylinder(import, infos);
+// 	// if (!ft_strcmp(infos[0], "cn"))
+// 	// 	process_cone(import, infos);
 	else
 		return (1); // ft_darray_delete if something already exits, othwewise just ret 1
 }

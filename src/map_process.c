@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:32:43 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/06 16:05:42 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:37:40 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,8 @@ int	check_integer(char *value, int type)
 int	check_decimal(char *value, int type)
 {
 	float	decimal;
-	int		fail;
 
-	decimal = ft_atof(value, &fail);
-	if (fail)
+	if (ft_atof(value, &decimal))
 		return (1);
 	else if (type == LIGHT && decimal >= 0.0 && decimal <= 1.0)
 		return (0);

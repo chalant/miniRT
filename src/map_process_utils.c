@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 13:19:18 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/06 16:31:20 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:42:21 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,17 @@ int	set_light(float light, char *info)
 	return (ft_clear_ds(tab), 0);
 }
 
-int	set_rgb(int *rgb, char *info)
+int	set_rgb(float *rgb, char *info)
 {
 	char	**tab;
 
 	tab = check_ranges(info, RGB);
 	if (!tab)
 		return (1);
-	rgb[0] = ft_atoi(tab[0]);
-	rgb[1] = ft_atoi(tab[1]);
-	rgb[2] = ft_atoi(tab[2]);
-	rgb[3] = 0;
+	rgb[0] = (float)ft_atoi(tab[0]);
+	rgb[1] = (float)ft_atoi(tab[1]);
+	rgb[2] = (float)ft_atoi(tab[2]);
+	rgb[3] = (float)0;
 	return (ft_clear_ds(tab), 0);
 }
 
@@ -62,6 +62,7 @@ int	set_normal(float *normal, char *info)
 	tab = check_ranges(info, NORMAL);
 	if (!tab)
 		return (1);
+	i = -1;
 	while (++i < 3)
 		if (ft_atof(tab[i], &normal[i]))
 			return (ft_clear_ds(tab), 1);
@@ -69,14 +70,13 @@ int	set_normal(float *normal, char *info)
 	return (ft_clear_ds(tab), 0);
 }
 
-int	set_fov(int	fov, char *info)
+int	set_fov(int fov, char *info)
 {
 	char	**tab;
 	
 	tab = check_ranges(info, FOV);
 	if (!tab)
 		return (1);
-	if (ft_atof(tab[0], fov))
-		return (ft_clear_ds(tab), 1);
+	fov = (float)ft_atoi(tab[0]);
 	return (ft_clear_ds(tab), 0);
 }

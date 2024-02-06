@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:32:43 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/05 18:09:59 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:05:42 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,39 +87,32 @@ char	**check_ranges(char *values, int type)
 int	process_ambient(t_import *import, char **infos)
 {
 	t_light		ambient;
-	int			fail;
-	char		**lighting;
-	char		**rgb;
 
-	lighting = check_ranges(infos[1], LIGHT);
-	if (!lighting)
+	if (set_light(ambient.brightness, infos[1]))
 		return (1);
-	import->minirt->ambient.brightness = ft_atof(lighting[0], &fail);
-	if (fail)
-		return (ft_clear_ds(lighting), 1);
-	rgb = check_ranges(infos[2], RGB);
-	if (!rgb)
+	if (set_rgb(ambient.color, infos[2]))
 		return (1);
-	ambient.color[0] = ft_atoi(rgb[0]);
-	ambient.color[1] = ft_atoi(rgb[1]);
-	ambient.color[2] = ft_atoi(rgb[2]);
-	ambient.color[3] = 0;
-	return (ft_clear_ds(lighting), ft_clear_ds(rgb), 0);
+	import->minirt->ambient = ambient;
+	return (0);
 }
 
-// int	process_camera(t_import *import, char **infos)
-// {
-// 	t_camera	camera;
+int	process_camera(t_import *import, char **infos)
+{
+	t_camera	camera;
 
-// 	camera.
-
-// 	vector_magnitude()
-// }
+	if (set_xyz(camera.origin, infos[1]))
+		return (1);
+	if (set_normal(camera.orientation, infos[2]))
+		return (1);
+	if (set_fov(camera.fov, infos[3]))
+		return (1);
+	import->minirt->camera = camera;
+	return (0);
+}
 
 // int	process_light(t_import *import, char **infos)
 // {
-// 	t_object	obj;
-// 	t_light		light;
+// 	t_light	light;	
 // }
 
 // int	process_sphere(t_import *import, char **infos)
@@ -151,8 +144,8 @@ int	process_element(t_import *import, char **infos)
 {
 	if (!ft_strcmp(infos[0], "A"))
 		return (process_ambient(import, infos));
-// 	// if (!ft_strcmp(infos[0], "C"))
-// 	// 	process_camera(import, infos);
+	// if (!ft_strcmp(infos[0], "C"))
+	// 	process_camera(import, infos);
 // 	// if (!ft_strcmp(infos[0], "L"))
 // 	// 	process_light(import, infos);
 // 	// if (!ft_strcmp(infos[0], "sp"))

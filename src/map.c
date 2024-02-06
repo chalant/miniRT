@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 14:24:32 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/06 12:54:24 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/06 14:39:10 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@ int	import_map(t_minirt *minirt, char **av)
 		return (printf("Bad map!\n"), 1);
 	else
 		return (printf("Good map!\n"), 0);
-	if (check_scene(&import))
-		return (1);
+	// if (check_scene(&import))
+	// 	return (1);
 	return (0);
 }
 

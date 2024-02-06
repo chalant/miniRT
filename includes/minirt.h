@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 14:24:06 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/02 14:24:09 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/06 13:37:19 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ typedef struct	s_camera
 	t_matrix		*basis;
 	t_matrix		*view;
 	t_matrix		*inverse_view;
-	float			*orientation;
+	float			orientation[4];
 	float			right[3];
 	float			up[3];
 	float			origin[4];

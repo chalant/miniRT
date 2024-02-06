@@ -5,9 +5,11 @@ typedef struct	s_mouse
 {
 	t_matrix	*direction;
 	int			capture;
+	int			right_click;
+	int			left_click;
 	float		x;
 	float		y;
-}	t_mouse;
+}				t_mouse;
 
 typedef struct	s_key
 {

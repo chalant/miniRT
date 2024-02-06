@@ -55,8 +55,10 @@ int	rotate_around(t_minirt *fdf, t_matrix *rot)
 
 int	key_press_hook(int code, t_minirt *fdf)
 {
-	float	tmp[4];
+	float		tmp[4];
+	// t_object	*object;
 
+	// object = ft_darray_get(&fdf->objects, fdf->objects.size - 1);
 	if (code == RL)
 	{
 		// if (!fdf->mouse.capture)
@@ -98,20 +100,10 @@ int	key_press_hook(int code, t_minirt *fdf)
 		tmp[0] = 1.0f;
 		tmp[1] = 0.0f;
 		tmp[2] = 0.0f;
+		//rotate(fdf, object, fdf->rotations->x_axis);
 		vmatmul(fdf->camera.basis, tmp, fdf->camera.orientation);
 		add_vectors(fdf->camera.origin, scale_vector(fdf->camera.orientation, 0.1f,  fdf->camera.orientation, 3), fdf->camera.origin, 3);
 		look_at(&fdf->camera, fdf);
-
-		// obj->center[0] += center[0];
-		// obj->center[1] += center[1];
-		// obj->center[2] += center[2];
-		// vmatmul(fdf->rotations->y_axis, obj->center, tmp);
-		// obj->center[0] = tmp[0];
-		// obj->center[1] = tmp[1];
-		// obj->center[2] = tmp[2];
-		// obj->center[0] -= center[0];
-		// obj->center[1] -= center[1];
-		// obj->center[2] -= center[2];
 
 	}
 	else if (code == TR)

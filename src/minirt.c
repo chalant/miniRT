@@ -1,16 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minirt.c                                            :+:      :+:    :+:  */
+/*   minirt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
+/*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:53:50 by ychalant          #+#    #+#             */
-/*   Updated: 2023/12/21 13:15:28 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/02/05 14:50:46 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+#include "map.h"
 #include "minirt_objects.h"
 #include <stdio.h>
 
@@ -295,26 +296,37 @@ int	load_scene(t_minirt *minirt)
 	return (1);
 }
 
+// int	main(int argc, char *argv[])
+// {
+// 	t_minirt	minirt;
+
+// 	//todo: use a cache for this.
+// 	(void)argv;
+// 	if (argc - 1 < 0 || argc - 1 > 1)
+// 		return (0);
+// 	minirt_init(&minirt);
+// 	minirt.mouse.x = 0.0f;
+// 	minirt.mouse.y = 0.0f;
+// 	set_variables(&minirt);
+// 	mlx_setup(&minirt);
+// 	set_hooks(&minirt);
+// 	set_minirt_transforms(&minirt);
+// 	homogeneous_matrix(&minirt.tmp, 3, 3);
+// 	load_scene(&minirt);
+// 	perspective_projector(&minirt.world_space, &minirt.display, &minirt.camera);
+// 	invert_matrix(minirt.world_space, minirt.world_space, minirt.tmp, 4);
+// 	perspective_projector(&minirt.view_matrix, &minirt.display, &minirt.camera);
+// 	mlx_loop(minirt.mlx);
+// 	return (0);
+// }
+
+
 int	main(int argc, char *argv[])
 {
 	t_minirt	minirt;
-
-	//todo: use a cache for this.
-	(void)argv;
-	if (argc - 1 < 0 || argc - 1 > 1)
-		return (0);
-	minirt_init(&minirt);
-	minirt.mouse.x = 0.0f;
-	minirt.mouse.y = 0.0f;
-	set_variables(&minirt);
-	mlx_setup(&minirt);
-	set_hooks(&minirt);
-	set_minirt_transforms(&minirt);
-	homogeneous_matrix(&minirt.tmp, 3, 3);
-	load_scene(&minirt);
-	perspective_projector(&minirt.world_space, &minirt.display, &minirt.camera);
-	invert_matrix(minirt.world_space, minirt.world_space, minirt.tmp, 4);
-	perspective_projector(&minirt.view_matrix, &minirt.display, &minirt.camera);
-	mlx_loop(minirt.mlx);
-	return (0);
+	
+	(void)argc;
+	if (argc != 2)
+		return (1);
+	return (import_map(&minirt, argv));
 }

@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:30:29 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/02 16:05:33 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/05 17:35:59 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int		process_ambient(t_import *import, char **infos);
 
 // Argument to float
 int		check_input(char *nbr);
-int		check_sign(char *nbr);
+float	check_sign(char *nbr);
 float	ft_atof(char *nbr, int *bad);
 
 #endif

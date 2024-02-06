@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:32:43 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/06 16:37:40 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/06 17:59:40 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,11 @@ int	check_integer(char *value, int type)
 	int	i;
 	int	integer;
 
+	printf("From check_integer: %s\n", value);
 	if (value[0] != '-' && !ft_isdigit(value[0]))
 		return (1);
 	i = 1;
-	while (value[i])
+	while (value[i]) // This is fucking me up when there is a \n at end of line
 		if (!ft_isdigit(value[i++]))
 			return (1);
 	integer = ft_atoi(value);
@@ -69,16 +70,18 @@ char	**check_ranges(char *values, int type)
 	i = 0;
 	while (tab[i])
 	{
+		printf("From check_ranges: %s\n", tab[i]);
 		if (type == RGB || type == FOV)
 		{
 			if (check_integer(tab[i], type))
-				return (ft_clear_ds(tab), NULL);
+				return (ft_clear_ds(tab), printf("A\n"), NULL);
 		}
 		else
 			if (check_decimal(tab[i], type))
-				return (ft_clear_ds(tab), NULL);
+				return (ft_clear_ds(tab), printf("B\n"), NULL);
 		i++;
 	}
+	printf("Hey from check_ranges!\n");
 	return (tab);
 }
 
@@ -86,11 +89,16 @@ int	process_ambient(t_import *import, char **infos)
 {
 	t_light		ambient;
 
-	if (set_light(ambient.brightness, infos[1]))
+	if (set_light(&ambient.brightness, infos[1]))
 		return (1);
+	printf("Brightness: %f\n", ambient.brightness);
 	if (set_rgb(ambient.color, infos[2]))
 		return (1);
+	int i = -1;
+	while (++i < 4)
+		printf("RGB[%i]: %f\n", i, ambient.color[i]);
 	import->minirt->ambient = ambient;
+	printf("Hey from process_ambient\n");
 	return (0);
 }
 
@@ -100,10 +108,19 @@ int	process_camera(t_import *import, char **infos)
 
 	if (set_xyz(camera.origin, infos[1]))
 		return (1);
+	printf("XYZ[0]: %f\n", camera.origin[0]);
+	printf("XYZ[1]: %f\n", camera.origin[1]);
+	printf("XYZ[2]: %f\n", camera.origin[2]);
+	printf("XYZ[3]: %f\n", camera.origin[3]);
 	if (set_normal(camera.orientation, infos[2]))
 		return (1);
+	printf("NORMAL[0]: %f\n", camera.orientation[0]);
+	printf("NORMAL[1]: %f\n", camera.orientation[1]);
+	printf("NORMAL[2]: %f\n", camera.orientation[2]);
+	printf("NORMAL[3]: %f\n", camera.orientation[3]);
 	if (set_fov(camera.fov, infos[3]))
 		return (1);
+	printf("FOV: %f\n", camera.fov);
 	import->minirt->camera = camera;
 	return (0);
 }
@@ -140,10 +157,11 @@ int	process_camera(t_import *import, char **infos)
 // [ ] TODO: Manage array deletion if an error occur
 int	process_element(t_import *import, char **infos)
 {
+	printf("Hey from process element\n");
 	if (!ft_strcmp(infos[0], "A"))
 		return (process_ambient(import, infos));
-	// if (!ft_strcmp(infos[0], "C"))
-	// 	process_camera(import, infos);
+	if (!ft_strcmp(infos[0], "C"))
+		return (process_camera(import, infos));
 // 	// if (!ft_strcmp(infos[0], "L"))
 // 	// 	process_light(import, infos);
 // 	// if (!ft_strcmp(infos[0], "sp"))

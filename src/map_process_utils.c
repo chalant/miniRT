@@ -6,20 +6,20 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 13:19:18 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/06 16:42:21 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/06 17:25:46 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "map.h"
 
-int	set_light(float light, char *info)
+int	set_light(float *light, char *info)
 {
 	char	**tab;
 
 	tab = check_ranges(info, LIGHT);
 	if (!tab)
 		return (1);
-	if (ft_atof(tab[0], &light))
+	if (ft_atof(tab[0], &*light))
 		return (ft_clear_ds(tab), 1);
 	return (ft_clear_ds(tab), 0);
 }
@@ -30,7 +30,7 @@ int	set_rgb(float *rgb, char *info)
 
 	tab = check_ranges(info, RGB);
 	if (!tab)
-		return (1);
+		return (printf("FUCK ME!!!!!!!!!!!!!!!\n"), 1);
 	rgb[0] = (float)ft_atoi(tab[0]);
 	rgb[1] = (float)ft_atoi(tab[1]);
 	rgb[2] = (float)ft_atoi(tab[2]);

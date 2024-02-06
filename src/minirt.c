@@ -208,21 +208,34 @@ int	load_scene(t_minirt *minirt)
 {
 	t_object	new;
 	t_material	material;
+	t_material	other;
 
 	//todo: need to load the bump map file...
 	//the file could be specified in the rt file, and would load the
 	//bump map file when parsing.
 	material.ambient_reflection = 0.8f;
 	material.diffuse_reflection = 0.8f;
-	material.shininess = 100.5f;
-	material.reflectivity = 0.0f;
-	material.repeat_pattern = 5.0f;
+	material.shininess = 12.0f;
+	material.reflectivity = 0.2f;
+	material.repeat_pattern = 6.0f;
 	material.get_texture = checkerboard;
 	material.normal_perturb = compute_bump;
+
+	other.ambient_reflection = 0.8f;
+	other.diffuse_reflection = 0.8f;
+	other.shininess = 100.5f;
+	other.reflectivity = 0.5f;
+	other.repeat_pattern = 0.2f;
+	other.get_texture = checkerboard;
+	other.normal_perturb = compute_bump;
+
 	load_bmap(&material, "resources/mesh.bmap");
 	//to_color(0x00f94449, material.dark_color);
 	to_color(0x00ffffff, material.color);
+	to_color(0x00ffff00, other.color);
+	load_bmap(&other, "resources/mesh.bmap");
 	ft_darray_append(&minirt->materials, &material);
+	ft_darray_append(&minirt->materials, &other);
 	minirt->diffuse.position[0] = -40.0f;
 	minirt->diffuse.position[1] = 50.0f;
 	minirt->diffuse.position[2] = 0.0f;
@@ -281,12 +294,12 @@ int	load_scene(t_minirt *minirt)
 	ft_darray_append(&minirt->objects, &new);
 	create_plane(&new, (float[4]){0.0f, 1.0f, 0.0f, 0.0f});
 	new.center = ft_calloc(4, sizeof(float));
-	to_color(0x000000ff, new.color);
+	to_color(0x003261e3, new.color);
 	new.center[0] = 0.0f;
 	new.center[1] = -2.0f;
 	new.center[2] = 0.0f;
 	new.center[3] = 1.0f;
-	new.material = ft_darray_get(&minirt->materials, 0);
+	new.material = ft_darray_get(&minirt->materials, 1);
 	ft_darray_append(&minirt->objects, &new);
 	return (1);
 }

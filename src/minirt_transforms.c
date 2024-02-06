@@ -1,21 +1,25 @@
 #include "minirt.h"
 
-void    translate(t_minirt *minirt, t_object *object, t_matrix *axis)
+void	translate(t_minirt *minirt, t_object *object, int axis, float speed)
 {
-    vmatmul(axis, object->center, axis);
+	(void)minirt;
+	object->center[axis] += speed;
 }
 
-void    rotate(t_minirt *minirt, t_object *object, t_matrix *axis)
+void	rotate(t_minirt *minirt, t_object *object, t_matrix *axis)
 {
-    float   tmp[3];
+	float   tmp[3];
 
-    vmatmul(axis, object->orientation, tmp);
-    object->orientation[0] = tmp[0];
-    object->orientation[1] = tmp[1];
-    object->orientation[2] = tmp[2];
+	(void)minirt;
+	vmatmul(axis, object->orientation, tmp);
+	object->orientation[0] = tmp[0];
+	object->orientation[1] = tmp[1];
+	object->orientation[2] = tmp[2];
 }
 
-void    scale(t_minirt *minirt, t_object *object, int axis)
+void	scale(t_minirt *minirt, t_object *object, int axis, float rate)
 {
-    object->size[axis] *= axis;
+	(void)minirt;
+	(void)object;
+	object->size[axis] *= rate;
 }

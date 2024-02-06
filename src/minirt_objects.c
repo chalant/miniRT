@@ -52,11 +52,9 @@ float	*sphere_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 
 float	*plane_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 {
-	t_plane		*plane;
 	float		*normal;
 
 	normal = object->orientation;
-	plane = object->shape;
 	if (fabsf(normal[0]) > fabsf(normal[1]) && fabsf(normal[0]) > fabsf(normal[2]))
 	{
 		uv_coords[0] = hit->point[1] - object->center[1];
@@ -77,14 +75,7 @@ float	*plane_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 
 int create_sphere(t_object *object, float radius, const char *name)
 {
-	t_sphere	*sphere;
-
-	sphere = malloc(sizeof(t_sphere));
-	sphere->name = name;
-	if (!sphere)
-		return (-1);
-	sphere->radius = radius;
-	object->shape = sphere;
+	(void)name;
 	object->intersect = hit_sphere;
 	object->normal = sphere_normal;
 	object->uv_coords = sphere_uv_coords;
@@ -96,13 +87,11 @@ int create_sphere(t_object *object, float radius, const char *name)
 
 int	hit_plane(t_object *object, t_ray *ray)
 {
-	t_plane		*plane;
 	float		denominator;
 	float		numerator;
 	float		t;
 	float		result[3];
 
-	plane = object->shape;
 	denominator = -dot_product(object->orientation, ray->direction, 3);
 	if (fabsf(denominator) < 0.0001f)
 		return (0);
@@ -119,9 +108,6 @@ int	hit_plane(t_object *object, t_ray *ray)
 
 float	*plane_normal(t_object *object, t_hit *hit)
 {
-	t_plane	*plane;
-
-	plane = object->shape;
 	hit->normal[0] = object->orientation[0];
 	hit->normal[1] = object->orientation[1];
 	hit->normal[2] = object->orientation[2];

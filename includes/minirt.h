@@ -199,4 +199,8 @@ void	set_translate(t_matrix *matrix, float x, float y, float z);
 float   *checkerboard(t_object *object, float uv_coords[2], float color[4]);
 float	*compute_bump(t_object *object, float uv_coords[2], float bump[3]);
 
+void	translate(t_minirt *minirt, t_object *object, int axis, float speed);
+void	rotate(t_minirt *minirt, t_object *object, t_matrix *axis);
+void	scale(t_minirt *minirt, t_object *object, int axis, float rate);
+
 #endif

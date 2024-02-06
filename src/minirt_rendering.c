@@ -20,13 +20,13 @@ void	minirt_pixel_put(t_display *display, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-int	to_screen_space(t_display *display, float *pixel, float i, float j)
+float	*to_screen_space(t_display *display, float pixel[4], float i, float j)
 {
 	pixel[0] = (2.0f * i / (float)display->width) - 1.0f;
 	pixel[1] = (2.0f * j / (float)display->height) - 1.0f;
 	pixel[2] = 1.0f;
 	pixel[3] = 1.0f;
-	return (0);
+	return (pixel);
 }
 
 float	vector_length(float *vector, int size)
@@ -189,6 +189,15 @@ int	add_lights(t_minirt *minirt, t_ray *ray, t_hit *hit, float multiplier)
 	return (0);
 }
 
+float	*to_world_space(t_minirt *minirt, float point[4], float result[4])
+{
+	vmatmul(minirt->world_space, point, result);
+	scale_vector(result, 1 / result[3], result, 3);
+	normalize_vector(result, result, 3);
+	result[3] = 0.0f;
+	return (result);
+}
+
 int	shade_pixel(t_minirt *minirt, int coords[2])
 {
 	float		point[4];
@@ -203,10 +212,7 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 	i = -1;
 	bounces = 2;
 	to_screen_space(&minirt->display, point, coords[0], coords[1]);
-	vmatmul(minirt->world_space, point, result);
-	scale_vector(result, 1 / result[3], result, 3);
-	normalize_vector(result, result, 3);
-	result[3] = 0.0f;
+	to_world_space(minirt, point, result);
 	vmatmul(minirt->camera.inverse_view, result, ray.direction);
 	to_color(0x00000000, hit.color);
 	//minirt_pixel_put(&minirt->display, coords[0], coords[1], 0x0);
@@ -245,10 +251,10 @@ int	render(t_minirt *minirt)
 	while (++coords[0] < minirt->display.width)
 	{
 		coords[1] = -1;
-		// if ((coords[0] % 2))
-		// 	continue;
+		if ((coords[0] % 2))
+			continue;
 		while (++coords[1] < minirt->display.height)
-			//if (!(coords[1] % 2))
+			if (!(coords[1] % 2))
 				shade_pixel(minirt, coords);
 	}
 	mlx_put_image_to_window(minirt->mlx, minirt->window, minirt->display.img, 0, 0);

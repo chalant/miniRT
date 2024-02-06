@@ -109,6 +109,7 @@ typedef struct	s_object
 	void			*shape;
 	float			*center;
 	int				id;
+	int				(*hover)(struct s_object*, float position[3]);
 	int				(*intersect)(struct s_object*, t_ray*);
 	int				(*transform)(struct s_object*, t_matrix*, float*);
 	float			*(*normal)(struct s_object*, t_hit*);
@@ -202,5 +203,13 @@ float	*compute_bump(t_object *object, float uv_coords[2], float bump[3]);
 void	translate(t_minirt *minirt, t_object *object, int axis, float speed);
 void	rotate(t_minirt *minirt, t_object *object, t_matrix *axis);
 void	scale(t_minirt *minirt, t_object *object, int axis, float rate);
+
+int	mouse_click_hook(int button, int x, int y, t_minirt *minirt);
+int	mouse_release_hook(int button, int x, int y, t_minirt *minirt);
+int	mouse_update(int x, int y, t_minirt *minirt);
+
+float	*to_screen_space(t_display *display, float pixel[4], float i, float j);
+float	*to_world_space(t_minirt *minirt, float point[4], float result[4]);
+int		sphere_hover(t_object *object, float position[3]);
 
 #endif

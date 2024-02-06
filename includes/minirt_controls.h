@@ -1,6 +1,8 @@
 #ifndef MINIRT_CONTROLS_H
 # define MINIRT_CONTROLS_H
 
+#include "minirt.h"
+
 typedef struct	s_mouse
 {
 	t_matrix	*direction;
@@ -14,6 +16,11 @@ typedef struct	s_mouse
 typedef struct	s_key
 {
 	int	pressed;
-}	t_key;
+}				t_key;
+
+typedef	struct	s_controls
+{
+
+}				t_controls;
 
 #endif

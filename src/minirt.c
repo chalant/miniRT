@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minirt.h"
+#include "minirt_controls.h"
 #include "minirt_objects.h"
 #include <stdio.h>
 
@@ -95,66 +96,11 @@ int	normalize_col(t_matrix *matrix, int col)
 	return (0);
 }
 
-//todo: hard code the rotations.
-int	mouse_update(int x, int y, t_minirt *minirt)
-{
-	float	cos_a;
-	float	sin_a;
-	float	dx;
-	float	dy;
-
-	if (!minirt->mouse.capture)
-		return (0);
-	dy = (y - minirt->display.height / 2);
-	dx = (x - minirt->display.width / 2);
-	if (dy == 0.0f && dx == 0.0f)
-		return (0);
-	if (dy != 0.0f)
-		dy /= fabsf(dy);
-	if (dx != 0.0f)
-		dx /= fabsf(dx);
-	dx *= 0.02f;
-	dy *= 0.02f;
-	cos_a = cosf(dy);
-	sin_a = sinf(dy);
-	minirt->mouse.direction->points[0][0] = 1.0f;
-	minirt->mouse.direction->points[1][1] = cos_a;
-	minirt->mouse.direction->points[2][1] = sin_a;
-	minirt->mouse.direction->points[1][2] = -sin_a;
-	minirt->mouse.direction->points[2][2] = cos_a;
-	matmul(minirt->camera.basis, minirt->mouse.direction, minirt->tmp, 3);
-	matrix_copy(minirt->tmp, minirt->camera.basis, 3);
-	if (dx == 0.0f)
-		return (0);
-	cos_a = cosf(dx);
-	sin_a = sinf(dx);
-	minirt->mouse.direction->points[0][0] = 0.0f;
-	minirt->mouse.direction->points[1][1] = 0.0f;
-	minirt->mouse.direction->points[2][1] = 0.0f;
-	minirt->mouse.direction->points[1][2] = 0.0f;
-	minirt->mouse.direction->points[2][2] = 0.0f;
-	minirt->mouse.direction->points[0][0] = cos_a;
-	minirt->mouse.direction->points[0][2] = -sin_a;
-	minirt->mouse.direction->points[1][1] = 1.0f;
-	minirt->mouse.direction->points[2][0] = sin_a;
-	minirt->mouse.direction->points[2][2] = cos_a;
-	matmul(minirt->camera.basis, minirt->mouse.direction, minirt->tmp, 3);
-	matrix_copy(minirt->tmp, minirt->camera.basis, 3);
-	look_at(&minirt->camera, minirt);
-	minirt->mouse.direction->points[0][0] = 0.0f;
-	minirt->mouse.direction->points[0][2] = 0.0f;
-	minirt->mouse.direction->points[1][1] = 0.0f;
-	minirt->mouse.direction->points[2][0] = 0.0f;
-	minirt->mouse.direction->points[2][2] = 0.0f;
-	//mlx_mouse_move(minirt->window, minirt->display->width / 2, minirt->display->height / 2);
-	return (0);
-}
-
 int	set_hooks(t_minirt *minirt)
 {
-	//mlx_hook(minirt->window, 6, 1L << 6, mouse_update, minirt);
+	mlx_hook(minirt->window, 6, 1L << 6, mouse_update, minirt);
 	mlx_hook(minirt->window, 4, 1L << 2, mouse_click_hook, minirt);
-	mlx_hook(minirt->window, 5, 1L << 3, mouse_click_hook, minirt);
+	mlx_hook(minirt->window, 5, 1L << 3, mouse_release_hook, minirt);
 	mlx_hook(minirt->window, 2, 1L << 0, key_press_hook, minirt);
 	mlx_hook(minirt->window, 3, 1L << 1, key_release_hook, minirt);
 	mlx_hook(minirt->window, 17, 0, close_program, minirt);
@@ -235,7 +181,7 @@ int	load_scene(t_minirt *minirt)
 	//to_color(0x00f94449, material.dark_color);
 	to_color(0x00ffffff, material.color);
 	to_color(0x00ffff00, other.color);
-	load_bmap(&other, "resources/mesh.bmap");
+	load_bmap(&other, "resources/gravel.bmap");
 	ft_darray_append(&minirt->materials, &material);
 	ft_darray_append(&minirt->materials, &other);
 	minirt->diffuse.position[0] = -40.0f;

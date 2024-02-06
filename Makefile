@@ -33,6 +33,7 @@ SRC_FILES =	minirt.c \
 			minirt_camera.c \
 			minirt_projection.c \
 			minirt_colors.c \
+			minirt_mouse.c \
 			procedural_textures.c
 
 

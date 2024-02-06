@@ -38,4 +38,4 @@ def write_matrix_to_text(matrix, output_file):
 			file.write('\n')
 	print("Done")
 
-write_matrix_to_text(read_image('resources/mesh.jpg'), 'resources/mesh.bmap')
+write_matrix_to_text(read_image('resources/gravel.jpg'), 'resources/gravel.bmap')

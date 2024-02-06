@@ -153,6 +153,8 @@ int	mouse_update(int x, int y, t_minirt *minirt)
 int	set_hooks(t_minirt *minirt)
 {
 	//mlx_hook(minirt->window, 6, 1L << 6, mouse_update, minirt);
+	mlx_hook(minirt->window, 4, 1L << 2, mouse_click_hook, minirt);
+	mlx_hook(minirt->window, 5, 1L << 3, mouse_click_hook, minirt);
 	mlx_hook(minirt->window, 2, 1L << 0, key_press_hook, minirt);
 	mlx_hook(minirt->window, 3, 1L << 1, key_release_hook, minirt);
 	mlx_hook(minirt->window, 17, 0, close_program, minirt);

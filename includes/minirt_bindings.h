@@ -14,6 +14,7 @@
 # define MINIRT_BINDINGS_H
 
 # ifdef __APPLE__
+
 #  define TU 0x0D
 #  define TD 0x01
 #  define TL 0x00
@@ -37,6 +38,7 @@
 
 #  define LEFT_CLICK 1
 #  define RIGHT_CLICK 2
+
 #endif
 
 # ifdef __linux__

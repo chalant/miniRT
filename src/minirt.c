@@ -99,6 +99,7 @@ int	normalize_col(t_matrix *matrix, int col)
 
 int	set_hooks(t_minirt *minirt)
 {
+	mlx_mouse_hook(minirt->window, scroll_hook, minirt);
 	mlx_hook(minirt->window, 6, 1L << 6, mouse_update, minirt);
 	mlx_hook(minirt->window, 4, 1L << 2, mouse_click_hook, minirt);
 	mlx_hook(minirt->window, 5, 1L << 3, mouse_release_hook, minirt);
@@ -155,6 +156,7 @@ int	load_bmap(t_material *material, char *file_path)
 
 int	load_scene(t_minirt *minirt)
 {
+	//todo: need to set object basis for transformations.
 	t_object	new;
 	t_material	material;
 	t_material	other;
@@ -254,37 +256,37 @@ int	load_scene(t_minirt *minirt)
 	return (1);
 }
 
-// int	main(int argc, char *argv[])
-// {
-// 	t_minirt	minirt;
-
-// 	//todo: use a cache for this.
-// 	(void)argv;
-// 	if (argc - 1 < 0 || argc - 1 > 1)
-// 		return (0);
-// 	minirt_init(&minirt);
-// 	minirt.mouse.x = 0.0f;
-// 	minirt.mouse.y = 0.0f;
-// 	set_variables(&minirt);
-// 	mlx_setup(&minirt);
-// 	set_hooks(&minirt);
-// 	set_minirt_transforms(&minirt);
-// 	homogeneous_matrix(&minirt.tmp, 3, 3);
-// 	load_scene(&minirt);
-// 	perspective_projector(&minirt.world_space, &minirt.display, &minirt.camera);
-// 	invert_matrix(minirt.world_space, minirt.world_space, minirt.tmp, 4);
-// 	perspective_projector(&minirt.view_matrix, &minirt.display, &minirt.camera);
-// 	mlx_loop(minirt.mlx);
-// 	return (0);
-// }
-
-
 int	main(int argc, char *argv[])
 {
 	t_minirt	minirt;
-	
-	(void)argc;
-	if (argc != 2)
-		return (1);
-	return (import_map(&minirt, argv));
+
+	//todo: use a cache for this.
+	(void)argv;
+	if (argc - 1 < 0 || argc - 1 > 1)
+		return (0);
+	minirt_init(&minirt);
+	minirt.mouse.x = 0.0f;
+	minirt.mouse.y = 0.0f;
+	set_variables(&minirt);
+	mlx_setup(&minirt);
+	set_hooks(&minirt);
+	set_minirt_transforms(&minirt);
+	homogeneous_matrix(&minirt.tmp, 3, 3);
+	load_scene(&minirt);
+	perspective_projector(&minirt.world_space, &minirt.display, &minirt.camera);
+	invert_matrix(minirt.world_space, minirt.world_space, minirt.tmp, 4);
+	perspective_projector(&minirt.view_matrix, &minirt.display, &minirt.camera);
+	mlx_loop(minirt.mlx);
+	return (0);
 }
+
+
+// int	main(int argc, char *argv[])
+// {
+// 	t_minirt	minirt;
+	
+// 	(void)argc;
+// 	if (argc != 2)
+// 		return (1);
+// 	return (import_map(&minirt, argv));
+// }

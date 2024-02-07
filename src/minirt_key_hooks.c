@@ -61,6 +61,8 @@ int	key_press_hook(int code, t_minirt *fdf)
 	float		tmp[4];
 	// t_object	*object;
 
+	if (code == CTRL)
+		fdf->ctrl.pressed = 1;
 	// object = ft_darray_get(&fdf->objects, fdf->objects.size - 1);
 	if (code == RL)
 	{
@@ -143,5 +145,7 @@ int	key_release_hook(int code, t_minirt *fdf)
 {
 	(void)code;
 	(void)fdf;
+	if (code == CTRL)
+		fdf->ctrl.pressed = 0;
 	return (0);
 }

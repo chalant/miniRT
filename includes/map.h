@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:30:29 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/06 17:36:41 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/07 15:07:15 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MAP_H
 
 # include "minirt.h"
+# include "minirt_objects.h"
 # include "get_next_line.h"
 # include <fcntl.h>
 
@@ -32,7 +33,7 @@ typedef enum e_ranges
 	XYZ,
 	RGB,
 	NORMAL,
-	DIMENSION,
+	UNIT,
 	FOV,
 }	t_ranges;
 
@@ -69,7 +70,8 @@ int		set_light(float *light, char *info);
 int		set_rgb(float *rgb, char *info);
 int		set_xyz(float *xyz, char *info);
 int		set_normal(float *normal, char *info);
-int		set_fov(int	*fov, char *info);
+int		set_fov(float	*fov, char *info);
+int		set_unit(float *light, char *info);
 
 // Argument to float
 int		check_input(char *nbr);

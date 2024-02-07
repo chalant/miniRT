@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:53:50 by ychalant          #+#    #+#             */
-/*   Updated: 2024/02/05 14:50:46 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/07 15:06:33 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,7 @@ int	load_scene(t_minirt *minirt)
 	minirt->camera.origin[3] = 1.0f;
 	if (set_camera_transform(&minirt->camera) == -1)
 		return (-1);
-	create_sphere(&new, 1.5f, "red");
+	create_sphere(&new, 1.5f);
 	to_color(0x00f94449, new.color);
 	new.name = "red";
 	new.center = ft_calloc(4, sizeof(float));
@@ -221,7 +221,7 @@ int	load_scene(t_minirt *minirt)
 	new.center[3] = 1.0f;
 	new.material = ft_darray_get(&minirt->materials, 0);
 	ft_darray_append(&minirt->objects, &new);
-	create_sphere(&new, 0.4f, "blue");
+	create_sphere(&new, 0.4f);
 	to_color(0x003261e3, new.color);
 	new.name = "blue";
 	new.center = ft_calloc(4, sizeof(float));
@@ -231,7 +231,7 @@ int	load_scene(t_minirt *minirt)
 	new.center[3] = 1.0f;
 	//new.material = ft_darray_get(minirt->materials, 0);
 	ft_darray_append(&minirt->objects, &new);
-	create_sphere(&new, 0.5f, "green");
+	create_sphere(&new, 0.5f);
 	to_color(0x11aaea8c, new.color);
 	new.name = "green";
 	new.center = ft_calloc(4, sizeof(float));
@@ -254,37 +254,37 @@ int	load_scene(t_minirt *minirt)
 	return (1);
 }
 
-int	main(int argc, char *argv[])
-{
-	t_minirt	minirt;
-
-	//todo: use a cache for this.
-	(void)argv;
-	if (argc - 1 < 0 || argc - 1 > 1)
-		return (0);
-	minirt_init(&minirt);
-	minirt.mouse.x = 0.0f;
-	minirt.mouse.y = 0.0f;
-	set_variables(&minirt);
-	mlx_setup(&minirt);
-	set_hooks(&minirt);
-	set_minirt_transforms(&minirt);
-	homogeneous_matrix(&minirt.tmp, 3, 3);
-	load_scene(&minirt);
-	perspective_projector(&minirt.world_space, &minirt.display, &minirt.camera);
-	invert_matrix(minirt.world_space, minirt.world_space, minirt.tmp, 4);
-	perspective_projector(&minirt.view_matrix, &minirt.display, &minirt.camera);
-	mlx_loop(minirt.mlx);
-	return (0);
-}
-
-
 // int	main(int argc, char *argv[])
 // {
 // 	t_minirt	minirt;
-	
-// 	(void)argc;
-// 	if (argc != 2)
-// 		return (1);
-// 	return (import_map(&minirt, argv));
+
+// 	//todo: use a cache for this.
+// 	(void)argv;
+// 	if (argc - 1 < 0 || argc - 1 > 1)
+// 		return (0);
+// 	minirt_init(&minirt);
+// 	minirt.mouse.x = 0.0f;
+// 	minirt.mouse.y = 0.0f;
+// 	set_variables(&minirt);
+// 	mlx_setup(&minirt);
+// 	set_hooks(&minirt);
+// 	set_minirt_transforms(&minirt);
+// 	homogeneous_matrix(&minirt.tmp, 3, 3);
+// 	load_scene(&minirt);
+// 	perspective_projector(&minirt.world_space, &minirt.display, &minirt.camera);
+// 	invert_matrix(minirt.world_space, minirt.world_space, minirt.tmp, 4);
+// 	perspective_projector(&minirt.view_matrix, &minirt.display, &minirt.camera);
+// 	mlx_loop(minirt.mlx);
+// 	return (0);
 // }
+
+
+int	main(int argc, char *argv[])
+{
+	t_minirt	minirt;
+	
+	(void)argc;
+	if (argc != 2)
+		return (1);
+	return (import_map(&minirt, argv));
+}

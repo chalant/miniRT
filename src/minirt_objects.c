@@ -94,9 +94,8 @@ float	*plane_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 	return (uv_coords);
 }
 
-int create_sphere(t_object *object, float radius, const char *name)
+int create_sphere(t_object *object, float radius)
 {
-	(void)name;
 	object->intersect = hit_sphere;
 	object->normal = sphere_normal;
 	object->uv_coords = sphere_uv_coords;

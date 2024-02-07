@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 14:24:32 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/06 14:39:10 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/06 18:00:58 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,9 @@ int	import_map(t_minirt *minirt, char **av)
 //  [ ] Process Cylinder
 //  [ ] Process Cone
 
-// [ ] Map is considered bad when newline vs no newline at end of map
+// [WIP] Map is considered bad when newline vs no newline at end of map
+//  [ ] Sanitize strings from NL and EOF characters ?
+//  [ ] Fix the issue in check_integer() when itering through the string
 
 // Object types and expected elements per type:
 // A: 3

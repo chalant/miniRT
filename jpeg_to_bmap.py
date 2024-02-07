@@ -5,7 +5,7 @@ def read_image(file_path):
 	# Open the image file
 	img = Image.open(file_path)
 
-	# Get the dimensions of the image
+	# Get the UNITs of the image
 	width, height = img.size
 
 	# Create a matrix to store the RGB values

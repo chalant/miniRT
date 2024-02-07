@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 14:24:32 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/06 18:00:58 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/07 16:08:05 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,9 @@ int	import_map(t_minirt *minirt, char **av)
 	if (init_import(&import, minirt, av[1]))
 		return (1);
 	if (read_map(&import))
-		return (printf("Bad map!\n"), 1);
+		return (printf("\nBad map!\n\n"), 1);
 	else
-		return (printf("Good map!\n"), 0);
+		return (printf("\nGood map!\n\n"), 0);
 	// if (check_scene(&import))
 	// 	return (1);
 	return (0);
@@ -75,10 +75,10 @@ int	import_map(t_minirt *minirt, char **av)
 // 	[X] Verify that each part of the informations from an element is correct per the subject specifications (RGB, Normalization, Light Range..)
 // 	[X] Manage floats with a home made atof + Manage negatives float too!
 // 	[X] Process Ambient
-//  [ ] Process Camera
-//  [ ] Process Light
-//  [ ] Process Sphere
-//  [ ] Process Plane
+//  [X] Process Camera
+//  [X] Process Light
+//  [X] Process Sphere
+//  [X] Process Plane
 //  [ ] Process Cylinder
 //  [ ] Process Cone
 
@@ -95,17 +95,3 @@ int	import_map(t_minirt *minirt, char **av)
 // cn: 5
 // cy: 6
 
-// Prototyping 
-// int get_element(t_import *import, char **infos)
-// {
-// 	t_object	new;
-// 	t_sphere	*sphere;
-// 
-//
-// 	if (ft_strcmp("sp", infos[0]))
-// 	{
-// 		sphere->radius;
-// 	}
-// 	new.shape = sphere;
-// 	if (ft_darray_append(import->minirt->objects, &new))
-// }

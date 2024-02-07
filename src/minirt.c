@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:53:50 by ychalant          #+#    #+#             */
-/*   Updated: 2024/02/07 15:06:33 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/07 16:52:50 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,7 @@ int	load_scene(t_minirt *minirt)
 	create_sphere(&new, 1.5f);
 	to_color(0x00f94449, new.color);
 	new.name = "red";
-	new.center = ft_calloc(4, sizeof(float));
+	//new.center = ft_calloc(4, sizeof(float));
 	new.center[0] = 0.8f;
 	new.center[1] = -0.2f;
 	new.center[2] = 0.0f;
@@ -224,7 +224,7 @@ int	load_scene(t_minirt *minirt)
 	create_sphere(&new, 0.4f);
 	to_color(0x003261e3, new.color);
 	new.name = "blue";
-	new.center = ft_calloc(4, sizeof(float));
+	//new.center = ft_calloc(4, sizeof(float));
 	new.center[0] = -2.0f;
 	new.center[1] = -0.3f;
 	new.center[2] = 0.0f;
@@ -234,7 +234,7 @@ int	load_scene(t_minirt *minirt)
 	create_sphere(&new, 0.5f);
 	to_color(0x11aaea8c, new.color);
 	new.name = "green";
-	new.center = ft_calloc(4, sizeof(float));
+	//new.center = ft_calloc(4, sizeof(float));
 	new.center[0] = -0.9f;
 	new.center[1] = -1.4f;
 	new.center[2] = -0.0f;
@@ -243,7 +243,7 @@ int	load_scene(t_minirt *minirt)
 	ft_darray_append(&minirt->objects, &new);
 	create_plane(&new, (float[4]){0.0f, 1.0f, 0.0f, 0.0f});
 	new.name = "plane";
-	new.center = ft_calloc(4, sizeof(float));
+	//new.center = ft_calloc(4, sizeof(float));
 	to_color(0x003261e3, new.color);
 	new.center[0] = 0.0f;
 	new.center[1] = -2.0f;

@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:26:34 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/06 17:04:48 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/07 16:26:48 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	check_input(char *nbr)
 
 	dot = 0;
 	decimal = 0;
-	if ((nbr[0] != '-' && !ft_isdigit(nbr[0])) || nbr[0] == '.')
+	if ((!nbr || (nbr[0] != '-' && !ft_isdigit(nbr[0]))) || nbr[0] == '.')
 		return (1);
 	nbr++;
 	while (*nbr)

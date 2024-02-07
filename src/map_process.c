@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:32:43 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/07 15:08:53 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/07 17:09:04 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,17 +91,16 @@ int	process_ambient(t_import *import, char **infos)
 {
 	t_light		ambient;
 
-	// printf("Ambient:\n");
+	// printf("\nAmbient:\n");
 	if (set_light(&ambient.brightness, infos[1]))
 		return (1);
-	// printf("Brightness: %f\n", ambient.brightness);
+	// printf("Brightness: %.1f\n", ambient.brightness);
 	if (set_rgb(ambient.color, infos[2]))
 		return (1);
 	// int i = -1;
 	// while (++i < 4)
-	// 	printf("RGB[%i]: %f\n", i, ambient.color[i]);
+	// 	printf("RGB[%i]: %.1f\n", i, ambient.color[i]);
 	import->minirt->ambient = ambient;
-	// printf("Hey from process_ambient\n");
 	return (0);
 }
 
@@ -109,22 +108,20 @@ int	process_camera(t_import *import, char **infos)
 {
 	t_camera	camera;
 
-	// printf("Camera:\n");
+	// printf("\nCamera:\n");
 	if (set_xyz(camera.origin, infos[1]))
 		return (1);
-	// printf("XYZ[0]: %f\n", camera.origin[0]);
-	// printf("XYZ[1]: %f\n", camera.origin[1]);
-	// printf("XYZ[2]: %f\n", camera.origin[2]);
-	// printf("XYZ[3]: %f\n", camera.origin[3]);
+	// int i = -1;
+	// while (++i < 4)
+	// 	printf("XYZ[%i]: %.1f\n", i, camera.origin[i]);
 	if (set_normal(camera.orientation, infos[2]))
 		return (1);
-	// printf("NORMAL[0]: %f\n", camera.orientation[0]);
-	// printf("NORMAL[1]: %f\n", camera.orientation[1]);
-	// printf("NORMAL[2]: %f\n", camera.orientation[2]);
-	// printf("NORMAL[3]: %f\n", camera.orientation[3]);
+	// i = -1;
+	// while (++i < 4)
+	// 	printf("NORMAL[%i]: %.1f\n", i, camera.orientation[i]);
 	if (set_fov(&camera.fov, infos[3]))
 		return (1);
-	// printf("FOV: %f\n", camera.fov);
+	// printf("FOV: %.1f\n", camera.fov);
 	import->minirt->camera = camera;
 	return (0);
 }
@@ -133,23 +130,22 @@ int	process_light(t_import *import, char **infos)
 {
 	t_light	light;
 
+	// printf("\nLight:\n");
 	if (set_xyz(light.position, infos[1]))
 		return (1);
-	// printf("XYZ[0]: %f\n", light.position[0]);
-	// printf("XYZ[1]: %f\n", light.position[1]);
-	// printf("XYZ[2]: %f\n", light.position[2]);
-	// printf("XYZ[3]: %f\n", light.position[3]);
-	if (set_light(&light.brightness, infos[2]))
-		return (1);
-	// printf("Brightness: %f\n", light.brightness);
-	if (set_rgb(light.color, infos[3]))
-		return (1);	
 	// int i = -1;
 	// while (++i < 4)
-	// 	printf("RGB[%i]: %f\n", i, light.color[i]);
-	// Add to array of objects
-	(void)import; ////////////
-	// Add to array of objects
+	// 	printf("XYZ[%i]: %.1f\n", i, light.position[i]);
+	if (set_light(&light.brightness, infos[2]))
+		return (1);
+	// printf("Brightness: %.1f\n", light.brightness);
+	if (set_rgb(light.color, infos[3]))
+		return (1);	
+	// i = -1;
+	// while (++i < 4)
+	// 	printf("RGB[%i]: %.1f\n", i, light.color[i]);
+	if (ft_darray_append(&import->minirt->objects, &light))
+		return (1);
 	return (0);
 }
 
@@ -158,17 +154,24 @@ int	process_sphere(t_import *import, char **infos)
 	t_object	sphere;
 	float		diameter;
 
+	// printf("\nSphere:\n");
 	if (set_xyz(sphere.center, infos[1]))
 		return (1);
+	// int i = -1;
+	// while (++i < 4)
+	// 	printf("XYZ[%i]: %.1f\n", i, sphere.center[i]);
 	if (set_unit(&diameter, infos[2]))
 		return (1);
+	// printf("Diameter: %.1f\n", diameter);
 	if (create_sphere(&sphere, diameter / 2.0f))
 		return (1);
 	if (set_rgb(sphere.color, infos[3]))
 		return (1);
-	// Add to array of objects
-	(void)import; ////////////
-	// Add to array of objects
+	// i = -1;
+	// while (++i < 4)
+	// 	printf("RGB[%i]: %.1f\n", i, sphere.color[i]);
+	if (ft_darray_append(&import->minirt->objects, &sphere))
+		return (1);
 	return (0);
 }
 
@@ -176,15 +179,24 @@ int	process_plane(t_import *import, char **infos)
 {
 	t_object	plane;
 
+	// printf("\nPlane:\n");
 	if (set_xyz(plane.center, infos[1]))
 		return (1);
+	// int i = -1;
+	// while (++i < 4)
+	// 	printf("XYZ[%i]: %.1f\n", i, plane.center[i]);
 	if (set_normal(plane.orientation, infos[2]))
 		return (1);
+	// i = -1;
+	// while (++i < 4)
+	// 	printf("NORMAL[%i]: %.1f\n", i, plane.orientation[i]);
 	if (set_rgb(plane.color, infos[3]))
 		return (1);
-	// Add to array of objects
-	(void)import; ////////////
-	// Add to array of objects
+	// i = -1;
+	// while (++i < 4)
+	// 	printf("RGB[%i]: %.1f\n", i, plane.color[i]);
+	if (ft_darray_append(&import->minirt->objects, &plane))
+		return (1);
 	return (0);
 }
 

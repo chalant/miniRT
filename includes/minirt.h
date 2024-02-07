@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 14:24:06 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/06 13:37:19 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/07 16:51:46 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ typedef struct	s_object
 
 	const char		*name;
 	void			*shape;
-	float			*center;
+	float			center[4];
 	int				id;
 	int				(*hover)(struct s_object*, float position[3]);
 	int				(*intersect)(struct s_object*, t_ray*);

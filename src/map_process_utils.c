@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 13:19:18 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/07 14:52:20 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/07 17:03:35 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	set_rgb(float *rgb, char *info)
 
 	tab = check_ranges(info, RGB);
 	if (!tab)
-		return (printf("FUCK ME!!!!!!!!!!!!!!!\n"), 1);
+		return (1);
 	rgb[0] = (float)ft_atoi(tab[0]);
 	rgb[1] = (float)ft_atoi(tab[1]);
 	rgb[2] = (float)ft_atoi(tab[2]);

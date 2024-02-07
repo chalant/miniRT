@@ -69,7 +69,7 @@ int		set_light(float *light, char *info);
 int		set_rgb(float *rgb, char *info);
 int		set_xyz(float *xyz, char *info);
 int		set_normal(float *normal, char *info);
-int		set_fov(int	fov, char *info);
+int		set_fov(int	*fov, char *info);
 
 // Argument to float
 int		check_input(char *nbr);

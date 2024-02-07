@@ -233,6 +233,7 @@ int	load_scene(t_minirt *minirt)
 	ft_darray_append(&minirt->objects, &new);
 	create_sphere(&new, 0.5f, "green");
 	to_color(0x11aaea8c, new.color);
+	new.name = "green";
 	new.center = ft_calloc(4, sizeof(float));
 	new.center[0] = -0.9f;
 	new.center[1] = -1.4f;
@@ -241,6 +242,7 @@ int	load_scene(t_minirt *minirt)
 	new.material = ft_darray_get(&minirt->materials, 0);
 	ft_darray_append(&minirt->objects, &new);
 	create_plane(&new, (float[4]){0.0f, 1.0f, 0.0f, 0.0f});
+	new.name = "plane";
 	new.center = ft_calloc(4, sizeof(float));
 	to_color(0x003261e3, new.color);
 	new.center[0] = 0.0f;
@@ -252,37 +254,37 @@ int	load_scene(t_minirt *minirt)
 	return (1);
 }
 
-// int	main(int argc, char *argv[])
-// {
-// 	t_minirt	minirt;
-
-// 	//todo: use a cache for this.
-// 	(void)argv;
-// 	if (argc - 1 < 0 || argc - 1 > 1)
-// 		return (0);
-// 	minirt_init(&minirt);
-// 	minirt.mouse.x = 0.0f;
-// 	minirt.mouse.y = 0.0f;
-// 	set_variables(&minirt);
-// 	mlx_setup(&minirt);
-// 	set_hooks(&minirt);
-// 	set_minirt_transforms(&minirt);
-// 	homogeneous_matrix(&minirt.tmp, 3, 3);
-// 	load_scene(&minirt);
-// 	perspective_projector(&minirt.world_space, &minirt.display, &minirt.camera);
-// 	invert_matrix(minirt.world_space, minirt.world_space, minirt.tmp, 4);
-// 	perspective_projector(&minirt.view_matrix, &minirt.display, &minirt.camera);
-// 	mlx_loop(minirt.mlx);
-// 	return (0);
-// }
-
-
 int	main(int argc, char *argv[])
 {
 	t_minirt	minirt;
-	
-	(void)argc;
-	if (argc != 2)
-		return (1);
-	return (import_map(&minirt, argv));
+
+	//todo: use a cache for this.
+	(void)argv;
+	if (argc - 1 < 0 || argc - 1 > 1)
+		return (0);
+	minirt_init(&minirt);
+	minirt.mouse.x = 0.0f;
+	minirt.mouse.y = 0.0f;
+	set_variables(&minirt);
+	mlx_setup(&minirt);
+	set_hooks(&minirt);
+	set_minirt_transforms(&minirt);
+	homogeneous_matrix(&minirt.tmp, 3, 3);
+	load_scene(&minirt);
+	perspective_projector(&minirt.world_space, &minirt.display, &minirt.camera);
+	invert_matrix(minirt.world_space, minirt.world_space, minirt.tmp, 4);
+	perspective_projector(&minirt.view_matrix, &minirt.display, &minirt.camera);
+	mlx_loop(minirt.mlx);
+	return (0);
 }
+
+
+// int	main(int argc, char *argv[])
+// {
+// 	t_minirt	minirt;
+	
+// 	(void)argc;
+// 	if (argc != 2)
+// 		return (1);
+// 	return (import_map(&minirt, argv));
+// }

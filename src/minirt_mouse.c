@@ -30,23 +30,34 @@ int	mouse_update(int x, int y, t_minirt *minirt)
 	// float	dx;
 	// float	dy;
 	float		coords[4];
-	float		result[4];
+	float		position[4];
 	int			i;
 	t_object	*object;
 	static int	iterations = 0;
+	t_ray		ray;
 
 	i = -1;
 	if (x < 0 || y < 0 || x > minirt->display.width || y > minirt->display.height)
 		return (0);
 	to_screen_space(&minirt->display, coords, x, y);
-	to_world_space(minirt, coords, result);
-	//vmatmul(minirt->camera.view, result, coords);
+	to_world_space(minirt, coords, position);
+	ray.origin[0] = minirt->camera.origin[0];
+	ray.origin[1] = minirt->camera.origin[1];
+	ray.origin[2] = minirt->camera.origin[2];
+	vmatmul(minirt->camera.inverse_view, position, ray.direction);
+	//add_vectors(minirt->camera.origin, ray.direction, coords, 3);
+	ray.closest_t = FLT_MAX;
+	t_object	*closest = NULL;
 	while (++i < minirt->objects.size)
 	{
 		object = ft_darray_get(&minirt->objects, i);
-		if (object->hover && object->hover(object, coords))
-			printf("INSIDE! %s %d\n", object->name, iterations);
+		if (!object->intersect(object, &ray))
+			continue;
+		closest = object;
+		ray.closest_t = ray.t;
 	}
+	if (ray.closest_t < FLT_MAX)
+		printf("INSIDE! %s %d\n", closest->name, iterations);
 	iterations++;
 	//todo: check against all objects.
 	// if (!minirt->mouse.capture)

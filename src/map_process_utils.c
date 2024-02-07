@@ -70,13 +70,13 @@ int	set_normal(float *normal, char *info)
 	return (ft_clear_ds(tab), 0);
 }
 
-int	set_fov(int fov, char *info)
+int	set_fov(int *fov, char *info)
 {
 	char	**tab;
 	
 	tab = check_ranges(info, FOV);
 	if (!tab)
 		return (1);
-	fov = (float)ft_atoi(tab[0]);
+	*fov = (float)ft_atoi(tab[0]);
 	return (ft_clear_ds(tab), 0);
 }

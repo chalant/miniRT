@@ -24,6 +24,7 @@
 # include "mlx.h"
 # include "minirt_controls.h"
 # include "get_next_line.h"
+# include "float.h"
 
 typedef struct	s_light
 {

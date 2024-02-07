@@ -48,8 +48,11 @@ void	print_matrix3(t_matrix *matrix)
 
 int	rotate_around(t_minirt *fdf, t_matrix *rot)
 {
+	float	origin[4];
+
 	matmul(fdf->camera.basis, rot, fdf->tmp, 3);
 	matrix_copy(fdf->tmp, fdf->camera.basis, 3);
+	vmatmul(fdf->camera.basis, fdf->camera.origin, origin);
 	return (0);
 }
 

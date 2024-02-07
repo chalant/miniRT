@@ -105,12 +105,12 @@ typedef struct	s_material
 typedef struct	s_object
 {
 	t_material		*material;
+	t_matrix		basis;
 
 	const char		*name;
 	void			*shape;
 	float			*center;
 	int				id;
-	int				(*hover)(struct s_object*, float position[3]);
 	int				(*intersect)(struct s_object*, t_ray*);
 	int				(*transform)(struct s_object*, t_matrix*, float*);
 	float			*(*normal)(struct s_object*, t_hit*);
@@ -192,12 +192,12 @@ int		set_rotations(t_minirt *fdf, float x, float y, float z);
 int		translation(t_matrix *matrix, float x, float y, float z);
 int		set_translations(t_minirt *fdf, float x, float y, float z);
 
-float	to_rad(float degrees);
 int		set_camera_transform(t_camera *camera);
 int		look_at(t_camera *camera, t_minirt *fdf);
 int		perspective_projector(t_matrix **matrix, t_display *display, t_camera *camera);
 int		render(t_minirt *minirt);
 void	set_translate(t_matrix *matrix, float x, float y, float z);
+float	to_rad(float degrees);
 float   *checkerboard(t_object *object, float uv_coords[2], float color[4]);
 float	*compute_bump(t_object *object, float uv_coords[2], float bump[3]);
 
@@ -205,12 +205,12 @@ void	translate(t_minirt *minirt, t_object *object, int axis, float speed);
 void	rotate(t_minirt *minirt, t_object *object, t_matrix *axis);
 void	scale(t_minirt *minirt, t_object *object, int axis, float rate);
 
-int	mouse_click_hook(int button, int x, int y, t_minirt *minirt);
-int	mouse_release_hook(int button, int x, int y, t_minirt *minirt);
-int	mouse_update(int x, int y, t_minirt *minirt);
+int		mouse_click_hook(int button, int x, int y, t_minirt *minirt);
+int		mouse_release_hook(int button, int x, int y, t_minirt *minirt);
+int		mouse_update(int x, int y, t_minirt *minirt);
 
 float	*to_screen_space(t_display *display, float pixel[4], float i, float j);
 float	*to_world_space(t_minirt *minirt, float point[4], float result[4]);
-int		sphere_hover(t_object *object, float position[3]);
+int		scroll_hook(int button, int x, int y, t_minirt *minirt);
 
 #endif

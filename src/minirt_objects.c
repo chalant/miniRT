@@ -1,17 +1,6 @@
 #include "minirt.h"
 #include "float.h"
 
-int	sphere_hover(t_object *object, float position[3])
-{
-	float	result[3];
-
-	dot_product(result, result, 3);
-	subtract_vectors(position, object->center, result, 3);
-	printf("MAG %f %f %f\n", position[0], position[1], position[2]);
-	printf("MAG %f %f %f %f\n", object->center[0], object->center[1], object->center[2], object->center[3]);
-	return (dot_product(result, result, 3) < object->size[0] * object->size[0]);
-}
-
 int	hit_sphere(t_object *object, t_ray *ray)
 {
 	float		a;
@@ -57,7 +46,7 @@ float	*sphere_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 	float		center[3];
 	float		angle;
 
-	angle = to_rad(30);
+	angle = to_rad(90);
 	center[0] = object->center[0];
 	center[1] = object->center[1] * cosf(angle) - object->center[2] * sinf(angle);
 	center[2] = object->center[1] * sinf(angle) + object->center[2] * cosf(angle);
@@ -100,7 +89,6 @@ int create_sphere(t_object *object, float radius, const char *name)
 	object->intersect = hit_sphere;
 	object->normal = sphere_normal;
 	object->uv_coords = sphere_uv_coords;
-	object->hover = sphere_hover;
 	object->size[0] = radius;
 	object->size[1] = 0.0f;
 	object->size[2] = 0.0f;
@@ -145,6 +133,5 @@ int	create_plane(t_object *object, float normal[4])
 	object->intersect = hit_plane;
 	object->normal = plane_normal;
 	object->uv_coords = plane_uv_coords;
-	object->hover = NULL;
 	return (0);
 }

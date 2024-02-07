@@ -99,6 +99,7 @@ int	normalize_col(t_matrix *matrix, int col)
 
 int	set_hooks(t_minirt *minirt)
 {
+	mlx_mouse_hook(minirt->window, scroll_hook, minirt);
 	mlx_hook(minirt->window, 6, 1L << 6, mouse_update, minirt);
 	mlx_hook(minirt->window, 4, 1L << 2, mouse_click_hook, minirt);
 	mlx_hook(minirt->window, 5, 1L << 3, mouse_release_hook, minirt);

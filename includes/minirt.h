@@ -170,6 +170,8 @@ typedef struct	s_minirt
 	t_display		display;
 	t_camera		camera;
 	t_mouse			mouse;
+	t_key			shift;
+	t_key			ctrl;
 
 	float			x[4];
 	float			y[4];

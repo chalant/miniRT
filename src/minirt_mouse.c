@@ -87,6 +87,8 @@ int mouse_release_hook(int button, int x, int y, t_minirt *minirt)
 	return (0);
 }
 
+
+
 //todo: hard code the rotations.
 int	mouse_update(int x, int y, t_minirt *minirt)
 {
@@ -119,17 +121,23 @@ int	mouse_update(int x, int y, t_minirt *minirt)
 	// 	dy /= fabsf(dy);
 	// if (dx != 0.0f)
 	// 	dx /= fabsf(dx);
-	dx *= 8.0f;
-	dy *= 8.0f;
-	dz *= 8.0f;
+	dx *= 5.0f;
+	dy *= 5.0f;
+	dz *= 5.0f;
 	direction[0] = dx;
 	direction[1] = dy;
 	direction[2] = dz;
 	direction[3] = 1.0f;
 	vmatmul(minirt->camera.basis, direction, dir);
-	minirt->selected_object->center[0] += dir[0];
-	minirt->selected_object->center[1] += dir[1];
-	minirt->selected_object->center[2] += dir[2];
+	if (minirt->ctrl.pressed)
+		//todo: this should be object specific
+		minirt->selected_object->size[0] += dir[1];
+	else
+	{
+		minirt->selected_object->center[0] += dir[0];
+		minirt->selected_object->center[1] += dir[1];
+		minirt->selected_object->center[2] += dir[2];
+	}
 	minirt->mouse.world_position[0] = position[0];
 	minirt->mouse.world_position[1] = position[1];
 	minirt->mouse.world_position[2] = position[2];

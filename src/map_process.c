@@ -86,6 +86,7 @@ int	process_ambient(t_import *import, char **infos)
 {
 	t_light		ambient;
 
+	ambient.brightness = 0.0f;
 	if (set_light(ambient.brightness, infos[1]))
 		return (1);
 	if (set_rgb(ambient.color, infos[2]))
@@ -93,20 +94,20 @@ int	process_ambient(t_import *import, char **infos)
 	import->minirt->ambient = ambient;
 	return (0);
 }
+              
+// int	process_camera(t_import *import, char **infos)
+// {
+// 	t_camera	camera;
 
-int	process_camera(t_import *import, char **infos)
-{
-	t_camera	camera;
-
-	if (set_xyz(camera.origin, infos[1]))
-		return (1);
-	if (set_normal(camera.orientation, infos[2]))
-		return (1);
-	if (set_fov(camera.fov, infos[3]))
-		return (1);
-	import->minirt->camera = camera;
-	return (0);
-}
+// 	if (set_xyz(camera.origin, infos[1]))
+// 		return (1);
+// 	if (set_normal(camera.orientation, infos[2]))
+// 		return (1);
+// 	if (set_fov(&camera.fov, infos[3]))
+// 		return (1);
+// 	import->minirt->camera = camera;
+// 	return (0);
+// }
 
 // int	process_light(t_import *import, char **infos)
 // {

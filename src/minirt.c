@@ -233,6 +233,7 @@ int	load_scene(t_minirt *minirt)
 	ft_darray_append(&minirt->objects, &new);
 	create_sphere(&new, 0.5f, "green");
 	to_color(0x11aaea8c, new.color);
+	new.name = "green";
 	new.center = ft_calloc(4, sizeof(float));
 	new.center[0] = -0.9f;
 	new.center[1] = -1.4f;
@@ -241,6 +242,7 @@ int	load_scene(t_minirt *minirt)
 	new.material = ft_darray_get(&minirt->materials, 0);
 	ft_darray_append(&minirt->objects, &new);
 	create_plane(&new, (float[4]){0.0f, 1.0f, 0.0f, 0.0f});
+	new.name = "plane";
 	new.center = ft_calloc(4, sizeof(float));
 	to_color(0x003261e3, new.color);
 	new.center[0] = 0.0f;

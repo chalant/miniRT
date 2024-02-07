@@ -7,7 +7,7 @@ int	sphere_hover(t_object *object, float position[3])
 
 	dot_product(result, result, 3);
 	subtract_vectors(position, object->center, result, 3);
-	printf("MAG %f %f %f %f\n", position[0], position[1], position[2], position[3]);
+	printf("MAG %f %f %f\n", position[0], position[1], position[2]);
 	printf("MAG %f %f %f %f\n", object->center[0], object->center[1], object->center[2], object->center[3]);
 	return (dot_product(result, result, 3) < object->size[0] * object->size[0]);
 }
@@ -53,9 +53,19 @@ float	*sphere_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 {
 	float		theta;
 	float		phi;
+	float		point[3];
+	float		center[3];
+	float		angle;
 
-	phi = atan2f(hit->point[2] - object->center[2], hit->point[0] - object->center[0]);
-	theta = acosf((hit->point[1] - object->center[1]) / object->size[0]);
+	angle = to_rad(30);
+	center[0] = object->center[0];
+	center[1] = object->center[1] * cosf(angle) - object->center[2] * sinf(angle);
+	center[2] = object->center[1] * sinf(angle) + object->center[2] * cosf(angle);
+	point[0] = hit->point[0];
+	point[1] = hit->point[1] * cosf(angle) - hit->point[2] * sinf(angle);
+	point[2] = hit->point[1] * sinf(angle) + hit->point[2] * cosf(angle);
+	phi = atan2f(point[2] - center[2], point[0] - center[0]);
+	theta = acosf((point[1] - center[1]) / object->size[0]);
 	uv_coords[0] = (phi + M_PI) / (2.0f * M_PI);
     uv_coords[1] = 1.0f - theta / M_PI;
 	return (uv_coords);

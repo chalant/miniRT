@@ -233,6 +233,7 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 			hit.color[2] += sky_color[2] * multiplier;
 			break;
 		}
+		
 		set_hit_info(&hit, &ray);
 		add_vectors(hit.point, scale_vector(hit.normal, 0.0001f, epsilon, 3), ray.origin, 3);
 		add_lights(minirt, &ray, &hit, multiplier);

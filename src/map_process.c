@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:32:43 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/07 17:09:04 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/08 18:26:31 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,18 @@ int	expected_values(int type)
 int	check_integer(char *value, int type)
 {
 	int	integer;
-	// int	i;
+	int	sus;
+	int	i;
 
-	// printf("From check_integer: %s\n", value);
-	// if (value[0] != '-' && !ft_isdigit(value[0]))
-	// 	return (1);
-	// i = 1;
-	// while (value[i + 1])
-	// 	if (!ft_isdigit(value[i++]))
-	// 		return (1);
-	// if (!ft_isdigit(value[i]) && value[i] != '\n')
-	// 	return (1);
+	if (value[0] != '-' && !ft_isdigit(value[0]))
+		return (1);
+	sus = 0;
+	i = 0;
+	while (value[++i])
+		if (!ft_isdigit(value[i]))
+			sus++;
+	if (sus > 1 || (sus == 1 && value[ft_strlen(value) - 1] != '\n'))
+		return (1);
 	integer = ft_atoi(value);
 	if (type == RGB && integer >= 0 && integer <= 255)
 		return (0);
@@ -72,18 +73,16 @@ char	**check_ranges(char *values, int type)
 	i = 0;
 	while (tab[i])
 	{
-		// printf("From check_ranges: %s\n", tab[i]);
 		if (type == RGB || type == FOV)
 		{
 			if (check_integer(tab[i], type))
-				return (ft_clear_ds(tab), printf("A\n"), NULL);
+				return (ft_clear_ds(tab), NULL);
 		}
 		else
 			if (check_decimal(tab[i], type))
-				return (ft_clear_ds(tab), printf("B\n"), NULL);
+				return (ft_clear_ds(tab), NULL);
 		i++;
 	}
-	// printf("Hey from check_ranges!\n");
 	return (tab);
 }
 
@@ -91,15 +90,10 @@ int	process_ambient(t_import *import, char **infos)
 {
 	t_light		ambient;
 
-	// printf("\nAmbient:\n");
 	if (set_light(&ambient.brightness, infos[1]))
 		return (1);
-	// printf("Brightness: %.1f\n", ambient.brightness);
 	if (set_rgb(ambient.color, infos[2]))
 		return (1);
-	// int i = -1;
-	// while (++i < 4)
-	// 	printf("RGB[%i]: %.1f\n", i, ambient.color[i]);
 	import->minirt->ambient = ambient;
 	return (0);
 }
@@ -108,20 +102,12 @@ int	process_camera(t_import *import, char **infos)
 {
 	t_camera	camera;
 
-	// printf("\nCamera:\n");
 	if (set_xyz(camera.origin, infos[1]))
 		return (1);
-	// int i = -1;
-	// while (++i < 4)
-	// 	printf("XYZ[%i]: %.1f\n", i, camera.origin[i]);
 	if (set_normal(camera.orientation, infos[2]))
 		return (1);
-	// i = -1;
-	// while (++i < 4)
-	// 	printf("NORMAL[%i]: %.1f\n", i, camera.orientation[i]);
 	if (set_fov(&camera.fov, infos[3]))
 		return (1);
-	// printf("FOV: %.1f\n", camera.fov);
 	import->minirt->camera = camera;
 	return (0);
 }
@@ -130,22 +116,15 @@ int	process_light(t_import *import, char **infos)
 {
 	t_light	light;
 
-	// printf("\nLight:\n");
 	if (set_xyz(light.position, infos[1]))
 		return (1);
-	// int i = -1;
-	// while (++i < 4)
-	// 	printf("XYZ[%i]: %.1f\n", i, light.position[i]);
 	if (set_light(&light.brightness, infos[2]))
 		return (1);
-	// printf("Brightness: %.1f\n", light.brightness);
 	if (set_rgb(light.color, infos[3]))
-		return (1);	
-	// i = -1;
-	// while (++i < 4)
-	// 	printf("RGB[%i]: %.1f\n", i, light.color[i]);
-	if (ft_darray_append(&import->minirt->objects, &light))
 		return (1);
+	// if (ft_darray_append(&import->minirt->objects, &light))
+	(void)import;
+	// 	return (1);
 	return (0);
 }
 
@@ -154,24 +133,17 @@ int	process_sphere(t_import *import, char **infos)
 	t_object	sphere;
 	float		diameter;
 
-	// printf("\nSphere:\n");
 	if (set_xyz(sphere.center, infos[1]))
 		return (1);
-	// int i = -1;
-	// while (++i < 4)
-	// 	printf("XYZ[%i]: %.1f\n", i, sphere.center[i]);
 	if (set_unit(&diameter, infos[2]))
 		return (1);
-	// printf("Diameter: %.1f\n", diameter);
 	if (create_sphere(&sphere, diameter / 2.0f))
 		return (1);
 	if (set_rgb(sphere.color, infos[3]))
 		return (1);
-	// i = -1;
-	// while (++i < 4)
-	// 	printf("RGB[%i]: %.1f\n", i, sphere.color[i]);
-	if (ft_darray_append(&import->minirt->objects, &sphere))
-		return (1);
+	// if (ft_darray_append(&import->minirt->objects, &sphere))
+	(void)import;
+	// 	return (1);
 	return (0);
 }
 
@@ -179,24 +151,15 @@ int	process_plane(t_import *import, char **infos)
 {
 	t_object	plane;
 
-	// printf("\nPlane:\n");
 	if (set_xyz(plane.center, infos[1]))
 		return (1);
-	// int i = -1;
-	// while (++i < 4)
-	// 	printf("XYZ[%i]: %.1f\n", i, plane.center[i]);
 	if (set_normal(plane.orientation, infos[2]))
 		return (1);
-	// i = -1;
-	// while (++i < 4)
-	// 	printf("NORMAL[%i]: %.1f\n", i, plane.orientation[i]);
 	if (set_rgb(plane.color, infos[3]))
 		return (1);
-	// i = -1;
-	// while (++i < 4)
-	// 	printf("RGB[%i]: %.1f\n", i, plane.color[i]);
-	if (ft_darray_append(&import->minirt->objects, &plane))
-		return (1);
+	// if (ft_darray_append(&import->minirt->objects, &plane))
+	(void)import;
+	// 	return (1);
 	return (0);
 }
 
@@ -213,7 +176,6 @@ int	process_plane(t_import *import, char **infos)
 // [ ] TODO: Manage array deletion if an error occur
 int	process_element(t_import *import, char **infos)
 {
-	// printf("Hey from process element\n");
 	if (!ft_strcmp(infos[0], "A"))
 		return (process_ambient(import, infos));
 	if (!ft_strcmp(infos[0], "C"))

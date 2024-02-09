@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:29:20 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/07 13:21:06 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/08 17:55:40 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,16 @@
 
 int	is_blank(char **line)
 {
-	if (!*line || !*line[0])
+	char	*tmp;
+
+	tmp = *line;
+	if (!tmp)
 		return (1);
-	if (**line == '\n' || **line == '\0')
+	if (*tmp == '\n' || *tmp == '\0')
 		return (free(*line), 1);
-	while (**line == ' ')
-		(*line)++;
-	if (**line == '\n' || **line == '\0')
+	while (*tmp == ' ')
+		tmp++;
+	if (*tmp == '\n' || *tmp == '\0')
 		return (free(*line), 1);
 	else
 		return (0);
@@ -37,7 +40,7 @@ int	expected_infos(char *type)
 	else if (!ft_strcmp(type, "cy") || !ft_strcmp(type, "cn"))
 		return (6);
 	else
-		return (-1);
+		return (1);
 }
 
 int	seen_type(t_import *import, char **line)
@@ -47,13 +50,13 @@ int	seen_type(t_import *import, char **line)
 	type = line[0];
 	if (!ft_strcmp(type, "A"))
 		if (++import->ambient && import->ambient > 1)
-			return (1);
+			return (err("The map has too many ambient elements."));
 	if (!ft_strcmp(type, "C"))
 		if (++import->camera && import->camera > 1)
-			return (1);
+			return (err("The map has too many camera elements."));
 	if (!ft_strcmp(type, "L"))
 		if (++import->light && import->light > 1)
-			return (1);
+			return (err("The map has too many light elements."));
 	return (0);
 }
 
@@ -69,12 +72,12 @@ int	read_map(t_import *import)
 			break ;
 		if (is_blank(&line))
 			continue ;
-		// printf("I should be printed once\n");
 		infos = ft_split(line, ' ');
 		if (!infos)
 			return (free(line), ft_clear_ds(infos), 1);
 		if ((int)ft_count_strings(infos) != expected_infos(infos[0]))
-			return (free(line), ft_clear_ds(infos), 1);
+			return (free(line), ft_clear_ds(infos),
+				err("An element has the wrong number of infos."));
 		if (seen_type(import, infos))
 			return (free(line), ft_clear_ds(infos), 1);
 		if (process_element(import, infos))

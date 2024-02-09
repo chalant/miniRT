@@ -17,6 +17,7 @@ SRC_FILES =	minirt.c \
 			map_process.c \
 			map_process_utils.c \
 			map_atof.c \
+			map_error.c \
 			minirt_key_hooks.c \
 			matrix.c \
 			matrix_operations.c \
@@ -49,8 +50,8 @@ MINILIBX_LINUX = $(MLX_DIR_LINUX)/libmlx_Linux.a
 MLX_MAC = $(MLX_DIR_MAC)/libmlx.a
 
 # C_FLAGS = -O3 -I$(MLX_DIR_LINUX) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror -MMD -MP
-C_FLAGS = -g -O3 -I$(MLX_DIR_LINUX) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror
-C_FLAGS_MAC = -g -O3 -I$(MLX_DIR_MAC) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror
+C_FLAGS = -g -O3 -I$(MLX_DIR_LINUX) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror -g -fsanitize=address
+C_FLAGS_MAC = -g -O3 -I$(MLX_DIR_MAC) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror -g -fsanitize=address
 
 all:
 	mkdir -p $(OBJ_DIR)

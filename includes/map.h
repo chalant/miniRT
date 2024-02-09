@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:30:29 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/07 15:07:15 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/08 17:32:58 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ int		process_element(t_import *import, char **infos);
 // Processes
 int		process_ambient(t_import *import, char **infos);
 int		process_camera(t_import *import, char **infos);
-// int	process_light(t_import *import, char **infos);
-// int	process_sphere(t_import *import, char **infos);
-// int	process_plane(t_import *import, char **infos);
+int		process_light(t_import *import, char **infos);
+int		process_sphere(t_import *import, char **infos);
+int		process_plane(t_import *import, char **infos);
 // int	process_cylinder(t_import *import, char **infos);
 // int	process_cone(t_import *import, char **infos)
 
@@ -77,5 +77,8 @@ int		set_unit(float *light, char *info);
 int		check_input(char *nbr);
 float	check_sign(char *nbr);
 int		ft_atof(char *nbr, float *res);
+
+// Error
+int		err(char *msg);
 
 #endif

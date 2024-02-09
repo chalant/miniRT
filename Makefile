@@ -29,7 +29,10 @@ SRC_FILES =	minirt.c \
 			minirt_init.c \
 			minirt_setup.c \
 			minirt_window_hooks.c \
-			minirt_objects.c \
+			minirt_plane.c \
+			minirt_sphere.c \
+			minirt_cylinder.c \
+			minirt_cone.c \
 			minirt_rendering.c \
 			minirt_camera.c \
 			minirt_projection.c \

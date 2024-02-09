@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
+/*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 14:24:06 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/07 16:51:46 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/09 14:00:35 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdio.h>
 # include <math.h>
 # include <fcntl.h>
+# include <float.h>
 # include "matrix.h"
 # include "minirt_bindings.h"
 # include "minirt_colors.h"
@@ -24,7 +25,6 @@
 # include "mlx.h"
 # include "minirt_controls.h"
 # include "get_next_line.h"
-# include "float.h"
 
 typedef struct	s_light
 {

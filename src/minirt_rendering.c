@@ -1,5 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minirt_rendering.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/09 14:00:12 by ychalant          #+#    #+#             */
+/*   Updated: 2024/02/09 14:00:16 by ychalant         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
-#include <float.h>
 
 void	copy_vector(float *src, float *dst, int n)
 {
@@ -50,8 +61,6 @@ int	set_hit_info(t_hit *hit, t_ray *ray)
 	return (1);
 }
 
-//todo: perform ray intersection with all objects in the scene.
-//todo: should use an abstract data structure for this.
 int	ray_trace(t_minirt *minirt, t_ray *ray, t_hit *hit, int coords[2])
 {
 	int			i;
@@ -200,14 +209,15 @@ float	*to_world_space(t_minirt *minirt, float point[4], float result[4])
 
 int	shade_pixel(t_minirt *minirt, int coords[2])
 {
-	float		point[4];
-	float		result[4];
 	t_ray		ray;
 	t_hit		hit;
+	float		point[4];
+	float		result[4];
 	int			bounces;
 	int			i;
 	float		epsilon[3];
 	float		sky_color[4];
+	float		multiplier = 1.0f;
 
 	i = -1;
 	bounces = 2;
@@ -215,14 +225,9 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 	to_world_space(minirt, point, result);
 	vmatmul(&minirt->camera.inverse_view, result, ray.direction);
 	to_color(0x00000000, hit.color);
-	//minirt_pixel_put(&minirt->display, coords[0], coords[1], 0x0);
 	copy_vector(minirt->camera.origin, ray.origin, 3);
 	hit.screen_coords = coords;
-	float	multiplier = 1.0f;
-	to_color(0x00000000, sky_color);
-	// sky_color[0] = 0.1f;
-	// sky_color[1] = 0.8f;
-	// sky_color[2] = 0.6f;
+	to_color(0x0087ceeb, sky_color);
 	while (++i < bounces)
 	{
 		ray_trace(minirt, &ray, &hit, coords);

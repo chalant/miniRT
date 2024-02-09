@@ -12,6 +12,7 @@ typedef struct	s_mouse
 	int			left_click;
 	float		x;
 	float		y;
+	float		hit_point;
 }				t_mouse;
 
 typedef struct	s_key

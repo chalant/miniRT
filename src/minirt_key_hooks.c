@@ -12,40 +12,6 @@
 
 #include "minirt.h"
 
-void	movement_hook(int code, t_minirt *fdf)
-{
-	(void)code;
-	(void)fdf;
-}
-
-void	fdf_control_key(int code, t_minirt *fdf)
-{
-	(void)code;
-	(void)fdf;
-}
-
-void	set_translate(t_matrix *matrix, float x, float y, float z)
-{
-	matrix->points[0][matrix->cols - 1] = x;
-	matrix->points[1][matrix->cols - 1] = y;
-	matrix->points[2][matrix->cols - 1] = z;
-}
-
-void	print_matrix3(t_matrix *matrix)
-{
-	int	i;
-	int	j;
-
-	i = -1;
-	while (++i < matrix->rows)
-	{
-		j = -1;
-		while (++j < matrix->cols)
-			fprintf(stderr, "%f ", matrix->points[i][j]);
-		fprintf(stderr, "\n");
-	}
-}
-
 int	rotate_camera(t_minirt *minirt, t_matrix *rot)
 {
 	float	origin[4];
@@ -59,19 +25,30 @@ int	rotate_camera(t_minirt *minirt, t_matrix *rot)
 
 int	translate_camera(t_minirt *minirt, float direction[3])
 {
+	float	orientation[3];
+
+	vmatmul(&minirt->camera.basis, direction, orientation);
+	add_vectors(minirt->camera.origin, 
+		scale_vector(orientation, 0.1f,  orientation, 3), minirt->camera.origin, 3);
+	look_at(&minirt->camera, minirt);
 	return (0);
+}
+
+void	set_translate(t_matrix *matrix, float x, float y, float z)
+{
+	matrix->points[0][matrix->cols - 1] = x;
+	matrix->points[1][matrix->cols - 1] = y;
+	matrix->points[2][matrix->cols - 1] = z;
 }
 
 int	key_press_hook(int code, t_minirt *minirt)
 {
 	float		tmp[4];
-	// t_object	*object;
 
 	if (code == CTRL)
 		minirt->ctrl.pressed = 1;
 	else if (code == SHIFT)
 		minirt->shift.pressed = 1;
-	// object = ft_darray_get(&fdf->objects, fdf->objects.size - 1);
 	if (code == RL)
 		rotate_camera(minirt, &minirt->rev_rotations->y_axis);
 	else if (code == RR)
@@ -85,10 +62,7 @@ int	key_press_hook(int code, t_minirt *minirt)
 		tmp[0] = 1.0f;
 		tmp[1] = 0.0f;
 		tmp[2] = 0.0f;
-		//rotate(fdf, object, fdf->rotations->x_axis);
-		vmatmul(&minirt->camera.basis, tmp, minirt->camera.orientation);
-		add_vectors(minirt->camera.origin, scale_vector(minirt->camera.orientation, 0.1f,  minirt->camera.orientation, 3), minirt->camera.origin, 3);
-		look_at(&minirt->camera, minirt);
+		translate_camera(minirt, tmp);
 
 	}
 	else if (code == TR)
@@ -96,27 +70,21 @@ int	key_press_hook(int code, t_minirt *minirt)
 		tmp[0] = -1.0f;
 		tmp[1] = 0.0f;
 		tmp[2] = 0.0f;
-		vmatmul(&minirt->camera.basis, tmp, minirt->camera.orientation);
-		add_vectors(minirt->camera.origin, scale_vector(minirt->camera.orientation, 0.1f,  minirt->camera.orientation, 3), minirt->camera.origin, 3);
-		look_at(&minirt->camera, minirt);
+		translate_camera(minirt, tmp);
 	}
 	else if (code == TU)
 	{
 		tmp[0] = 0.0f;
 		tmp[1] = 0.0f;
 		tmp[2] = 1.0f;
-		vmatmul(&minirt->camera.basis, tmp, minirt->camera.orientation);
-		add_vectors(minirt->camera.origin, scale_vector(minirt->camera.orientation, 0.1f,  minirt->camera.orientation, 3), minirt->camera.origin, 3);
-		look_at(&minirt->camera, minirt);
+		translate_camera(minirt, tmp);
 	}
 	else if (code == TD)
 	{
 		tmp[0] = 0.0f;
 		tmp[1] = 0.0f;
 		tmp[2] = -1.0f;
-		vmatmul(&minirt->camera.basis, tmp, minirt->camera.orientation);
-		add_vectors(minirt->camera.origin, scale_vector(minirt->camera.orientation, 0.1f,  minirt->camera.orientation, 3), minirt->camera.origin, 3);
-		look_at(&minirt->camera, minirt);
+		translate_camera(minirt, tmp);
 	}
 	return (0);
 }
@@ -126,6 +94,6 @@ int	key_release_hook(int code, t_minirt *minirt)
 	if (code == CTRL)
 		minirt->ctrl.pressed = 0;
 	else if (code == SHIFT)
-		minirt->ctrl.pressed = 0;
+		minirt->shift.pressed = 0;
 	return (0);
 }

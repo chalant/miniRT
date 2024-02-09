@@ -99,7 +99,6 @@ int	normalize_col(t_matrix *matrix, int col)
 
 int	set_hooks(t_minirt *minirt)
 {
-	mlx_mouse_hook(minirt->window, scroll_hook, minirt);
 	mlx_hook(minirt->window, 6, 1L << 6, mouse_update, minirt);
 	mlx_hook(minirt->window, 4, 1L << 2, mouse_click_hook, minirt);
 	mlx_hook(minirt->window, 5, 1L << 3, mouse_release_hook, minirt);
@@ -164,9 +163,9 @@ int	load_scene(t_minirt *minirt)
 	//todo: need to load the bump map file...
 	//the file could be specified in the rt file, and would load the
 	//bump map file when parsing.
-	material.ambient_reflection = 0.8f;
+	material.ambient_reflection = 0.2f;
 	material.diffuse_reflection = 0.8f;
-	material.shininess = 12.0f;
+	material.shininess = 100.0f;
 	material.reflectivity = 0.2f;
 	material.repeat_pattern = 6.0f;
 	material.get_texture = checkerboard;
@@ -175,7 +174,7 @@ int	load_scene(t_minirt *minirt)
 	other.ambient_reflection = 0.8f;
 	other.diffuse_reflection = 0.8f;
 	other.shininess = 100.5f;
-	other.reflectivity = 0.5f;
+	other.reflectivity = 0.2f;
 	other.repeat_pattern = 0.2f;
 	other.get_texture = checkerboard;
 	other.normal_perturb = compute_bump;
@@ -190,10 +189,6 @@ int	load_scene(t_minirt *minirt)
 	minirt->diffuse.position[0] = -40.0f;
 	minirt->diffuse.position[1] = 50.0f;
 	minirt->diffuse.position[2] = 0.0f;
-	//scale_vector(minirt->light->direction, -1.0f, 3);
-	// normalize_vector(minirt->diffuse.direction, minirt->diffuse.direction, 3);
-	// scale_vector(minirt->diffuse.direction, -1.0f, minirt->diffuse.direction, 3);
-	//todo: the light direction should be the negative of the position, normalized.
 	minirt->diffuse.brightness = 0.8f;
 	to_color(0x00ffffff, minirt->diffuse.color);
 	minirt->ambient.brightness = 0.2f;
@@ -216,27 +211,24 @@ int	load_scene(t_minirt *minirt)
 	create_sphere(&new, 1.5f);
 	to_color(0x00f94449, new.color);
 	new.name = "red sphere";
-	//new.center = ft_calloc(4, sizeof(float));
 	new.center[0] = 0.8f;
 	new.center[1] = -0.2f;
 	new.center[2] = 0.0f;
 	new.center[3] = 1.0f;
 	new.material = ft_darray_get(&minirt->materials, 0);
 	ft_darray_append(&minirt->objects, &new);
-	create_sphere(&new, 0.4f);
+	create_cone(&new, 2.0f, 1.0f);
 	to_color(0x003261e3, new.color);
 	new.name = "blue sphere";
-	//new.center = ft_calloc(4, sizeof(float));
-	new.center[0] = -2.0f;
-	new.center[1] = -0.3f;
-	new.center[2] = 0.0f;
+	new.center[0] = 2.0f;
+	new.center[1] = 2.0f;
+	new.center[2] = 2.0f;
 	new.center[3] = 1.0f;
 	//new.material = ft_darray_get(minirt->materials, 0);
 	ft_darray_append(&minirt->objects, &new);
 	create_sphere(&new, 0.5f);
 	to_color(0x11aaea8c, new.color);
 	new.name = "green sphere";
-	//new.center = ft_calloc(4, sizeof(float));
 	new.center[0] = -0.9f;
 	new.center[1] = -1.4f;
 	new.center[2] = -0.0f;
@@ -245,7 +237,6 @@ int	load_scene(t_minirt *minirt)
 	ft_darray_append(&minirt->objects, &new);
 	create_plane(&new, (float[4]){0.0f, 1.0f, 0.0f, 0.0f});
 	new.name = "plane";
-	//new.center = ft_calloc(4, sizeof(float));
 	to_color(0x003261e3, new.color);
 	new.center[0] = 0.0f;
 	new.center[1] = -2.0f;

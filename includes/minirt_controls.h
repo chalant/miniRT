@@ -5,7 +5,7 @@
 
 typedef struct	s_mouse
 {
-	t_matrix	*direction;
+	t_matrix	direction;
 	float		world_position[4];
 	int			capture;
 	int			right_click;

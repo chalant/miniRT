@@ -191,7 +191,7 @@ int	add_lights(t_minirt *minirt, t_ray *ray, t_hit *hit, float multiplier)
 
 float	*to_world_space(t_minirt *minirt, float point[4], float result[4])
 {
-	vmatmul(minirt->world_space, point, result);
+	vmatmul(&minirt->world_space, point, result);
 	scale_vector(result, 1 / result[3], result, 3);
 	normalize_vector(result, result, 3);
 	result[3] = 0.0f;
@@ -213,7 +213,7 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 	bounces = 2;
 	to_screen_space(&minirt->display, point, coords[0], coords[1]);
 	to_world_space(minirt, point, result);
-	vmatmul(minirt->camera.inverse_view, result, ray.direction);
+	vmatmul(&minirt->camera.inverse_view, result, ray.direction);
 	to_color(0x00000000, hit.color);
 	//minirt_pixel_put(&minirt->display, coords[0], coords[1], 0x0);
 	copy_vector(minirt->camera.origin, ray.origin, 3);
@@ -233,7 +233,7 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 			hit.color[2] += sky_color[2] * multiplier;
 			break;
 		}
-		
+
 		set_hit_info(&hit, &ray);
 		add_vectors(hit.point, scale_vector(hit.normal, 0.0001f, epsilon, 3), ray.origin, 3);
 		add_lights(minirt, &ray, &hit, multiplier);

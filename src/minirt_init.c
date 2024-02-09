@@ -25,7 +25,6 @@ int	minirt_init(t_minirt *minirt)
 	minirt->rev_scalings = NULL;
 	minirt->transforms = NULL;
 	minirt->centering = NULL;
-	minirt->tmp = NULL;
 	minirt->selected_object = NULL;
 	minirt->mouse.x = 0;
 	minirt->mouse.y = 0;

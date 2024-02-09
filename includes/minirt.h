@@ -45,9 +45,9 @@ typedef struct	s_ray
 
 typedef struct	s_camera
 {
-	t_matrix		*basis;
-	t_matrix		*view;
-	t_matrix		*inverse_view;
+	t_matrix		basis;
+	t_matrix		view;
+	t_matrix		inverse_view;
 	float			orientation[4];
 	float			right[3];
 	float			up[3];
@@ -122,9 +122,9 @@ typedef struct	s_object
 
 typedef struct	s_transforms_3d
 {
-	t_matrix		*x_axis;
-	t_matrix		*y_axis;
-	t_matrix		*z_axis;
+	t_matrix		x_axis;
+	t_matrix		y_axis;
+	t_matrix		z_axis;
 }				t_transforms_3d;
 
 typedef struct s_display
@@ -153,12 +153,12 @@ typedef struct	s_minirt
 	t_transforms_3d	*scalings;
 	t_transforms_3d	*rev_scalings;
 
-	t_matrix		*view_matrix;
-	t_matrix		*world_space;
+	t_matrix		view_matrix;
+	t_matrix		world_space;
 	t_matrix		*screen_space;
 	t_matrix		*transforms;
 	t_matrix		*centering;
-	t_matrix		*tmp;
+	t_matrix		tmp;
 	t_object		*selected_object;
 
 	t_light			diffuse;
@@ -194,9 +194,10 @@ int		set_rotations(t_minirt *fdf, float x, float y, float z);
 int		translation(t_matrix *matrix, float x, float y, float z);
 int		set_translations(t_minirt *fdf, float x, float y, float z);
 
+int		set_basis(t_matrix *basis, float orientation[3]);
 int		set_camera_transform(t_camera *camera);
 int		look_at(t_camera *camera, t_minirt *fdf);
-int		perspective_projector(t_matrix **matrix, t_display *display, t_camera *camera);
+int		perspective_projector(t_matrix *matrix, t_display *display, t_camera *camera);
 int		render(t_minirt *minirt);
 void	set_translate(t_matrix *matrix, float x, float y, float z);
 float	to_rad(float degrees);

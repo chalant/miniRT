@@ -28,66 +28,50 @@ float	to_rad(float angle)
 	return (angle * (M_PI / 180.0));
 }
 
-//todo: handle errors.
+//todo: malloc protections.
 int	set_rotations(t_minirt *fdf, float x, float y, float z)
 {
-	t_matrix	*tmp;
-
 	fdf->rotations = malloc(sizeof(t_transforms_3d));
 	if (!fdf->rotations)
 		return (0);
 	fdf->rev_rotations = malloc(sizeof(t_transforms_3d));
 	if (!fdf->rev_rotations)
 		return (0);
-	homogeneous_matrix(&tmp, 3, 3);
-	x_rotation(tmp, to_rad(x));
-	fdf->rotations->x_axis = tmp;
-	homogeneous_matrix(&tmp, 3, 3);
-	y_rotation(tmp, to_rad(y));
-	fdf->rotations->y_axis = tmp;
-	homogeneous_matrix(&tmp, 3, 3);
-	z_rotation(tmp, to_rad(z));
-	fdf->rotations->z_axis = tmp;
-	homogeneous_matrix(&tmp, 3, 3);
-	x_rotation(tmp, to_rad(-x));
-	fdf->rev_rotations->x_axis = tmp;
-	homogeneous_matrix(&tmp, 3, 3);
-	y_rotation(tmp, to_rad(-y));
-	fdf->rev_rotations->y_axis = tmp;
-	homogeneous_matrix(&tmp, 3, 3);
-	z_rotation(tmp, to_rad(-z));
-	fdf->rev_rotations->z_axis = tmp;
+	homogeneous_matrix(&fdf->rotations->x_axis, 3, 3);
+	x_rotation(&fdf->rotations->x_axis, to_rad(x));
+	homogeneous_matrix(&fdf->rotations->y_axis, 3, 3);
+	y_rotation(&fdf->rotations->y_axis, to_rad(y));
+	homogeneous_matrix(&fdf->rotations->z_axis, 3, 3);
+	z_rotation(&fdf->rotations->z_axis, to_rad(z));
+	homogeneous_matrix(&fdf->rev_rotations->x_axis, 3, 3);
+	x_rotation(&fdf->rev_rotations->x_axis, to_rad(-x));
+	homogeneous_matrix(&fdf->rev_rotations->y_axis, 3, 3);
+	y_rotation(&fdf->rev_rotations->y_axis, to_rad(-y));
+	homogeneous_matrix(&fdf->rev_rotations->z_axis, 3, 3);
+	z_rotation(&fdf->rev_rotations->z_axis, to_rad(-z));
 	return (1);
 }
 
 int	set_translations(t_minirt *fdf, float x, float y, float z)
 {
-	t_matrix	*tmp;
-
 	fdf->translations = malloc(sizeof(t_transforms_3d));
 	if (!fdf->translations)
 		return (0);
 	fdf->rev_translations = malloc(sizeof(t_transforms_3d));
 	if (!fdf->rev_translations)
 		return (0);
-	homogeneous_matrix(&tmp, 3, 3);
-	translation(tmp, x, 0.0f, 0.0f);
-	fdf->translations->x_axis = tmp;
-	homogeneous_matrix(&tmp, 3, 3);
-	translation(tmp, 0.0f, y, 0.0f);
-	fdf->translations->y_axis = tmp;
-	homogeneous_matrix(&tmp, 3, 3);
-	translation(tmp, 0.0f, 0.0f, z);
-	fdf->translations->z_axis = tmp;
-	homogeneous_matrix(&tmp, 3, 3);
-	translation(tmp, -x, 0.0f, 0.0f);
-	fdf->rev_translations->x_axis = tmp;
-	homogeneous_matrix(&tmp, 3, 3);
-	translation(tmp, 0.0f, -y, 0.0f);
-	fdf->rev_translations->y_axis = tmp;
-	homogeneous_matrix(&tmp, 3, 3);
-	translation(tmp, 0.0f, 0.0f, -z);
-	fdf->rev_translations->z_axis = tmp;
+	homogeneous_matrix(&fdf->translations->x_axis, 3, 3);
+	translation(&fdf->translations->x_axis, x, 0.0f, 0.0f);
+	homogeneous_matrix(&fdf->translations->y_axis, 3, 3);
+	translation(&fdf->translations->y_axis, 0.0f, y, 0.0f);
+	homogeneous_matrix(&fdf->translations->z_axis, 3, 3);
+	translation(&fdf->translations->z_axis, 0.0f, 0.0f, z);
+	homogeneous_matrix(&fdf->rev_translations->x_axis, 3, 3);
+	translation(&fdf->rev_translations->x_axis, -x, 0.0f, 0.0f);
+	homogeneous_matrix(&fdf->rev_translations->y_axis, 3, 3);
+	translation(&fdf->rev_translations->y_axis, 0.0f, -y, 0.0f);
+	homogeneous_matrix(&fdf->rev_translations->z_axis, 3, 3);
+	translation(&fdf->rev_translations->z_axis, 0.0f, 0.0f, -z);
 	return (1);
 }
 

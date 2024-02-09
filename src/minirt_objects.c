@@ -42,17 +42,11 @@ float	*sphere_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 {
 	float		theta;
 	float		phi;
-	float		point[3];
-	float		center[3];
-	float		angle;
+	float		point[4];
+	float		center[4];
 
-	angle = to_rad(90);
-	center[0] = object->center[0];
-	center[1] = object->center[1] * cosf(angle) - object->center[2] * sinf(angle);
-	center[2] = object->center[1] * sinf(angle) + object->center[2] * cosf(angle);
-	point[0] = hit->point[0];
-	point[1] = hit->point[1] * cosf(angle) - hit->point[2] * sinf(angle);
-	point[2] = hit->point[1] * sinf(angle) + hit->point[2] * cosf(angle);
+	vmatmul(&object->basis, hit->point, point);
+	vmatmul(&object->basis, object->center, center);
 	phi = atan2f(point[2] - center[2], point[0] - center[0]);
 	theta = acosf((point[1] - center[1]) / object->size[0]);
 	uv_coords[0] = (phi + M_PI) / (2.0f * M_PI);
@@ -63,7 +57,11 @@ float	*sphere_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 float	*plane_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 {
 	float		*normal;
+	float		point[4];
+	float		center[4];
 
+	vmatmul(&object->basis, hit->point, point);
+	vmatmul(&object->basis, object->center, center);
 	normal = object->orientation;
 	if (fabsf(normal[0]) > fabsf(normal[1]) && fabsf(normal[0]) > fabsf(normal[2]))
 	{
@@ -91,6 +89,9 @@ int create_sphere(t_object *object, float radius)
 	object->size[0] = radius;
 	object->size[1] = 0.0f;
 	object->size[2] = 0.0f;
+	if (homogeneous_matrix(&object->basis, 3, 3) < 0)
+		return (-1);
+	set_basis(&object->basis, (float[3]){1.0f, 0.0f, 0.0f});
 	return (0);
 }
 
@@ -125,6 +126,8 @@ float	*plane_normal(t_object *object, t_hit *hit)
 
 int	create_plane(t_object *object, float normal[4])
 {
+	float	axis[4];
+
 	object->orientation[0] = normal[0];
 	object->orientation[1] = normal[1];
 	object->orientation[2] = normal[2];
@@ -132,5 +135,9 @@ int	create_plane(t_object *object, float normal[4])
 	object->intersect = hit_plane;
 	object->normal = plane_normal;
 	object->uv_coords = plane_uv_coords;
+	if (homogeneous_matrix(&object->basis, 3, 3) < 0)
+		return (-1);
+	cross_product((float[3]){0.0f, 0.0f, 1.0f}, object->orientation, axis);
+	set_basis(&object->basis, axis);
 	return (0);
 }

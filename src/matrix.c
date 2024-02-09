@@ -39,7 +39,6 @@ int	delete_matrix(t_matrix *matrix)
 	while (++i < matrix->rows)
 		free(matrix->points[i]);
 	free(matrix->points);
-	free(matrix);
 	return (0);
 }
 
@@ -78,14 +77,11 @@ int	init_matrix(t_matrix *matrix, float value)
 	return (0);
 }
 
-int	homogeneous_matrix(t_matrix **matrix, int rows, int cols)
+int	homogeneous_matrix(t_matrix *matrix, int rows, int cols)
 {
-	*matrix = malloc(sizeof(t_matrix));
-	if (!*matrix)
-		return (-1);
-	create_matrix(*matrix, rows + 1, cols + 1);
-	init_matrix(*matrix, 0.0f);
-	(*matrix)->points[rows][cols] = 1.0f;
+	create_matrix(matrix, rows + 1, cols + 1);
+	init_matrix(matrix, 0.0f);
+	matrix->points[rows][cols] = 1.0f;
 	return (0);
 }
 

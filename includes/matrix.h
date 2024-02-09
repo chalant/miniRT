@@ -34,7 +34,7 @@ void	set_point(t_matrix *matrix, int i, int j, float value);
 int		create_matrix(t_matrix *matrix, int rows, int cols);
 int		delete_matrix(t_matrix *matrix);
 int		init_matrix(t_matrix *matrix, float value);
-int		homogeneous_matrix(t_matrix **matrix, int rows, int cols);
+int		homogeneous_matrix(t_matrix *matrix, int rows, int cols);
 int		set_diagonal(t_matrix *matrix, float value);
 
 void	matmul(t_matrix *mat1, t_matrix *mat2, t_matrix *result, int n);

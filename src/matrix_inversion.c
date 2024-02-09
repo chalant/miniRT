@@ -15,6 +15,16 @@ int	set_matrix(t_matrix *matrix, float value)
 	return (0);
 }
 
+// void	permute_rows(t_matrix *matrix, int i, int j)
+// {
+// 	float	*tmp;
+// 	int		k;
+
+// 	tmp = matrix->points[i];
+// 	matrix->points[i] = matrix->points[j];
+// 	matrix->points[j] = tmp;
+// }
+
 void invert_matrix(t_matrix *matrix, t_matrix *result, t_matrix *identity, int n) 
 {
 	float       diag;
@@ -30,6 +40,8 @@ void invert_matrix(t_matrix *matrix, t_matrix *result, t_matrix *identity, int n
 	{
 		j = -1;
 		diag = result->points[i][i];
+		if (diag == 0.0f)
+			return ;
 		while (++j < n) 
 		{
 			result->points[i][j] /= diag;

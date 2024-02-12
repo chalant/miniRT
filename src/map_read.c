@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:29:20 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/08 17:55:40 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/12 15:51:11 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,7 @@ int	read_map(t_import *import)
 		if (!infos)
 			return (free(line), ft_clear_ds(infos), 1);
 		if ((int)ft_count_strings(infos) != expected_infos(infos[0]))
-			return (free(line), ft_clear_ds(infos),
-				err("An element has the wrong number of infos."));
+			return (free(line), ft_clear_ds(infos), 1);
 		if (seen_type(import, infos))
 			return (free(line), ft_clear_ds(infos), 1);
 		if (process_element(import, infos))

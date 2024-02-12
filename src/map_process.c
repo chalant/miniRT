@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:32:43 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/08 18:26:31 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/12 15:47:59 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,9 +122,8 @@ int	process_light(t_import *import, char **infos)
 		return (1);
 	if (set_rgb(light.color, infos[3]))
 		return (1);
-	// if (ft_darray_append(&import->minirt->objects, &light))
-	(void)import;
-	// 	return (1);
+	if (ft_darray_append(&import->minirt->objects, &light))
+		return (1);
 	return (0);
 }
 
@@ -137,43 +136,77 @@ int	process_sphere(t_import *import, char **infos)
 		return (1);
 	if (set_unit(&diameter, infos[2]))
 		return (1);
-	if (create_sphere(&sphere, diameter / 2.0f))
-		return (1);
 	if (set_rgb(sphere.color, infos[3]))
 		return (1);
-	// if (ft_darray_append(&import->minirt->objects, &sphere))
-	(void)import;
-	// 	return (1);
+	if (create_sphere(&sphere, diameter / 2.0f))
+		return (1);
+	if (ft_darray_append(&import->minirt->objects, &sphere))
+		return (1);
 	return (0);
 }
 
 int	process_plane(t_import *import, char **infos)
 {
 	t_object	plane;
+	float		normal[4];
 
 	if (set_xyz(plane.center, infos[1]))
 		return (1);
-	if (set_normal(plane.orientation, infos[2]))
+	if (set_normal(normal, infos[2]))
 		return (1);
 	if (set_rgb(plane.color, infos[3]))
 		return (1);
-	// if (ft_darray_append(&import->minirt->objects, &plane))
-	(void)import;
-	// 	return (1);
+	if (create_plane(&plane, normal))
+		return (1);
+	if (ft_darray_append(&import->minirt->objects, &plane))
+		return (1);
 	return (0);
 }
 
-// int	process_cylinder(t_import *import, char **infos)
-// {
-// 	t_object	cylinder;
-// }
+int	process_cylinder(t_import *import, char **infos)
+{
+	t_object	cylinder;
+	float		diameter;
+	float		height;
 
-// int	process_cone(t_import *import, char **infos)	TODO: T_CONE STRUCT
-// {
-// 	t_object	cone;
-// }
+	if (set_xyz(cylinder.center, infos[1]))
+		return (1);
+	if (set_normal(cylinder.orientation, infos[2]))
+		return (1);
+	if (set_unit(&diameter, infos[3]) || set_unit(&height, infos[4]))
+		return (1);
+	if (set_rgb(cylinder.color, infos[5]))
+		return (1);
+	if (create_cylinder(&cylinder, height, diameter / 2))
+		return (1);
+	if (ft_darray_append(&import->minirt->objects, &cylinder))
+		return (1);
+	return (0);
+}
 
-// [ ] TODO: Manage array deletion if an error occur
+int	process_cone(t_import *import, char **infos)
+{
+	t_object	cone;
+	float		diameter;
+	float		height;
+
+	if (set_xyz(cone.center, infos[1]))
+		return (1);
+	if (set_normal(cone.orientation, infos[2]))
+		return (1);
+	if (set_unit(&diameter, infos[3]))
+		return (1);
+	if (set_unit(&height, infos[4]))
+		return (1);
+	if (set_rgb(cone.color, infos[5]))
+		return (1);
+	if (create_cone(&cone, height, diameter / 2))
+		return (1);
+	if (ft_darray_append(&import->minirt->objects, &cone))
+		return (1);
+	return (0);
+}
+
 int	process_element(t_import *import, char **infos)
 {
 	if (!ft_strcmp(infos[0], "A"))
@@ -186,10 +219,10 @@ int	process_element(t_import *import, char **infos)
 		return (process_sphere(import, infos));
 	if (!ft_strcmp(infos[0], "pl"))
 		return (process_plane(import, infos));
-	// if (!ft_strcmp(infos[0], "cy"))
-	// 	return (process_cylinder(import, infos));
-// 	// if (!ft_strcmp(infos[0], "cn"))
-// 	// 	return (process_cone(import, infos));
+	if (!ft_strcmp(infos[0], "cy"))
+		return (process_cylinder(import, infos));
+	if (!ft_strcmp(infos[0], "cn"))
+		return (process_cone(import, infos));
 	else
-		return (1); // ft_darray_delete if something already exits, othwewise just ret 1
+		return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 14:24:32 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/08 18:04:51 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/12 15:30:40 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ int	check_extension(char *filename, char *extension)
 
 int	init_import(t_import *import, t_minirt *minirt, char *map)
 {
+	if (ft_darray_init(&minirt->objects, sizeof(t_object), 1))
+		return (1);
 	import->minirt = minirt;
 	import->fd = open(map, O_RDONLY);
 	if (import->fd == -1)
@@ -81,19 +83,6 @@ int	import_map(t_minirt *minirt, char **av)
 //  [X] Process Light
 //  [X] Process Sphere
 //  [X] Process Plane
-//  [ ] Process Cylinder
-//  [ ] Process Cone
-
-// [WIP] Map is considered bad when newline vs no newline at end of map
-//  [ ] Sanitize strings from NL and EOF characters ?
-//  [ ] Fix the issue in check_integer() when itering through the string
-
-// Object types and expected elements per type:
-// A: 3
-// C: 4
-// L: 4
-// sp: 4
-// pl: 4
-// cn: 5
-// cy: 6
-
+//  [X] Process Cylinder
+//  [X] Process Cone
+// 	[ ] TODO: Manage array deletion if an error occur

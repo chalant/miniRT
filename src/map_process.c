@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:32:43 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/12 15:47:59 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/12 16:57:10 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,9 @@ int	process_cylinder(t_import *import, char **infos)
 		return (1);
 	if (set_normal(cylinder.orientation, infos[2]))
 		return (1);
-	if (set_unit(&diameter, infos[3]) || set_unit(&height, infos[4]))
+	if (set_unit(&diameter, infos[3]))
+		return (1);
+	if (set_unit(&height, infos[4]))
 		return (1);
 	if (set_rgb(cylinder.color, infos[5]))
 		return (1);

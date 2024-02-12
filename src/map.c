@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 14:24:32 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/12 15:30:40 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/12 16:48:10 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,3 +86,6 @@ int	import_map(t_minirt *minirt, char **av)
 //  [X] Process Cylinder
 //  [X] Process Cone
 // 	[ ] TODO: Manage array deletion if an error occur
+
+// atof
+// [X] Should atof supports numbers with 2 decimals ? Well now it does.

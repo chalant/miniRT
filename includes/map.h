@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:30:29 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/12 15:33:26 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/12 16:49:44 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,9 @@ int		set_fov(float	*fov, char *info);
 int		set_unit(float *light, char *info);
 
 // Argument to float - atof
-int		check_input(char *nbr);
-float	check_sign(char *nbr);
+int		check_input(char *nbr, int decimals);
+void	process_left(char *left, float *res);
+void	process_right(char *right, float *res);
 int		ft_atof(char *nbr, float *res);
 
 // Error

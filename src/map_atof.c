@@ -6,21 +6,22 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:26:34 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/07 16:26:48 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/12 16:52:33 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "map.h"
 
-int	check_input(char *nbr)
+int	check_input(char *nbr, int decimals)
 {
 	int	dot;
 	int	decimal;
 
+	if ((!nbr || (nbr[0] != '-' && !ft_isdigit(nbr[0]))) ||
+		nbr[0] == '.' || nbr[ft_strlen(nbr) - 1] == '.')
+		return (1);
 	dot = 0;
 	decimal = 0;
-	if ((!nbr || (nbr[0] != '-' && !ft_isdigit(nbr[0]))) || nbr[0] == '.')
-		return (1);
 	nbr++;
 	while (*nbr)
 	{
@@ -31,45 +32,58 @@ int	check_input(char *nbr)
 			if (++dot && dot > 1)
 				return (1);
 		}
-		else if (dot && ++decimal > 1)
+		else if (dot && ++decimal > decimals)
 			return (1);
 		nbr++;
 	}
 	return (0);
 }
 
-float	check_sign(char *nbr)
+void	process_left(char *left, float *res)
 {
-	if (nbr[0] == '-')
-		return (-1.0);
-	else
-		return (1.0);
+	int		len;
+	float	power;
+
+	power = 1.0f;
+	len = ft_strlen(left);
+	while (len > (left[0] == '-'))
+	{
+		*res += (left[len - 1] - '0') * power;
+		power *= 10.0f;
+		len--;
+	}
+}
+
+void	process_right(char *right, float *res)
+{
+	int		i;
+	float	power;
+
+	i = -1;
+	power = 10.0f;
+	while (right && right[++i])
+	{
+		*res += (right[i] - '0') / power;
+		power *= 10.0f;
+	}
 }
 
 int	ft_atof(char *nbr, float *res)
 {
-	char	**decimal;
+	char	**tab;
 	float	sign;
-	float	power;
-	int		left_len;
 
-	if (check_input(nbr))
+	if (check_input(nbr, 2))
+		return (1);
+	tab = ft_split(nbr, '.');
+	if (!tab)
 		return (1);
 	*res = 0.0;
-	power = 1.0;
-	sign = check_sign(nbr);
-	decimal = ft_split(nbr, '.');
-	if (!decimal)
-		return (1);
-	left_len = ft_strlen(decimal[0]);
-	while (left_len > (sign == -1))
-	{
-		*res += (decimal[0][left_len - 1] - '0') * power;
-		power *= 10.0;
-		left_len--;
-	}
-	if (decimal[1])
-		*res += (decimal[1][0] - '0') / 10.0f;
+	process_left(tab[0], &*res);
+	process_right(tab[1], &*res);
+	sign = 1.0f;
+	if (nbr[0] == '-')
+		sign = -sign;
 	*res *= sign;
-	return (ft_clear_ds(decimal), 0);
+	return (ft_clear_ds(tab), 0);
 }

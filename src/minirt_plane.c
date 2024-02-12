@@ -15,11 +15,7 @@
 float	*plane_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 {
 	float		*normal;
-	float		point[4];
-	float		center[4];
 
-	vmatmul(&object->basis, hit->point, point);
-	vmatmul(&object->basis, object->center, center);
 	normal = object->orientation;
 	if (fabsf(normal[0]) > fabsf(normal[1]) && fabsf(normal[0]) > fabsf(normal[2]))
 	{

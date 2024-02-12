@@ -106,6 +106,7 @@ typedef struct	s_object
 {
 	t_material		*material;
 	t_matrix		basis;
+	t_matrix		inverse_basis;
 
 	const char		*name;
 	void			*shape;
@@ -187,8 +188,6 @@ int		update_view(t_minirt *minirt);
 
 int		key_release_hook(int code, t_minirt *minirt);
 int		key_press_hook(int code, t_minirt *minirt);
-void	fdf_control_key(int code, t_minirt *fdf);
-void	movement_hook(int code, t_minirt *fdf);
 
 int		set_rotations(t_minirt *fdf, float x, float y, float z);
 int		translation(t_matrix *matrix, float x, float y, float z);

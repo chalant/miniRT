@@ -14,67 +14,148 @@
 
 float	*cylinder_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 {
-	float		theta;
-	float		phi;
 	float		point[4];
-	float		center[4];
+	float		projected[4];
+	float		up[3] = {1.0f, 0.0f, 0.0f};
+	float		u[3];
+	float		v[3];
 
-	vmatmul(&object->basis, hit->point, point);
-	vmatmul(&object->basis, object->center, center);
-	phi = atan2f(point[2] - center[2], point[0] - center[0]);
-	theta = acosf((point[1] - center[1]) / object->size[0]);
-	uv_coords[0] = (phi + M_PI) / (2.0f * M_PI);
-	uv_coords[1] = 1.0f - theta / M_PI;
+	//todo: find a robust way of choosing the up vector
+	cross_product(up, object->orientation, u);
+	cross_product(u, object->orientation, v);
+	subtract_vectors(hit->point, object->center, point, 3);
+	projected[0] = dot_product(point, u, 3);
+	projected[1] = dot_product(point, v, 3);
+	projected[2] = dot_product(point, object->orientation, 3);
+	uv_coords[0] = atan2f(projected[1], projected[0]) / (2.0f * M_PI);
+	uv_coords[1] = (projected[2]) / object->size[1];
 	return (uv_coords);
 }
 
 float	*cylinder_normal(t_object *object, t_hit *hit)
 {
-	float		center[3];
+	float	point[3];
+	float	cp[3];
+	float	center[3];
 
-	subtract_vectors(hit->ray_origin, hit->object->center, center, 3);
-	add_vectors(hit->point, center, hit->normal, 3);
+	subtract_vectors(hit->ray_origin, object->center, center, 3);
+	add_vectors(hit->point, center, point, 3);
+	scale_vector(object->orientation, dot_product(object->orientation, point, 3), cp, 3);
+	subtract_vectors(point, cp, hit->normal, 3);
 	scale_vector(hit->normal, 1 / object->size[0], hit->normal, 3);
+	//normalize_vector(hit->normal, hit->normal, 3);
 	return (hit->normal);
 }
 
+// int	hit_cylinder(t_object *object, t_ray *ray)
+// {
+// 	float	c1[3];
+// 	float	c2[3];
+// 	float	abc[3];
+// 	float	axis[3];
+// 	float	oc[3];
+// 	float	baoc;
+// 	float	dd;
+// 	float	t;
+
+// 	scale_vector(object->orientation, object->size[1] / 2.0f, c2, 3);
+// 	add_vectors(object->center, c2, c2, 3);
+// 	scale_vector(object->orientation, object->size[1] / 2.0f, c1, 3);
+// 	subtract_vectors(object->center, c1, c1, 3);
+// 	subtract_vectors(c2, c1, axis, 3);
+// 	subtract_vectors(ray->origin, c1, oc, 3);
+// 	dd = dot_product(axis, axis, 3);
+// 	baoc = dot_product(oc, axis, 3);
+// 	float	bard = dot_product(ray->direction, axis, 3);
+// 	abc[0] = dd * dot_product(oc, oc, 3) - baoc * baoc - object->size[0] * object->size[0] * dd;
+// 	abc[1] = dd * dot_product(oc, ray->direction, 3) - baoc * bard;
+// 	abc[2] = dd - bard * bard;
+// 	float	det = abc[1] * abc[1] - abc[2] * abc[0];
+// 	if (det < 0.0f)
+// 		return (0);
+// 	float	t1 = (-abc[1] - sqrtf(det)) / abc[2];
+// 	float	t2 = (-abc[1] + sqrtf(det)) / abc[2];
+// 	float intersection[3];
+// 	t = t1;
+// 	scale_vector(ray->direction, t, intersection, 3);
+// 	add_vectors(ray->origin, intersection, intersection, 3);
+// 	//scale_vector(ray->direction, t, intersection, 3);
+// 	subtract_vectors(intersection, object->center, intersection, 3);
+// 	float height = dot_product(intersection, object->orientation, 3);
+// 	if (height < 0.0f || height > object->size[1] || t < 0.0f || t > ray->closest_t)
+// 		t = t2;
+// 	if (t < 0.0f || t > ray->closest_t)
+// 		return (0);
+// 	scale_vector(ray->direction, t, intersection, 3);
+// 	add_vectors(ray->origin, intersection, intersection, 3);
+// 	//scale_vector(ray->direction, t, intersection, 3);
+// 	subtract_vectors(intersection, object->center, intersection, 3);
+// 	height = dot_product(intersection, object->orientation, 3);
+// 	if (height < 0.0f || height > object->size[1])
+// 		return (0);
+// 	ray->t = t;
+// 	return 1;
+// }
+
 int	hit_cylinder(t_object *object, t_ray *ray)
 {
-	float		a;
-	float		b;
-	float		c;
-	float		discriminant;
-	float		t;
-	float		center[3];
+	float	oc[3];
+	float	rd_axis;
+	float	oc_axis;
+	float	abc[3];
 
-	subtract_vectors(ray->origin, object->center, center, 3);
-	a = dot_product(ray->direction, ray->direction, 3);
-	b = 2.0f * dot_product(center, ray->direction, 3);
-	c = dot_product(center, center, 3) - object->size[0] * object->size[0];
-	discriminant = b * b - 4 * a * c;
-	if (discriminant < 0.0f)
+	subtract_vectors(ray->origin, object->center, oc, 3);
+	rd_axis = dot_product(ray->direction, object->orientation, 3);
+	oc_axis = dot_product(oc, object->orientation, 3);
+	abc[0] = 1.0f - rd_axis * rd_axis;
+	abc[1] = dot_product(ray->direction, oc, 3) - rd_axis * oc_axis;
+	abc[2] = dot_product(oc, oc, 3) - oc_axis * oc_axis - object->size[0] * object->size[0];
+
+	float	det = abc[1] * abc[1] - abc[0] * abc[2];
+	if (det < 0.0f)
 		return (0);
-	t = (-b - sqrt(discriminant)) / (2 * a);
+	float	t1 = (-abc[1] - sqrtf(det)) / abc[0];
+	float	t2 = (-abc[1] + sqrtf(det)) / abc[0];
+	float intersection[3];
+	float	t = t1;
+	if (t < 0.0f || (t2 > 0.0f && t2 < t1))
+		t = t2;
+	// else
+	// 	t = t1;
 	if (t < 0.0f || t > ray->closest_t)
-		t = (-b + sqrt(discriminant)) / (2 * a);
-	if (t < 0.0f)
 		return (0);
-	if (t > ray->closest_t)
+	scale_vector(ray->direction, t, intersection, 3);
+	add_vectors(ray->origin, intersection, intersection, 3);
+	subtract_vectors(intersection, object->center, intersection, 3);
+	float height = dot_product(intersection, object->orientation, 3);
+	if (height < 0.0f || height > object->size[1] || t > ray->closest_t || t < 0.0f)
+		t = t2;
+	if (t < 0.0f || t > ray->closest_t)
+		return (0);
+	scale_vector(ray->direction, t, intersection, 3);
+	add_vectors(ray->origin, intersection, intersection, 3);
+	subtract_vectors(intersection, object->center, intersection, 3);
+	height = dot_product(intersection, object->orientation, 3);
+	if (height < 0.0f || height > object->size[1] || t > ray->closest_t || t < 0.0f)
 		return (0);
 	ray->t = t;
-	return (1);
+	return 1;
 }
 
-int create_cylinder(t_object *object, float radius)
+int create_cylinder(t_object *object, float height, float radius)
 {
 	object->intersect = hit_cylinder;
 	object->normal = cylinder_normal;
 	object->uv_coords = cylinder_uv_coords;
 	object->size[0] = radius;
-	object->size[1] = 0.0f;
+	object->size[1] = height;
 	object->size[2] = 0.0f;
+	object->orientation[0] = 0.0f;
+	object->orientation[1] = 1.0f;
+	object->orientation[2] = 0.0f;
+	normalize_vector(object->orientation, object->orientation, 3);
 	if (homogeneous_matrix(&object->basis, 3, 3) < 0)
 		return (-1);
-	set_basis(&object->basis, (float[3]){1.0f, 0.0f, 0.0f});
+	set_basis(&object->basis, (float[3]){0.0f, 0.0f, 1.0f});
 	return (0);
 }

@@ -32,7 +32,7 @@ float	*sphere_normal(t_object *object, t_hit *hit)
 {
 	float		center[3];
 
-	subtract_vectors(hit->ray_origin, hit->object->center, center, 3);
+	subtract_vectors(hit->ray_origin, object->center, center, 3);
 	add_vectors(hit->point, center, hit->normal, 3);
 	scale_vector(hit->normal, 1 / object->size[1], hit->normal, 3);
 	return (hit->normal);

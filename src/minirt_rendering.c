@@ -220,7 +220,7 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 	float		multiplier = 1.0f;
 
 	i = -1;
-	bounces = 2;
+	bounces = 1;
 	to_screen_space(&minirt->display, point, coords[0], coords[1]);
 	to_world_space(minirt, point, result);
 	vmatmul(&minirt->camera.inverse_view, result, ray.direction);

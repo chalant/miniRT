@@ -82,12 +82,22 @@ int mouse_release_hook(int button, int x, int y, t_minirt *minirt)
 
 int	rotate_object(t_minirt *minirt, t_object *object, t_matrix *axis)
 {
-	float	origin[4];
+	//float	origin[4];
 
 	matmul(&object->basis, axis, &minirt->tmp, 3);
 	matrix_copy(&minirt->tmp, &object->basis, 3);
-	vmatmul(&object->basis, object->center, origin);
+	//vmatmul(&object->basis, object->center, origin);
 	return (0);
+}
+
+int	set_x_rotation(t_matrix *matrix, float cos_a, float sin_a)
+{
+	matrix->points[0][0] = 1.0f;
+	matrix->points[1][1] = cos_a;
+	matrix->points[2][1] = sin_a;
+	matrix->points[1][2] = -sin_a;
+	matrix->points[2][2] = cos_a;
+	return (1);
 }
 
 //todo: hard code the rotations.

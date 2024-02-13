@@ -16,12 +16,12 @@ float	*plane_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 {
 	float		point[4];
 	float		projected[4];
-	float		*normal;
+	//float		*normal;
 	float		u[3];
 	float		v[3];
 
 	create_basis(object->orientation, u, v);
-	normal = object->orientation;
+	//normal = object->orientation;
 	//create_basis(object->orientation, u, v);
 	subtract_vectors(hit->point, object->center, point, 3);
 	projected[0] = dot_product(point, u, 3);

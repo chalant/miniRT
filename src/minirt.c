@@ -266,7 +266,7 @@ int	main(int argc, char *argv[])
 {
 	t_minirt	minirt;
 
-	(void)argc;
+	//(void)argc;
 	if (argc != 2)
 		return (1);
 	minirt_init(&minirt);
@@ -279,15 +279,27 @@ int	main(int argc, char *argv[])
 	homogeneous_matrix(&minirt.tmp, 3, 3);
 	import_map(&minirt, argv);
 	normalize_vector(minirt.camera.orientation, minirt.camera.orientation, 3);
-	minirt.camera.origin[0] = 0.0f;
-	minirt.camera.origin[1] = 0.0f;
-	minirt.camera.origin[2] = 3.0f;
-	minirt.camera.origin[3] = 1.0f;
+	// minirt.camera.fov = 70.0f;
+	minirt.camera.near = -1.0f;
+	minirt.camera.far = 1.0f;
+	// minirt.camera.orientation[0] = 0.0f;
+	// minirt.camera.orientation[1] = 0.0f;
+	// minirt.camera.orientation[2] = -1.0f;
+	// minirt.camera.orientation[3] = 1.0f;
+	// normalize_vector(minirt.camera.orientation, minirt.camera.orientation, 3);
+	// minirt.camera.origin[0] = 0.0f;
+	// minirt.camera.origin[1] = 0.0f;
+	// minirt.camera.origin[2] = 3.0f;
+	// minirt.camera.origin[3] = 1.0f;
 	if (set_camera_transform(&minirt.camera) == -1)
 		return (-1);
-	//load_scene(&minirt);
+	//load_scene(&minirt);import_map(&minirt, argv);
 	perspective_projector(&minirt.world_space, &minirt.display, &minirt.camera);
+	printf("CAMERA %f %f %f\n", minirt.camera.orientation[0], minirt.camera.orientation[1], minirt.camera.orientation[2]);
+	print_matrix(&minirt.camera.view);
+	print_matrix(&minirt.world_space);
 	invert_matrix(&minirt.world_space, &minirt.world_space, &minirt.tmp, 4);
+	print_matrix(&minirt.world_space);
 	perspective_projector(&minirt.view_matrix, &minirt.display, &minirt.camera);
 	mlx_loop(minirt.mlx);
 	return (0);

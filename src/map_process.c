@@ -119,7 +119,7 @@ int	process_light(t_import *import, char **infos)
 		return (1);
 	if (set_rgb(light.color, infos[3]))
 		return (1);
-	if (ft_darray_append(&import->minirt->objects, &light))
+	if (ft_darray_append(&import->minirt->spot_lights, &light))
 		return (1);
 	return (0);
 }

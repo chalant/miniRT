@@ -34,8 +34,6 @@ int	check_extension(char *filename, char *extension)
 
 int	init_import(t_import *import, t_minirt *minirt, char *map)
 {
-	if (ft_darray_init(&minirt->objects, sizeof(t_object), 1))
-		return (1);
 	import->minirt = minirt;
 	import->fd = open(map, O_RDONLY);
 	if (import->fd == -1)

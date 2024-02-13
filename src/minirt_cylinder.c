@@ -12,17 +12,43 @@
 
 #include "minirt.h"
 
+float	*choose_arbitray_vector(float result[3], float axis[3])
+{
+	result[0] = 0.0f;
+	result[1] = 1.0f;
+	result[2] = 0.0f;
+	if (dot_product(axis, result, 3) == 1.0f)
+	{
+		result[0] = 0.0f;
+		result[1] = 0.0f;
+		result[2] = 1.0f;
+	}
+	if (dot_product(axis, result, 3) == 1.0f)
+	{
+		result[0] = 1.0f;
+		result[1] = 0.0f;
+		result[2] = 0.0f;
+	}
+	return (result);
+}
+
+void	create_basis(float orientation[3], float u[3], float v[3])
+{
+	float	arbitrary[3];
+
+	choose_arbitray_vector(arbitrary, orientation);
+	cross_product(arbitrary, orientation, u);
+	cross_product(u, orientation, v);
+}
+
 float	*cylinder_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 {
 	float		point[4];
 	float		projected[4];
-	float		up[3] = {1.0f, 0.0f, 0.0f};
 	float		u[3];
 	float		v[3];
 
-	//todo: find a robust way of choosing the up vector
-	cross_product(up, object->orientation, u);
-	cross_product(u, object->orientation, v);
+	create_basis(object->orientation, u, v);
 	subtract_vectors(hit->point, object->center, point, 3);
 	projected[0] = dot_product(point, u, 3);
 	projected[1] = dot_product(point, v, 3);

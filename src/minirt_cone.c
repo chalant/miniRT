@@ -184,25 +184,31 @@ int	hit_cone(t_object *object, t_ray *ray)
 	float	discriminant = abc[1] * abc[1] - 4.0f * abc[0] * abc[2];
 	if (discriminant < 0.0f)
 		return (0);
+	float	t;
 	discriminant = sqrtf(discriminant);
 	float t1 = (-abc[1] - discriminant) / (2 * abc[0]);
 	float t2 = (-abc[1] + discriminant) / (2 * abc[0]);
 	//printf("Error %f %f %f\n", discriminant, t1, t2);
-	float	t = t1;
-	if (t < 0.0f || (t2 > 0.0f && t2 < t1))
+	t = t1;
+	if (t < 0.0f || t > ray->closest_t)
 		t = t2;
 	if (t < 0.0f || t > ray->closest_t)
 		return (0);
 	float intersection[3];
-	scale_vector(direction, t, intersection, 3);
+	scale_vector(direction, t1, intersection, 3);
 	add_vectors(ray->origin, intersection, intersection, 3);
-	subtract_vectors(intersection, object->center, intersection, 3);
+	subtract_vectors(object->center, intersection, intersection, 3);
 	float height = dot_product(intersection, object->orientation, 3);
 	if (height < 0.0f || height > object->size[1])
 	{
-		printf("HELLO %f\n", height);
-		return (0);
+		scale_vector(direction, t2, intersection, 3);
+		add_vectors(ray->origin, intersection, intersection, 3);
+		subtract_vectors(object->center, intersection, intersection, 3);
+		height = dot_product(intersection, object->orientation, 3);
+		t = t2;
 	}
+	if (height < 0.0f || height > object->size[1])
+		return (0);
 	//printf("TEST %f\n", height);
 	ray->t = t;
 	return 1;
@@ -223,7 +229,6 @@ int create_cone(t_object *object, float height, float radius)
 	object->orientation[1] = 1.0f;
 	object->orientation[2] = 0.0f;
 	normalize_vector(object->orientation, object->orientation, 3);
-	scale_vector(object->orientation, -1.0f, object->orientation, 3);
 	if (homogeneous_matrix(&object->basis, 3, 3) < 0)
 		return (-1);
 	set_basis(&object->basis, (float[3]){0.0f, 1.0f, 1.0f});

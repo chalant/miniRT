@@ -127,6 +127,8 @@ int	mouse_update(int x, int y, t_minirt *minirt)
 	direction[1] = dy;
 	direction[2] = dz;
 	direction[3] = 1.0f;
+	float	u[3];
+	float	v[3];
 	vmatmul(&minirt->camera.basis, direction, dir);
 	if (minirt->ctrl.pressed)
 	{
@@ -141,7 +143,11 @@ int	mouse_update(int x, int y, t_minirt *minirt)
 		// matmul(&minirt->selected_object->basis, &minirt->mouse.direction, &minirt->tmp, 3);
 		// matrix_copy(&minirt->tmp, &minirt->selected_object->basis, 3);
 		rotate_object(minirt, minirt->selected_object, &minirt->mouse.direction);
-		
+		create_basis(minirt->selected_object->orientation, u, v);
+	
+		// dir[0] = dot_product(dir, u, 3);
+		// dir[1] = dot_product(dir, v, 3);
+		// dir[2] = dot_product(dir, minirt->selected_object->orientation, 3);
 		vmatmul(&minirt->mouse.direction, minirt->selected_object->orientation, tmp);
 		minirt->selected_object->orientation[0] = tmp[0];
 		minirt->selected_object->orientation[1] = tmp[1];

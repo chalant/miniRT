@@ -213,6 +213,6 @@ int		mouse_update(int x, int y, t_minirt *minirt);
 
 float	*to_screen_space(t_display *display, float pixel[4], float i, float j);
 float	*to_world_space(t_minirt *minirt, float point[4], float result[4]);
-int		scroll_hook(int button, int x, int y, t_minirt *minirt);
+void	create_basis(float orientation[3], float u[3], float v[3]);
 
 #endif

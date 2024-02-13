@@ -12,12 +12,6 @@
 
 #include "minirt.h"
 
-void	copy_vector(float *src, float *dst, int n)
-{
-	while (--n > -1)
-		dst[n] = src[n];
-}
-
 void	minirt_pixel_put(t_display *display, int x, int y, int color)
 {
 	char	*dst;
@@ -38,18 +32,6 @@ float	*to_screen_space(t_display *display, float pixel[4], float i, float j)
 	pixel[2] = 1.0f;
 	pixel[3] = 1.0f;
 	return (pixel);
-}
-
-float	vector_length(float *vector, int size)
-{
-	int		i;
-	float	length;
-
-	i = -1;
-	length = 0.0f;
-	while (++i < size)
-		length += vector[i] * vector[i];
-	return (sqrtf(length));
 }
 
 int	set_hit_info(t_hit *hit, t_ray *ray)
@@ -140,7 +122,7 @@ void	add_spot_lights(t_minirt *minirt, t_hit *hit, float view[3])
 float	distance(float *v1, float *v2, float *result, int n)
 {
 	subtract_vectors(v1, v2, result, n);
-	return (vector_magnitude(result, n));
+	return (vector_length(result, n));
 }
 
 int	add_lights(t_minirt *minirt, t_ray *ray, t_hit *hit, float multiplier)
@@ -193,7 +175,7 @@ int	add_lights(t_minirt *minirt, t_ray *ray, t_hit *hit, float multiplier)
 	{
 		hit->color[i] += avis * minirt->ambient.brightness * minirt->ambient.color[i] * color[i] * hit->object->material->ambient_reflection * multiplier;
 		hit->color[i] += vis * hit_angle * minirt->diffuse.brightness * minirt->diffuse.color[i] * color[i] * hit->object->material->diffuse_reflection * multiplier;
-		hit->color[i] += svis * 0.9f * specular_power * minirt->diffuse.color[i] * multiplier;
+		hit->color[i] += svis * 1.0f * specular_power * minirt->diffuse.color[i] * multiplier;
 	}
 	return (0);
 }
@@ -220,7 +202,7 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 	float		multiplier = 1.0f;
 
 	i = -1;
-	bounces = 1;
+	bounces = 2;
 	to_screen_space(&minirt->display, point, coords[0], coords[1]);
 	to_world_space(minirt, point, result);
 	vmatmul(&minirt->camera.inverse_view, result, ray.direction);

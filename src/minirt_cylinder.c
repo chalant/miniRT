@@ -73,56 +73,6 @@ float	*cylinder_normal(t_object *object, t_hit *hit)
 	return (hit->normal);
 }
 
-// int	hit_cylinder(t_object *object, t_ray *ray)
-// {
-// 	float	c1[3];
-// 	float	c2[3];
-// 	float	abc[3];
-// 	float	axis[3];
-// 	float	oc[3];
-// 	float	baoc;
-// 	float	dd;
-// 	float	t;
-
-// 	scale_vector(object->orientation, object->size[1] / 2.0f, c2, 3);
-// 	add_vectors(object->center, c2, c2, 3);
-// 	scale_vector(object->orientation, object->size[1] / 2.0f, c1, 3);
-// 	subtract_vectors(object->center, c1, c1, 3);
-// 	subtract_vectors(c2, c1, axis, 3);
-// 	subtract_vectors(ray->origin, c1, oc, 3);
-// 	dd = dot_product(axis, axis, 3);
-// 	baoc = dot_product(oc, axis, 3);
-// 	float	bard = dot_product(ray->direction, axis, 3);
-// 	abc[0] = dd * dot_product(oc, oc, 3) - baoc * baoc - object->size[0] * object->size[0] * dd;
-// 	abc[1] = dd * dot_product(oc, ray->direction, 3) - baoc * bard;
-// 	abc[2] = dd - bard * bard;
-// 	float	det = abc[1] * abc[1] - abc[2] * abc[0];
-// 	if (det < 0.0f)
-// 		return (0);
-// 	float	t1 = (-abc[1] - sqrtf(det)) / abc[2];
-// 	float	t2 = (-abc[1] + sqrtf(det)) / abc[2];
-// 	float intersection[3];
-// 	t = t1;
-// 	scale_vector(ray->direction, t, intersection, 3);
-// 	add_vectors(ray->origin, intersection, intersection, 3);
-// 	//scale_vector(ray->direction, t, intersection, 3);
-// 	subtract_vectors(intersection, object->center, intersection, 3);
-// 	float height = dot_product(intersection, object->orientation, 3);
-// 	if (height < 0.0f || height > object->size[1] || t < 0.0f || t > ray->closest_t)
-// 		t = t2;
-// 	if (t < 0.0f || t > ray->closest_t)
-// 		return (0);
-// 	scale_vector(ray->direction, t, intersection, 3);
-// 	add_vectors(ray->origin, intersection, intersection, 3);
-// 	//scale_vector(ray->direction, t, intersection, 3);
-// 	subtract_vectors(intersection, object->center, intersection, 3);
-// 	height = dot_product(intersection, object->orientation, 3);
-// 	if (height < 0.0f || height > object->size[1])
-// 		return (0);
-// 	ray->t = t;
-// 	return 1;
-// }
-
 int	hit_cylinder(t_object *object, t_ray *ray)
 {
 	float	oc[3];
@@ -146,8 +96,6 @@ int	hit_cylinder(t_object *object, t_ray *ray)
 	float	t = t1;
 	if (t < 0.0f || (t2 > 0.0f && t2 < t1))
 		t = t2;
-	// else
-	// 	t = t1;
 	if (t < 0.0f || t > ray->closest_t)
 		return (0);
 	scale_vector(ray->direction, t, intersection, 3);
@@ -168,20 +116,17 @@ int	hit_cylinder(t_object *object, t_ray *ray)
 	return 1;
 }
 
-int create_cylinder(t_object *object, float height, float radius)
+int create_cylinder(t_object *object, float height, float diameter)
 {
 	object->intersect = hit_cylinder;
 	object->normal = cylinder_normal;
 	object->uv_coords = cylinder_uv_coords;
-	object->size[0] = radius;
+	object->size[0] = diameter / 2.0f;
 	object->size[1] = height;
 	object->size[2] = 0.0f;
 	object->orientation[0] = 0.0f;
 	object->orientation[1] = 1.0f;
 	object->orientation[2] = 0.0f;
 	normalize_vector(object->orientation, object->orientation, 3);
-	if (homogeneous_matrix(&object->basis, 3, 3) < 0)
-		return (-1);
-	set_basis(&object->basis, (float[3]){0.0f, 0.0f, 1.0f});
 	return (0);
 }

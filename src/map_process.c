@@ -100,15 +100,12 @@ int	process_ambient(t_import *import, char **infos)
 
 int	process_camera(t_import *import, char **infos)
 {
-	t_camera	camera;
-
-	if (set_xyz(camera.origin, infos[1]))
+	if (set_xyz(import->minirt->camera.origin, infos[1]))
 		return (1);
-	if (set_normal(camera.orientation, infos[2]))
+	if (set_normal(import->minirt->camera.orientation, infos[2]))
 		return (1);
-	if (set_fov(&camera.fov, infos[3]))
+	if (set_fov(&import->minirt->camera.fov, infos[3]))
 		return (1);
-	import->minirt->camera = camera;
 	return (0);
 }
 

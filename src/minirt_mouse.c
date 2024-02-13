@@ -43,6 +43,7 @@ int	grab_object(t_minirt *minirt, int x, int y)
 	{
 		minirt->selected_object = closest;
 		minirt->mouse.hit_point = ray.closest_t;
+		add_vectors(ray.origin, scale_vector(ray.direction, ray.closest_t, minirt->mouse.point, 3), minirt->mouse.point, 3);
 		minirt->mouse.world_position[0] = position[0];
 		minirt->mouse.world_position[1] = position[1];
 		minirt->mouse.world_position[2] = position[2];
@@ -129,6 +130,7 @@ int	mouse_update(int x, int y, t_minirt *minirt)
 	direction[3] = 1.0f;
 	float	u[3];
 	float	v[3];
+	//float	dd[3];
 	vmatmul(&minirt->camera.basis, direction, dir);
 	if (minirt->ctrl.pressed)
 	{
@@ -181,8 +183,8 @@ int	mouse_update(int x, int y, t_minirt *minirt)
 		minirt->mouse.direction.points[2][0] = 0.0f;
 		minirt->mouse.direction.points[2][2] = 0.0f;
 
-		cos_a = cosf(-dir[0]);
-		sin_a = sinf(-dir[0]);
+		cos_a = cosf(dir[0]);
+		sin_a = sinf(dir[0]);
 		minirt->mouse.direction.points[0][0] = cos_a;
 		minirt->mouse.direction.points[0][1] = -sin_a;
 		minirt->mouse.direction.points[1][0] = sin_a;
@@ -205,7 +207,9 @@ int	mouse_update(int x, int y, t_minirt *minirt)
 		minirt->mouse.direction.points[2][2] = 0.0f;
 	}
 	else if (minirt->shift.pressed)
+	{
 		add_vectors(minirt->selected_object->size, dir, minirt->selected_object->size, 3);
+	}
 	else
 	{
 		minirt->selected_object->center[0] += minirt->mouse.hit_point * dir[0];

@@ -16,8 +16,3 @@ float	to_rad(float angle)
 {
 	return (angle * (M_PI / 180.0));
 }
-
-long	fdf_labs(long n)
-{
-	return ((n < 0) * -n + (n >= 0) * n);
-}

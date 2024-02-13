@@ -26,10 +26,11 @@ float	*subtract_vectors(float *v1, float *v2, float *result, int n);
 float	*cross_product(float v1[3], float v2[3], float result[3]);
 float	*scale_vector(float *vector, float scale, float *result, int n);
 float	*normalize_vector(float *vector, float *result, int n);
-float	vector_magnitude(float *vector, int n);
+float	vector_length(float *vector, int n);
 float	**get_points(t_matrix *matrix);
 float	get_point(t_matrix *matrix, int i, int j);
 void	set_point(t_matrix *matrix, int i, int j, float value);
+void	copy_vector(float *src, float *dst, int n);
 
 int		create_matrix(t_matrix *matrix, int rows, int cols);
 int		delete_matrix(t_matrix *matrix);

@@ -12,6 +12,12 @@
 
 #include "minirt.h"
 
+void	copy_vector(float *src, float *dst, int n)
+{
+	while (--n > -1)
+		dst[n] = src[n];
+}
+
 float   dot_product(float *v1, float *v2, int n)
 {
 	float	result;
@@ -30,7 +36,7 @@ float   *cross_product(float v1[3], float v2[3], float result[3])
 	return (result);
 }
 
-float vector_magnitude(float *vector, int n)
+float vector_length(float *vector, int n)
 {
 	return (sqrtf(dot_product(vector, vector, n)));
 }
@@ -39,7 +45,7 @@ float	*normalize_vector(float *vector, float *result, int n)
 {
 	float	magnitude;
 
-	magnitude = vector_magnitude(vector, n);
+	magnitude = vector_length(vector, n);
 	while (--n > -1)
 		result[n] = vector[n] / magnitude;
 	return (result);

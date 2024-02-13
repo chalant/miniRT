@@ -14,24 +14,21 @@
 
 float	*plane_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 {
+	float		point[4];
+	float		projected[4];
 	float		*normal;
+	float		u[3];
+	float		v[3];
 
+	create_basis(object->orientation, u, v);
 	normal = object->orientation;
-	if (fabsf(normal[0]) > fabsf(normal[1]) && fabsf(normal[0]) > fabsf(normal[2]))
-	{
-		uv_coords[0] = hit->point[1] - object->center[1];
-		uv_coords[1] = hit->point[2] - object->center[2];
-	}
-	else if (fabsf(normal[1]) > fabsf(normal[0]) && fabsf(normal[1]) > fabsf(normal[2]))
-	{
-		uv_coords[0] = -hit->point[0] + object->center[0];
-		uv_coords[1] = hit->point[2] - object->center[2];
-	}
-	else
-	{
-		uv_coords[0] = hit->point[0] - object->center[0];
-		uv_coords[1] = hit->point[1] - object->center[1];
-	}
+	//create_basis(object->orientation, u, v);
+	subtract_vectors(hit->point, object->center, point, 3);
+	projected[0] = dot_product(point, u, 3);
+	projected[1] = dot_product(point, v, 3);
+	projected[2] = dot_product(point, object->orientation, 3);
+	uv_coords[0] = projected[0];
+	uv_coords[1] = projected[1];
 	return (uv_coords);
 }
 

@@ -140,9 +140,12 @@ int	add_lights(t_minirt *minirt, t_ray *ray, t_hit *hit, float multiplier)
 	float		vis;
 	t_ray		lray;
 	t_hit		lhit;
+	t_light		*diffuse;
 
+	diffuse = ft_darray_get(&minirt->spot_lights, 0);
+	//printf("%f %f\n", diffuse->brightness);
 	copy_vector(ray->origin, lray.origin, 3);
-	subtract_vectors(minirt->diffuse.position, hit->point, direction, 3);
+	subtract_vectors(diffuse->position, hit->point, direction, 3);
 	normalize_vector(direction, direction, 3);
 	hit->object->uv_coords(hit->object, hit, uv_coords);
 	hit->object->material->normal_perturb(hit->object, uv_coords, perturbation);
@@ -168,14 +171,14 @@ int	add_lights(t_minirt *minirt, t_ray *ray, t_hit *hit, float multiplier)
 	scale_vector(direction, -1.0f, direction, 3);
 	reflect(direction, hit->normal, dot_product(direction, hit->normal, 3), reflection) ;
 	specular_power = powf(fmaxf(0.0f, dot_product(reflection, view, 3)),
-		hit->object->material->shininess) * minirt->diffuse.brightness;
+		hit->object->material->shininess) * diffuse->brightness;
 	i = -1;
 	hit->object->material->get_texture(hit->object, uv_coords, color);
 	while (++i < 3)
 	{
 		hit->color[i] += avis * minirt->ambient.brightness * minirt->ambient.color[i] * color[i] * hit->object->material->ambient_reflection * multiplier;
-		hit->color[i] += vis * hit_angle * minirt->diffuse.brightness * minirt->diffuse.color[i] * color[i] * hit->object->material->diffuse_reflection * multiplier;
-		hit->color[i] += svis * 1.0f * specular_power * minirt->diffuse.color[i] * multiplier;
+		hit->color[i] += vis * hit_angle * diffuse->brightness * diffuse->color[i] * color[i] * hit->object->material->diffuse_reflection * multiplier;
+		hit->color[i] += svis * 1.0f * specular_power * diffuse->color[i] * multiplier;
 	}
 	return (0);
 }
@@ -239,10 +242,10 @@ int	render(t_minirt *minirt)
 	while (++coords[0] < minirt->display.width)
 	{
 		coords[1] = -1;
-		if ((coords[0] % 2))
-			continue;
+		// if ((coords[0] % 2))
+		// 	continue;
 		while (++coords[1] < minirt->display.height)
-			if (!(coords[1] % 2))
+			// if (!(coords[1] % 2))
 				shade_pixel(minirt, coords);
 	}
 	mlx_put_image_to_window(minirt->mlx, minirt->window, minirt->display.img, 0, 0);

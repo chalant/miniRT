@@ -59,6 +59,15 @@ float	*to_color(int rgb, float color[4])
 	return (color);
 }
 
+float	*normalize_rgb(int rgb[3], float color[4])
+{
+	color[3] = 0.0f;
+	color[0] = (float)(rgb[0]) / 255.0f;
+	color[1] = (float)(rgb[1]) / 255.0f;
+	color[2] = (float)(rgb[2]) / 255.0f;
+	return (color);
+}
+
 float	clamp(float value, float min, float max)
 {
 	return (fmaxf(min, fminf(value, max)));

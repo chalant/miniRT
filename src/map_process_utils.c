@@ -28,14 +28,15 @@ int	set_rgb(float *rgb, char *info)
 {
 	char	**tab;
 	int		i;
+	int		_rgb[3];
 
 	tab = check_ranges(info, RGB);
 	if (!tab)
 		return (1);
 	i = -1;
 	while (++i < 3)
-		rgb[i] = (float)ft_atoi(tab[i]);
-	rgb[i] = (float)0;
+		_rgb[i] = ft_atoi(tab[i]);
+	normalize_rgb(_rgb, rgb);
 	return (ft_clear_ds(tab), 0);
 }
 

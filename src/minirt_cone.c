@@ -98,12 +98,9 @@ int create_cone(t_object *object, float height, float diameter)
 	object->size[0] = tanf(diameter / 2.0f / height);
 	object->size[1] = height;
 	object->size[2] = 0.0f;
-	object->orientation[0] = 0.0f;
-	object->orientation[1] = 1.0f;
-	object->orientation[2] = 0.0f;
 	normalize_vector(object->orientation, object->orientation, 3);
-	// if (homogeneous_matrix(&object->basis, 3, 3) < 0)
-	// 	return (-1);
-	// set_basis(&object->basis, (float[3]){0.0f, 1.0f, 0.0f});
+	if (homogeneous_matrix(&object->basis, 3, 3) < 0)
+		return (-1);
+	set_basis(&object->basis, object->orientation);
 	return (0);
 }

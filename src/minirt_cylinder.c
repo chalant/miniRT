@@ -124,9 +124,8 @@ int create_cylinder(t_object *object, float height, float diameter)
 	object->size[0] = diameter / 2.0f;
 	object->size[1] = height;
 	object->size[2] = 0.0f;
-	object->orientation[0] = 0.0f;
-	object->orientation[1] = 1.0f;
-	object->orientation[2] = 0.0f;
 	normalize_vector(object->orientation, object->orientation, 3);
+	homogeneous_matrix(&object->basis, 3, 3);
+	set_basis(&object->basis, object->orientation);
 	return (0);
 }

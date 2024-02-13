@@ -72,8 +72,8 @@ int create_sphere(t_object *object, float radius)
 	object->size[1] = radius;
 	object->size[2] = 0.0f;
 	object->orientation[0] = 0.0f;
-	object->orientation[0] = 0.0f;
-	object->orientation[0] = 1.0f;
+	object->orientation[1] = 0.0f;
+	object->orientation[2] = 1.0f;
 	if (homogeneous_matrix(&object->basis, 3, 3) < 0)
 		return (-1);
 	set_basis(&object->basis, object->orientation);

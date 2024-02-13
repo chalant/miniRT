@@ -13,24 +13,9 @@
 #ifndef MINIRT_COLORS_H
 # define MINIRT_COLORS_H
 
-# define BASE_COLOR 0xFFFFFF
-# define MAX_COLOR
-
-typedef struct s_hsl
-{
-	float			hue;
-	float			saturation;
-	float			lightness;
-}					t_hsl;
-
-unsigned int		hsl_to_rgb(t_hsl *hsl);
 unsigned int		to_argb(float color[4]);
 float				*to_color(int rgb, float color[4]);
 float				clamp(float value, float min, float max);
-unsigned int		fdf_gradient(float fraction, unsigned int start,
-						unsigned int end);
-float				fdf_color(char *point_values);
-
-t_hsl				rgb_to_hsl(float rr, float gg, float bb);
+float				*normalize_rgb(int rgb[3], float color[4]);
 
 #endif

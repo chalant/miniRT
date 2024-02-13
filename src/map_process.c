@@ -176,7 +176,7 @@ int	process_cylinder(t_import *import, char **infos)
 		return (1);
 	if (set_rgb(cylinder.color, infos[5]))
 		return (1);
-	if (create_cylinder(&cylinder, height, diameter / 2))
+	if (create_cylinder(&cylinder, height, diameter))
 		return (1);
 	if (ft_darray_append(&import->minirt->objects, &cylinder))
 		return (1);
@@ -199,7 +199,7 @@ int	process_cone(t_import *import, char **infos)
 		return (1);
 	if (set_rgb(cone.color, infos[5]))
 		return (1);
-	if (create_cone(&cone, height, diameter / 2))
+	if (create_cone(&cone, height, diameter))
 		return (1);
 	if (ft_darray_append(&import->minirt->objects, &cone))
 		return (1);

@@ -261,12 +261,61 @@ int	load_scene(t_minirt *minirt)
 // 	return (0);
 // }
 
+int	load_materials(t_minirt *minirt)
+{
+	t_material	material;
+	t_material	other;
+	t_object	*object;
+	// t_light		*diffuse;
+
+	//todo: need to load the bump map file...
+	//the file could be specified in the rt file, and would load the
+	//bump map file when parsing.
+	material.ambient_reflection = 0.2f;
+	material.diffuse_reflection = 0.8f;
+	material.shininess = 100.0f;
+	material.reflectivity = 0.2f;
+	material.repeat_pattern = 10.0f;
+	material.get_texture = checkerboard;
+	material.normal_perturb = compute_bump;
+
+	other.ambient_reflection = 0.8f;
+	other.diffuse_reflection = 0.8f;
+	other.shininess = 100.5f;
+	other.reflectivity = 0.2f;
+	other.repeat_pattern = 0.2f;
+	other.get_texture = checkerboard;
+	other.normal_perturb = compute_bump;
+
+	load_bmap(&material, "resources/mesh.bmap");
+	//to_color(0x00f94449, material.dark_color);
+	to_color(0x00ffffff, material.color);
+	to_color(0x00ffff00, other.color);
+	load_bmap(&other, "resources/gravel.bmap");
+	ft_darray_append(&minirt->materials, &material);
+	ft_darray_append(&minirt->materials, &other);
+	object = ft_darray_get(&minirt->objects, 0);
+	object->material = ft_darray_get(&minirt->materials, 1);
+	object = ft_darray_get(&minirt->objects, 1);
+	object->material = ft_darray_get(&minirt->materials, 0);
+	object = ft_darray_get(&minirt->objects, 3);
+	object->material = ft_darray_get(&minirt->materials, 0);
+	object = ft_darray_get(&minirt->objects, 2);
+	object->material = ft_darray_get(&minirt->materials, 0);
+
+	//diffuse = ft_darray_get(&minirt->spot_lights, 0);
+	// diffuse->position[0] = -40.0f;
+	// diffuse->position[1] = 30.0f;
+	// diffuse->position[2] = 0.0f;
+	// diffuse->brightness = 0.8f;
+	// to_color(0x00ffffff, diffuse->color);
+	return (0);
+}
 
 int	main(int argc, char *argv[])
 {
 	t_minirt	minirt;
 
-	//(void)argc;
 	if (argc != 2)
 		return (1);
 	minirt_init(&minirt);
@@ -278,28 +327,15 @@ int	main(int argc, char *argv[])
 	set_minirt_transforms(&minirt);
 	homogeneous_matrix(&minirt.tmp, 3, 3);
 	import_map(&minirt, argv);
+	load_materials(&minirt);
 	normalize_vector(minirt.camera.orientation, minirt.camera.orientation, 3);
-	// minirt.camera.fov = 70.0f;
 	minirt.camera.near = -1.0f;
 	minirt.camera.far = 1.0f;
-	// minirt.camera.orientation[0] = 0.0f;
-	// minirt.camera.orientation[1] = 0.0f;
-	// minirt.camera.orientation[2] = -1.0f;
-	// minirt.camera.orientation[3] = 1.0f;
-	// normalize_vector(minirt.camera.orientation, minirt.camera.orientation, 3);
-	// minirt.camera.origin[0] = 0.0f;
-	// minirt.camera.origin[1] = 0.0f;
-	// minirt.camera.origin[2] = 3.0f;
-	// minirt.camera.origin[3] = 1.0f;
 	if (set_camera_transform(&minirt.camera) == -1)
 		return (-1);
-	//load_scene(&minirt);import_map(&minirt, argv);
+	//load_scene(&minirt);
 	perspective_projector(&minirt.world_space, &minirt.display, &minirt.camera);
-	printf("CAMERA %f %f %f\n", minirt.camera.orientation[0], minirt.camera.orientation[1], minirt.camera.orientation[2]);
-	print_matrix(&minirt.camera.view);
-	print_matrix(&minirt.world_space);
 	invert_matrix(&minirt.world_space, &minirt.world_space, &minirt.tmp, 4);
-	print_matrix(&minirt.world_space);
 	perspective_projector(&minirt.view_matrix, &minirt.display, &minirt.camera);
 	mlx_loop(minirt.mlx);
 	return (0);

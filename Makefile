@@ -21,12 +21,12 @@ SRC_FILES =	minirt.c \
 			minirt_key_hooks.c \
 			matrix.c \
 			matrix_operations.c \
-			matrix_interface.c \
 			matrix_inversion.c \
 			vector_operations.c \
 			rotations.c \
 			minirt_transforms.c \
 			transforms.c \
+			minirt_bump_mapping.c \
 			minirt_init.c \
 			minirt_setup.c \
 			minirt_window_hooks.c \

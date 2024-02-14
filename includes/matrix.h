@@ -27,10 +27,7 @@ float	*cross_product(float v1[3], float v2[3], float result[3]);
 float	*scale_vector(float *vector, float scale, float *result, int n);
 float	*normalize_vector(float *vector, float *result, int n);
 float	vector_length(float *vector, int n);
-float	**get_points(t_matrix *matrix);
-float	get_point(t_matrix *matrix, int i, int j);
-void	set_point(t_matrix *matrix, int i, int j, float value);
-void	copy_vector(float *src, float *dst, int n);
+float	*copy_vector(float *src, float *dst, int n);
 
 int		create_matrix(t_matrix *matrix, int rows, int cols);
 int		delete_matrix(t_matrix *matrix);
@@ -43,8 +40,6 @@ void	invert_matrix(t_matrix *matrix, t_matrix *result, t_matrix *identity, int n
 void	mattranspose(t_matrix *matrix, t_matrix *result);
 void	inplace_matmul(t_matrix *mat1, t_matrix *mat2, t_matrix *result, int n);
 void	matrix_copy(t_matrix *source, t_matrix *dest, int n);
-int		matdiff(t_matrix *mat1, t_matrix *mat2, t_matrix *result);
-int		matsum(t_matrix *mat1, t_matrix *mat2, t_matrix *result);
 int		smatmul(t_matrix *mat, float scalar, t_matrix *result);
 int		vmatmul(t_matrix *mat, float *vec, float *result);
 

@@ -12,44 +12,6 @@
 
 #include "minirt.h"
 
-unsigned int	str_to_uint(char *str, int base)
-{
-	unsigned int	res;
-	int				i;
-
-	res = 0;
-	i = 2;
-	while (str[i])
-	{
-		if (ft_isdigit(str[i]))
-			res = res * base + (str[i] - '0');
-		else if (ft_isalpha(str[i]))
-			res = res * base + (ft_toupper(str[i]) - 'A' + 10);
-		i++;
-	}
-	return (res);
-}
-
-unsigned int	get_gradient(int start, int end, float fraction)
-{
-	return ((unsigned int)((1 - fraction) * start + fraction * end));
-}
-
-unsigned int	fdf_gradient(float fraction, unsigned int start,
-		unsigned int end)
-{
-	int	r;
-	int	g;
-	int	b;
-
-	if (start == end)
-		return (start);
-	r = get_gradient((start >> 16) & 0xFF, (end >> 16) & 0xFF, fraction);
-	g = get_gradient((start >> 8) & 0xFF, (end >> 8) & 0xFF, fraction);
-	b = get_gradient(start & 0xFF, end & 0xFF, fraction);
-	return ((r << 16) | (g << 8) | b);
-}
-
 float	*to_color(int rgb, float color[4])
 {
 	color[3] = (float)((rgb & (0xFF << 24)) >> 24) / 255.0f;

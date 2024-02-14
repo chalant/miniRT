@@ -196,7 +196,7 @@ int		translation(t_matrix *matrix, float x, float y, float z);
 int		set_translations(t_minirt *fdf, float x, float y, float z);
 
 int		set_basis(t_matrix *basis, float orientation[3]);
-int		set_camera_transform(t_camera *camera);
+int		set_camera_transform(t_minirt *minirt, t_camera *camera);
 int		look_at(t_camera *camera, t_minirt *fdf);
 int		perspective_projector(t_matrix *matrix, t_display *display, t_camera *camera);
 int		render(t_minirt *minirt);

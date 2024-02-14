@@ -12,10 +12,11 @@
 
 #include "minirt.h"
 
-void	copy_vector(float *src, float *dst, int n)
+float	*copy_vector(float *src, float *dst, int n)
 {
 	while (--n > -1)
 		dst[n] = src[n];
+	return (dst);
 }
 
 float   dot_product(float *v1, float *v2, int n)

@@ -30,7 +30,8 @@ int	minirt_init(t_minirt *minirt)
 	minirt->mouse.y = 0;
 	minirt->ctrl.pressed = 0;
 	minirt->shift.pressed = 0;
-	homogeneous_matrix(&minirt->mouse.direction, 3, 3);
+	if (homogeneous_matrix(&minirt->mouse.direction, 3, 3))
+		return (-1);
 	if (ft_darray_init(&minirt->objects, sizeof(t_object), 10) < 0)
 		return (-1);
 	if (ft_darray_init(&minirt->materials, sizeof(t_material), 10) < 0)

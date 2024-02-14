@@ -16,18 +16,15 @@ float	*plane_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 {
 	float		point[4];
 	float		projected[4];
-	//float		*normal;
 	float		u[3];
 	float		v[3];
 
 	create_basis(object->orientation, u, v);
-	//normal = object->orientation;
-	//create_basis(object->orientation, u, v);
 	subtract_vectors(hit->point, object->center, point, 3);
 	projected[0] = dot_product(point, u, 3);
 	projected[1] = dot_product(point, v, 3);
 	projected[2] = dot_product(point, object->orientation, 3);
-	uv_coords[0] = projected[0];
+	uv_coords[0] = -projected[0];
 	uv_coords[1] = projected[1];
 	return (uv_coords);
 }
@@ -55,16 +52,12 @@ int	hit_plane(t_object *object, t_ray *ray)
 
 float	*plane_normal(t_object *object, t_hit *hit)
 {
-	hit->normal[0] = object->orientation[0];
-	hit->normal[1] = object->orientation[1];
-	hit->normal[2] = object->orientation[2];
+	copy_vector(object->orientation, hit->normal, 3);
 	return (hit->normal);
 }
 
 int	create_plane(t_object *object, float normal[4])
 {
-	float	axis[4];
-
 	object->orientation[0] = normal[0];
 	object->orientation[1] = normal[1];
 	object->orientation[2] = normal[2];
@@ -74,7 +67,6 @@ int	create_plane(t_object *object, float normal[4])
 	object->uv_coords = plane_uv_coords;
 	if (homogeneous_matrix(&object->basis, 3, 3) < 0)
 		return (-1);
-	cross_product((float[3]){0.0f, 0.0f, 1.0f}, object->orientation, axis);
-	set_basis(&object->basis, axis);
+	set_basis(&object->basis, object->orientation);
 	return (0);
 }

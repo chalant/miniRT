@@ -138,9 +138,9 @@ void	compute_shadows(t_minirt *minirt, t_hit *hit, float light_direction[3], flo
 
 	copy_vector(hit->ray_origin, lray.origin, 3);
 	copy_vector(light_direction, lray.direction, 3);
-	lray.origin[0] = hit->point[0] + 0.0001f * hit->normal[0];
-	lray.origin[1] = hit->point[1] + 0.0001f * hit->normal[1];
-	lray.origin[2] = hit->point[2] + 0.0001f * hit->normal[2];
+	lray.origin[0] = hit->point[0] + 0.001f * hit->normal[0];
+	lray.origin[1] = hit->point[1] + 0.001f * hit->normal[1];
+	lray.origin[2] = hit->point[2] + 0.001f * hit->normal[2];
 	lhit.object = hit->object;
 	shadow_ray(minirt, &lray, &lhit, visibility);
 }
@@ -164,7 +164,7 @@ int	handle_light(t_minirt *minirt, t_hit *hit, t_light *diffuse, float color[3])
 {
 	int			i;
 	float		hit_angle;
-	float		pow;
+	float		spec_pow;
 	float		direction[3];
 	float		visibility[3];
 
@@ -172,7 +172,7 @@ int	handle_light(t_minirt *minirt, t_hit *hit, t_light *diffuse, float color[3])
 	normalize_vector(direction, direction, 3);
 	hit_angle = dot_product(hit->normal, direction, 3);
 	compute_shadows(minirt, hit, direction, visibility);
-	pow = specular_power(minirt, hit, diffuse, direction);
+	spec_pow = specular_power(minirt, hit, diffuse, direction);
 	i = -1;
 	while (++i < 3)
 	{
@@ -180,7 +180,7 @@ int	handle_light(t_minirt *minirt, t_hit *hit, t_light *diffuse, float color[3])
 			* ambient_light(minirt, hit, i);
 		hit->color[i] += visibility[1] * color[i] * hit->energy
 			* hit_angle * diffuse_light(hit, diffuse, i);
-		hit->color[i] += visibility[2] *  hit->energy * pow
+		hit->color[i] += visibility[2] *  hit->energy * spec_pow
 			* specular_light(hit, diffuse, i);
 	}
 	return (0);
@@ -229,7 +229,7 @@ void	bounce_ray(t_ray *ray, t_hit *hit)
 {
 	float		epsilon[3];
 
-	add_vectors(hit->point, scale_vector(hit->normal, 0.0001f, epsilon, 3), ray->origin, 3);
+	add_vectors(hit->point, scale_vector(hit->normal, 0.001f, epsilon, 3), ray->origin, 3);
 	reflect(ray->direction, hit->normal, dot_product(ray->direction, hit->normal, 3), ray->direction);
 	hit->energy *= hit->object->material->reflectivity;
 }
@@ -245,8 +245,8 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 	bounces = 2;
 	hit.screen_coords = coords;
 	hit.energy = 1.0f;
-	set_ray(minirt, &ray, coords);
 	to_color(0x00000000, hit.color);
+	set_ray(minirt, &ray, coords);
 	while (++i < bounces)
 	{
 		ray_trace(minirt, &ray, &hit, coords);

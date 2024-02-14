@@ -27,48 +27,54 @@ int	set_matrix(t_matrix *matrix, float value)
 	return (0);
 }
 
-// void	permute_rows(t_matrix *matrix, int i, int j)
-// {
-// 	float	*tmp;
-// 	int		k;
-
-// 	tmp = matrix->points[i];
-// 	matrix->points[i] = matrix->points[j];
-// 	matrix->points[j] = tmp;
-// }
-
-void invert_matrix(t_matrix *matrix, t_matrix *result, t_matrix *identity, int n) 
+int	compute_pivots(t_matrix *matrix, t_matrix *identity, int i, int n)
 {
-	float       diag;
-	float       factor;
-	int			i;
 	int			j;
+	float		diag;
 
+	j = -1;
+	diag = matrix->points[i][i];
+	if (diag == 0.0f)
+		return (0);
+	while (++j < n) 
+	{
+		matrix->points[i][j] /= diag;
+		identity->points[i][j] /= diag;
+	}
+	return (1);
+}
+
+int	invert_init(t_matrix *matrix, t_matrix *result, t_matrix *identity, int n)
+{
 	set_matrix(identity, 0.0f);
 	set_diagonal(identity, 1.0f);
 	matrix_copy(matrix, result, n);
-	i = -1;
+	return (-1);
+}
+
+void invert_matrix(t_matrix *matrix, t_matrix *result, t_matrix *identity, int n) 
+{
+	float       factor;
+	int			i;
+	int			j;
+	int			k;
+
+	i = invert_init(matrix, result, identity, n);
 	while (++i < n) 
 	{
-		j = -1;
-		diag = result->points[i][i];
-		if (diag == 0.0f)
+		if (!compute_pivots(result, identity, i, n))
 			return ;
-		while (++j < n) 
+		k = -1;
+		while (++k < n)
 		{
-			result->points[i][j] /= diag;
-			identity->points[i][j] /= diag;
-		}
-		for (int k = 0; k < n; k++)
-		{
-			if (k != i) 
+			if (k == i)
+				continue;
+			factor = result->points[k][i];
+			j = -1;
+			while (++j < n)
 			{
-				factor = result->points[k][i];
-				for (int j = 0; j < n; j++) 
-				{
-					result->points[k][j] -= factor * result->points[i][j];
-					identity->points[k][j] -= factor * identity->points[i][j];
-				}
+				result->points[k][j] -= factor * result->points[i][j];
+				identity->points[k][j] -= factor * identity->points[i][j];
 			}
 		}
 	}

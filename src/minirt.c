@@ -196,7 +196,7 @@ int	load_scene(t_minirt *minirt)
 	minirt->camera.origin[1] = 0.0f;
 	minirt->camera.origin[2] = 3.0f;
 	minirt->camera.origin[3] = 1.0f;
-	if (set_camera_transform(&minirt->camera) == -1)
+	if (set_camera_transform(minirt, &minirt->camera) == -1)
 		return (-1);
 	create_cone(&new, 2.0f, 1.0f);
 	to_color(0x00f94449, new.color);
@@ -284,7 +284,7 @@ int	load_materials(t_minirt *minirt)
 	other.diffuse_reflection = 0.8f;
 	other.specular_reflection = 0.2f;
 	other.shininess = 20.5f;
-	other.reflectivity = 0.2f;
+	other.reflectivity = 0.0f;
 	other.repeat_pattern = 0.1f;
 	other.get_texture = checkerboard;
 	other.normal_perturb = compute_bump;
@@ -344,13 +344,11 @@ int	main(int argc, char *argv[])
 	import_map(&minirt, argv);
 	to_color(0x0087ceeb, minirt.sky_color);
 	normalize_vector(minirt.camera.orientation, minirt.camera.orientation, 3);
-	printf("camera orientation: %f %f %f\n", minirt.camera.orientation[0], minirt.camera.orientation[1], minirt.camera.orientation[2]);
 	load_materials(&minirt);
 	minirt.camera.near = -1.0f;
 	minirt.camera.far = 1.0f;
-	if (set_camera_transform(&minirt.camera) == -1)
+	if (set_camera_transform(&minirt, &minirt.camera) == -1)
 		return (-1);
-	//load_scene(&minirt);
 	perspective_projector(&minirt.world_space, &minirt.display, &minirt.camera);
 	invert_matrix(&minirt.world_space, &minirt.world_space, &minirt.tmp, 4);
 	perspective_projector(&minirt.view_matrix, &minirt.display, &minirt.camera);

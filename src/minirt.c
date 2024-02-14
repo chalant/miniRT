@@ -273,16 +273,18 @@ int	load_materials(t_minirt *minirt)
 	//bump map file when parsing.
 	material.ambient_reflection = 0.2f;
 	material.diffuse_reflection = 0.8f;
-	material.shininess = 200.0f;
+	material.specular_reflection = 0.8f;
+	material.shininess = 2.0f;
 	material.reflectivity = 0.05f;
 	material.repeat_pattern = 10.0f;
 	material.get_texture = checkerboard;
 	material.normal_perturb = compute_bump;
 
-	other.ambient_reflection = 0.8f;
+	other.ambient_reflection = 0.2f;
 	other.diffuse_reflection = 0.8f;
-	other.shininess = 2.5f;
-	other.reflectivity = 0.1f;
+	other.specular_reflection = 0.2f;
+	other.shininess = 20.5f;
+	other.reflectivity = 0.2f;
 	other.repeat_pattern = 0.1f;
 	other.get_texture = checkerboard;
 	other.normal_perturb = compute_bump;
@@ -314,7 +316,7 @@ int	load_materials(t_minirt *minirt)
 	light.position[0] = -40.0f;
 	light.position[1] = 30.0f;
 	light.position[2] = 0.7f;
-	light.brightness = 0.3f;
+	light.brightness = 0.7f;
 	ft_darray_append(&minirt->spot_lights, &light);
 	//diffuse = ft_darray_get(&minirt->spot_lights, 0);
 	// diffuse->position[0] = -40.0f;
@@ -340,6 +342,7 @@ int	main(int argc, char *argv[])
 	set_minirt_transforms(&minirt);
 	homogeneous_matrix(&minirt.tmp, 3, 3);
 	import_map(&minirt, argv);
+	to_color(0x0087ceeb, minirt.sky_color);
 	normalize_vector(minirt.camera.orientation, minirt.camera.orientation, 3);
 	printf("camera orientation: %f %f %f\n", minirt.camera.orientation[0], minirt.camera.orientation[1], minirt.camera.orientation[2]);
 	load_materials(&minirt);

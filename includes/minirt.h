@@ -82,6 +82,7 @@ typedef struct	s_hit
 	float				normal[3];
 	float				point[3];
 	float				distance;
+	float				energy;
 	int					object_index;
 	int					*screen_coords;
 }		t_hit;
@@ -174,6 +175,7 @@ typedef struct	s_minirt
 	t_key			shift;
 	t_key			ctrl;
 
+	float			sky_color[3];
 	float			x[4];
 	float			y[4];
 	float			z[4];

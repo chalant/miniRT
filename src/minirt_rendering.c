@@ -75,7 +75,7 @@ int	shadow_ray(t_minirt *minirt, t_ray *ray, t_hit *hit)
 	while (++i < minirt->objects.size)
 	{
 		object = ft_darray_get(&minirt->objects, i);
-		if (object->intersect(object, ray))
+		if (object->intersect(object, ray) && ray->t > 0.0f)
 		{
 			ray->closest_t = ray->t;
 			hit->object = object;
@@ -119,13 +119,20 @@ void	add_spot_lights(t_minirt *minirt, t_hit *hit, float view[3])
 	}
 }
 
-float	distance(float *v1, float *v2, float *result, int n)
+int	get_textures(t_hit *hit, float color[4])
 {
-	subtract_vectors(v1, v2, result, n);
-	return (vector_length(result, n));
+	float		uv_coords[2];
+	float		perturbation[3];
+
+	hit->object->uv_coords(hit->object, hit, uv_coords);
+	hit->object->material->normal_perturb(hit->object, uv_coords, perturbation);
+	add_vectors(hit->normal, perturbation, hit->normal, 3);
+	normalize_vector(hit->normal, hit->normal, 3);
+	hit->object->material->get_texture(hit->object, uv_coords, color);
+	return (0);
 }
 
-int	add_lights(t_minirt *minirt, t_ray *ray, t_hit *hit, float multiplier)
+int	add_light(t_minirt *minirt, t_ray *ray, t_hit *hit, t_light *diffuse, float color[4], float multiplier)
 {
 	int			i;
 	float		view[3];
@@ -133,37 +140,28 @@ int	add_lights(t_minirt *minirt, t_ray *ray, t_hit *hit, float multiplier)
 	float		direction[3];
 	float		reflection[3];
 	float		specular_power;
-	float		uv_coords[2];
-	float		color[4];
-	float		perturbation[3];
-	//float		normal[3];
-	float		vis;
+	float		dvis;
+	float		svis;
+	float		avis;
 	t_ray		lray;
 	t_hit		lhit;
-	t_light		*diffuse;
 
-	diffuse = ft_darray_get(&minirt->spot_lights, 0);
-	//printf("%f %f\n", diffuse->brightness);
 	copy_vector(ray->origin, lray.origin, 3);
 	subtract_vectors(diffuse->position, hit->point, direction, 3);
 	normalize_vector(direction, direction, 3);
-	hit->object->uv_coords(hit->object, hit, uv_coords);
-	hit->object->material->normal_perturb(hit->object, uv_coords, perturbation);
-	add_vectors(hit->normal, perturbation, hit->normal, 3);
-	normalize_vector(hit->normal, hit->normal, 3);
 	hit_angle = dot_product(hit->normal, direction, 3);
-	lray.origin[0] = hit->point[0] + 0.0001f * hit->normal[0];
-	lray.origin[1] = hit->point[1] + 0.0001f * hit->normal[1];
-	lray.origin[2] = hit->point[2] + 0.0001f * hit->normal[2];
+	lray.origin[0] = hit->point[0] + 0.001f * hit->normal[0];
+	lray.origin[1] = hit->point[1] + 0.001f * hit->normal[1];
+	lray.origin[2] = hit->point[2] + 0.001f * hit->normal[2];
 	copy_vector(direction, lray.direction, 3);
-	vis = 1.0f;
-	float	svis = 1.0f;
-	float	avis = 1.0f;
+	dvis = 1.0f;
+	svis = 1.0f;
+	avis = 1.0f;
 	shadow_ray(minirt, &lray, &lhit);
-	if (lray.closest_t < FLT_MAX && lhit.object != hit->object)
+	if (lray.closest_t > 0.0f && lray.closest_t < FLT_MAX && lhit.object != hit->object)
 	{
 		avis = 0.0f;
-		vis = 0.2f;
+		dvis = 0.2f;
 		svis = 0.0f;
 	}
 	subtract_vectors(minirt->camera.origin, hit->point, view, 3);
@@ -173,12 +171,11 @@ int	add_lights(t_minirt *minirt, t_ray *ray, t_hit *hit, float multiplier)
 	specular_power = powf(fmaxf(0.0f, dot_product(reflection, view, 3)),
 		hit->object->material->shininess) * diffuse->brightness;
 	i = -1;
-	hit->object->material->get_texture(hit->object, uv_coords, color);
 	while (++i < 3)
 	{
 		hit->color[i] += avis * minirt->ambient.brightness * minirt->ambient.color[i] * color[i] * hit->object->material->ambient_reflection * multiplier;
-		hit->color[i] += vis * hit_angle * diffuse->brightness * diffuse->color[i] * color[i] * hit->object->material->diffuse_reflection * multiplier;
-		hit->color[i] += svis * 1.0f * specular_power * diffuse->color[i] * multiplier;
+		hit->color[i] += dvis * hit_angle * diffuse->brightness * diffuse->color[i] * color[i] * hit->object->material->diffuse_reflection * multiplier;
+		hit->color[i] += svis * 0.8f * specular_power * diffuse->color[i] * multiplier;
 	}
 	return (0);
 }
@@ -192,6 +189,19 @@ float	*to_world_space(t_minirt *minirt, float point[4], float result[4])
 	return (result);
 }
 
+int	add_lights(t_minirt *minirt, t_ray *ray, t_hit *hit, float color[4], float multiplier)
+{
+	int	j;
+
+	j = -1;
+	while (++j < minirt->spot_lights.size)
+		add_light(minirt, ray, hit, ft_darray_get(&minirt->spot_lights, j), color, multiplier);
+	int	i = -1;
+	while (++i < 3)
+		hit->color[i] *= multiplier;
+	return (0);
+}
+
 int	shade_pixel(t_minirt *minirt, int coords[2])
 {
 	t_ray		ray;
@@ -203,6 +213,7 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 	float		epsilon[3];
 	float		sky_color[4];
 	float		multiplier = 1.0f;
+	float		color[4];
 
 	i = -1;
 	bounces = 2;
@@ -223,10 +234,10 @@ int	shade_pixel(t_minirt *minirt, int coords[2])
 			hit.color[2] += sky_color[2] * multiplier;
 			break;
 		}
-
 		set_hit_info(&hit, &ray);
-		add_vectors(hit.point, scale_vector(hit.normal, 0.0001f, epsilon, 3), ray.origin, 3);
-		add_lights(minirt, &ray, &hit, multiplier);
+		add_vectors(hit.point, scale_vector(hit.normal, 0.00001f, epsilon, 3), ray.origin, 3);
+		get_textures(&hit, color);
+		add_lights(minirt, &ray, &hit, color, multiplier);
 		reflect(ray.direction, hit.normal, dot_product(ray.direction, hit.normal, 3), ray.direction);
 		multiplier *= hit.object->material->reflectivity;
 	}
@@ -245,7 +256,7 @@ int	render(t_minirt *minirt)
 		// if ((coords[0] % 2))
 		// 	continue;
 		while (++coords[1] < minirt->display.height)
-			// if (!(coords[1] % 2))
+			//if (!(coords[1] % 2))
 				shade_pixel(minirt, coords);
 	}
 	mlx_put_image_to_window(minirt->mlx, minirt->window, minirt->display.img, 0, 0);

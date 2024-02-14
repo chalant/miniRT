@@ -52,12 +52,11 @@ int	check_decimal(char *value, int type)
 		return (1);
 	else if (type == LIGHT && decimal >= 0.0 && decimal <= 1.0)
 		return (0);
-	else if (type == NORMAL && decimal >= -1.0 && decimal <= 1.0)
+	else if (type == NORMAL)
 		return (0);
 	else if (type == XYZ || type == UNIT)
 		return (0);
-	else
-		return (1);
+	return (1);
 }
 
 char	**check_ranges(char *values, int type)

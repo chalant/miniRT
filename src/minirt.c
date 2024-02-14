@@ -273,24 +273,24 @@ int	load_materials(t_minirt *minirt)
 	//bump map file when parsing.
 	material.ambient_reflection = 0.2f;
 	material.diffuse_reflection = 0.8f;
-	material.shininess = 100.0f;
-	material.reflectivity = 0.2f;
+	material.shininess = 200.0f;
+	material.reflectivity = 0.05f;
 	material.repeat_pattern = 10.0f;
 	material.get_texture = checkerboard;
 	material.normal_perturb = compute_bump;
 
 	other.ambient_reflection = 0.8f;
 	other.diffuse_reflection = 0.8f;
-	other.shininess = 100.5f;
-	other.reflectivity = 0.2f;
-	other.repeat_pattern = 0.2f;
+	other.shininess = 2.5f;
+	other.reflectivity = 0.1f;
+	other.repeat_pattern = 0.1f;
 	other.get_texture = checkerboard;
 	other.normal_perturb = compute_bump;
 
 	load_bmap(&material, "resources/mesh.bmap");
 	//to_color(0x00f94449, material.dark_color);
 	to_color(0x00ffffff, material.color);
-	to_color(0x00ffff00, other.color);
+	to_color(0x00ffffff, other.color);
 	load_bmap(&other, "resources/gravel.bmap");
 	ft_darray_append(&minirt->materials, &material);
 	ft_darray_append(&minirt->materials, &other);
@@ -303,6 +303,19 @@ int	load_materials(t_minirt *minirt)
 	object = ft_darray_get(&minirt->objects, 2);
 	object->material = ft_darray_get(&minirt->materials, 0);
 
+	// to_color(0x00ffffff, minirt->diffuse.color);
+	// minirt->diffuse.position[0] = -40.0f;
+	// minirt->diffuse.position[1] = -30.0f;
+	// minirt->diffuse.position[2] = 0.7f;
+	// minirt->diffuse.brightness = 0.7f;
+	// ft_darray_append(&minirt->spot_lights, &minirt->diffuse);
+	t_light	light;
+	to_color(0x00ff00ff, light.color);
+	light.position[0] = -40.0f;
+	light.position[1] = 30.0f;
+	light.position[2] = 0.7f;
+	light.brightness = 0.3f;
+	ft_darray_append(&minirt->spot_lights, &light);
 	//diffuse = ft_darray_get(&minirt->spot_lights, 0);
 	// diffuse->position[0] = -40.0f;
 	// diffuse->position[1] = 30.0f;
@@ -327,8 +340,9 @@ int	main(int argc, char *argv[])
 	set_minirt_transforms(&minirt);
 	homogeneous_matrix(&minirt.tmp, 3, 3);
 	import_map(&minirt, argv);
-	load_materials(&minirt);
 	normalize_vector(minirt.camera.orientation, minirt.camera.orientation, 3);
+	printf("camera orientation: %f %f %f\n", minirt.camera.orientation[0], minirt.camera.orientation[1], minirt.camera.orientation[2]);
+	load_materials(&minirt);
 	minirt.camera.near = -1.0f;
 	minirt.camera.far = 1.0f;
 	if (set_camera_transform(&minirt.camera) == -1)

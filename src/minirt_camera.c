@@ -100,14 +100,13 @@ int	set_basis(t_matrix *basis, float orientation[3])
 	up[0] = 0.0f;
 	up[1] = 1.0f;
 	up[2] = 0.0f;
-	if (dot_product(orientation, up, 3) == 1.0f)
+	normalize_vector(orientation, orientation, 3);
+	if (fabsf(dot_product(orientation, up, 3)) == 1.0f)
 	{
 		up[0] = 0.0f;
 		up[1] = 0.0f;
 		up[2] = 1.0f;
 	}
-	normalize_vector(orientation, orientation, 3);
-	//vec = choose_vector(tmp.points[0], tmp.points[1], tmp.points[2], orientation);
 	cross_product(up, orientation, right);
 	normalize_vector(right, right, 3);
 	cross_product(orientation, right, up);
@@ -131,6 +130,7 @@ int	set_camera_transform(t_camera *camera)
 		return (-1);
 	if (homogeneous_matrix(&camera->basis, 2, 2) == -1)
 		return (-1);
+	//scale_vector(camera->orientation, -1.0f, camera->orientation, 3);
 	set_basis(&camera->basis, camera->orientation);
 	if (homogeneous_matrix(&camera->inverse_view, 3, 3) == -1)
 		return (-1);
@@ -139,8 +139,6 @@ int	set_camera_transform(t_camera *camera)
 	matrix_copy(&camera->basis, &camera->view, 3);
 	set_translate(&camera->view, -camera->origin[0], -camera->origin[2], -camera->origin[2]);
 	invert_matrix(&camera->view, &camera->inverse_view, &tmp, 4);
-	print_matrix2(&camera->view);
-	print_matrix2(&camera->inverse_view);
 	delete_matrix(&tmp);
 	return (0);
 }

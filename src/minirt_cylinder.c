@@ -17,13 +17,13 @@ float	*choose_arbitray_vector(float result[3], float axis[3])
 	result[0] = 0.0f;
 	result[1] = 1.0f;
 	result[2] = 0.0f;
-	if (dot_product(axis, result, 3) == 1.0f)
+	if (fabsf(dot_product(axis, result, 3)) == 1.0f)
 	{
 		result[0] = 0.0f;
 		result[1] = 0.0f;
 		result[2] = 1.0f;
 	}
-	if (dot_product(axis, result, 3) == 1.0f)
+	else if (fabsf(dot_product(axis, result, 3)) == 1.0f)
 	{
 		result[0] = 1.0f;
 		result[1] = 0.0f;

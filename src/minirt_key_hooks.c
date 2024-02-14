@@ -14,11 +14,11 @@
 
 int	rotate_camera(t_minirt *minirt, t_matrix *rot)
 {
-	float	origin[4];
+	//float	origin[4];
 
 	matmul(&minirt->camera.basis, rot, &minirt->tmp, 3);
 	matrix_copy(&minirt->tmp, &minirt->camera.basis, 3);
-	vmatmul(&minirt->camera.basis, minirt->camera.origin, origin);
+	//vmatmul(&minirt->camera.basis, minirt->camera.origin, origin);
 	look_at(&minirt->camera, minirt);
 	return (0);
 }

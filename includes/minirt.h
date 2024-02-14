@@ -90,7 +90,7 @@ typedef struct	s_material
 {
 	float		diffuse_reflection;
 	float		ambient_reflection;
-	float		specular_coefficient;
+	float		specular_reflection;
 	float		shininess;
 	float		emission;
 	float		reflectivity;

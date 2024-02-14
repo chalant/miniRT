@@ -208,7 +208,10 @@ int	mouse_update(int x, int y, t_minirt *minirt)
 	}
 	else if (minirt->shift.pressed)
 	{
-		add_vectors(minirt->selected_object->size, dir, minirt->selected_object->size, 3);
+		//add_vectors(minirt->selected_object->size, dir, minirt->selected_object->size, 3);
+		minirt->selected_object->size[0] += -minirt->selected_object->size[0] * dir[0];
+		minirt->selected_object->size[1] += minirt->selected_object->size[1] * dir[1];
+		minirt->selected_object->size[2] += dir[2];
 	}
 	else
 	{

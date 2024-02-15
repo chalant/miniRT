@@ -64,17 +64,14 @@ int	ray_trace(t_minirt *minirt, t_ray *ray, t_hit *hit, int coords[2])
 	return (1);
 }
 
-int	shadow_ray(t_minirt *minirt, t_ray *ray, t_hit *hit, float visibility[3], float light_position[3])
+int	shadow_ray(t_minirt *minirt, t_ray *ray, t_hit *hit, t_object **closest)
 {
 	int			i;
 	t_object	*object;
-	t_object	*closest;
-	float		hit_point[3];
-	(void)hit;
 
 	i = -1;
 	ray->closest_t = FLT_MAX;
-	closest = NULL;
+	*closest = NULL;
 	while (++i < minirt->objects.size)
 	{
 		object = ft_darray_get(&minirt->objects, i);
@@ -83,23 +80,9 @@ int	shadow_ray(t_minirt *minirt, t_ray *ray, t_hit *hit, float visibility[3], fl
 		if (object->intersect(object, ray))
 		{
 			ray->closest_t = ray->t;
-			closest = object;
-			break;
+			*closest = object;
+			return (1);
 		}
-	}
-	visibility[0] = 1.0f;
-	visibility[1] = 1.0f;
-	visibility[2] = 1.0f;
-	scale_vector(ray->direction, ray->closest_t, hit_point, 3);
-	add_vectors(ray->origin, ray->direction, hit_point, 3);
-	//todo: if the object is below the light and below the object, it won't cast a shadow.
-	if (closest && light_position[1] > closest->center[1] && hit->object->center[1] > closest->center[1])
-		return (0);
-	if (closest && ray->closest_t < FLT_MAX)
-	{
-		visibility[0] = 0.0f;
-		visibility[1] = 0.2f;
-		visibility[2] = 0.0f;
 	}
 	return (0);
 }
@@ -141,18 +124,28 @@ float	specular_power(t_minirt *minirt, t_hit *hit, t_light *light, float light_d
 		hit->object->material->shininess) * light->brightness);
 }
 
-void	compute_shadows(t_minirt *minirt, t_hit *hit, float light_direction[3], float visibility[3], float light_position[3])
+void	compute_shadows(t_minirt *minirt, t_hit *hit, t_light *light, float visibility[3])
 {
 	t_ray		lray;
 	t_hit		lhit;
+	t_object	*closest;
 
 	copy_vector(hit->ray_origin, lray.origin, 3);
-	copy_vector(light_direction, lray.direction, 3);
+	copy_vector(light->direction, lray.direction, 3);
 	lray.origin[0] = hit->point[0] + 0.001f * hit->normal[0];
 	lray.origin[1] = hit->point[1] + 0.001f * hit->normal[1];
 	lray.origin[2] = hit->point[2] + 0.001f * hit->normal[2];
 	lhit.object = hit->object;
-	shadow_ray(minirt, &lray, &lhit, visibility, light_position);
+	shadow_ray(minirt, &lray, &lhit, &closest);
+	visibility[0] = 1.0f;
+	visibility[1] = 1.0f;
+	visibility[2] = 1.0f;
+	if (closest && lray.closest_t < FLT_MAX)
+	{
+		visibility[0] = 0.0f;
+		visibility[1] = 0.2f;
+		visibility[2] = 0.0f;
+	}
 }
 
 float	ambient_light(t_minirt *minirt, t_hit *hit, int i)
@@ -175,15 +168,14 @@ int	handle_light(t_minirt *minirt, t_hit *hit, t_light *light, float color[3])
 	int			i;
 	float		hit_angle;
 	float		spec_pow;
-	float		direction[3];
 	float		visibility[3];
 
-	subtract_vectors(light->position, hit->point, direction, 3);
-	add_vectors(light->position, direction, direction, 3);
-	normalize_vector(direction, direction, 3);
-	hit_angle = dot_product(hit->normal, direction, 3);
-	compute_shadows(minirt, hit, direction, visibility, light->position);
-	spec_pow = specular_power(minirt, hit, light, direction);
+	subtract_vectors(light->position, hit->point, light->direction, 3);
+	add_vectors(light->position, light->direction, light->direction, 3);
+	normalize_vector(light->direction, light->direction, 3);
+	hit_angle = dot_product(hit->normal, light->direction, 3);
+	compute_shadows(minirt, hit, light, visibility);
+	spec_pow = specular_power(minirt, hit, light, light->direction);
 	i = -1;
 	while (++i < 3)
 	{

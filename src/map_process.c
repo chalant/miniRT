@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:32:43 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/15 16:42:33 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/15 16:47:52 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,9 @@ int	check_decimal(char *value, int type)
 		return (0);
 	else if (type == NORMAL)
 		return (0);
-	else if (type == XYZ || type == UNIT)
+	else if (type == UNIT && decimal > 0.0)
+		return (0);
+	else if (type == XYZ)
 		return (0);
 	return (1);
 }

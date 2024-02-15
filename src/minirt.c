@@ -274,7 +274,7 @@ int	load_materials(t_minirt *minirt)
 	material.ambient_reflection = 0.2f;
 	material.diffuse_reflection = 0.8f;
 	material.specular_reflection = 0.8f;
-	material.shininess = 20.0f;
+	material.shininess = 200.0f;
 	material.reflectivity = 0.05f;
 	material.repeat_pattern = 10.0f;
 	material.get_texture = checkerboard;
@@ -316,7 +316,7 @@ int	load_materials(t_minirt *minirt)
 	light.position[0] = -40.0f;
 	light.position[1] = 30.0f;
 	light.position[2] = 0.7f;
-	light.brightness = 0.9f;
+	light.brightness = 0.7f;
 	ft_darray_append(&minirt->spot_lights, &light);
 	//diffuse = ft_darray_get(&minirt->spot_lights, 0);
 	// diffuse->position[0] = -40.0f;

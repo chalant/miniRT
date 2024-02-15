@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
+/*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 14:24:06 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/09 14:00:35 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/02/15 19:46:16 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ typedef struct	s_hit
 
 typedef struct	s_object
 {
-	t_material		*material;
+	// t_material		*material;
 	t_matrix		basis;
 	t_matrix		inverse_basis;
 
@@ -120,6 +120,7 @@ typedef struct	s_object
 	float			color[4];
 	float			orientation[3];
 	float			size[3];
+	int				material_index;
 }				t_object;
 
 typedef struct	s_transforms_3d

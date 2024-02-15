@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 14:24:32 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/12 16:48:10 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/15 20:19:23 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,37 @@ int	check_extension(char *filename, char *extension)
 	return (err("Wrong map extension: Expecting *.rt file)."));
 }
 
+int	has_material(int fd, int *material)
+{
+	char	*line;
+	char	**infos;
+
+	while (1)
+	{
+		line = get_next_line(fd);
+		if (!line)
+			break ;
+		if (is_blank(&line))
+			continue ;
+		infos = ft_split(line, ' ');
+		if (!infos)
+			return (free(line), ft_clear_ds(infos), 1);
+		if (ft_strcmp(infos[0], "mt"))
+			return (*material = 1, 0);
+		ft_clear_ds(infos);
+		free(line);
+	}
+	return (*material = 0, 0);
+}
+
 int	init_import(t_import *import, t_minirt *minirt, char *map)
 {
 	import->minirt = minirt;
 	import->fd = open(map, O_RDONLY);
 	if (import->fd == -1)
 		return (err("Open() failure."));
+	if (has_material(import->fd, &import->material))
+		return (1);
 	import->ambient = 0;
 	import->camera = 0;
 	import->light = 0;
@@ -68,22 +93,4 @@ int	import_map(t_minirt *minirt, char **av)
 	return (0);
 }
 
-// PARSING & MAP IMPORT:
-// [X] Check if input is a .rt file and check that it's not JUST ".rt"
-// [X] Read the map line per line with GNL and count the number of elements
-// [X] Split each line against blanks and check if it's n-sized as expected PER type
-// [X] If A, C or L type, check if already seen in the map (can be declared only once)
-// [WIP] If map is correct, process each element data into memory for rendering
-// 	[X] Verify that each part of the informations from an element is correct per the subject specifications (RGB, Normalization, Light Range..)
-// 	[X] Manage floats with a home made atof + Manage negatives float too!
-// 	[X] Process Ambient
-//  [X] Process Camera
-//  [X] Process Light
-//  [X] Process Sphere
-//  [X] Process Plane
-//  [X] Process Cylinder
-//  [X] Process Cone
-// 	[ ] TODO: Manage array deletion if an error occur
-
-// atof
-// [X] Should atof supports numbers with 2 decimals ? Well now it does.
+// [X] Update map_process function with material support

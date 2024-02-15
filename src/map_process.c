@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:32:43 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/15 16:47:52 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/15 20:18:25 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	expected_values(int type)
 {
-	if (type == LIGHT || type == UNIT || type == FOV)
+	if (type == LIGHT || type == UNIT || type == FOV || type == INDEX)
 		return (1);
 	else
 		return (3);
@@ -39,6 +39,8 @@ int	check_integer(char *value, int type)
 	if (type == RGB && integer >= 0 && integer <= 255)
 		return (0);
 	else if (type == FOV && integer >= 0 && integer <= 180)
+		return (0);
+	else if (type == INDEX && integer >= 0)
 		return (0);
 	else
 		return (1);
@@ -74,7 +76,7 @@ char	**check_ranges(char *values, int type)
 	i = 0;
 	while (tab[i])
 	{
-		if (type == RGB || type == FOV)
+		if (type == RGB || type == FOV || type == INDEX)
 		{
 			if (check_integer(tab[i], type))
 				return (ft_clear_ds(tab), NULL);
@@ -136,6 +138,9 @@ int	process_sphere(t_import *import, char **infos)
 		return (1);
 	if (set_rgb(sphere.color, infos[3]))
 		return (1);
+	if (import->material)
+		if (set_index(&sphere.material_index, infos[4]))
+			return (1);
 	if (create_sphere(&sphere, diameter / 2.0f))
 		return (1);
 	if (ft_darray_append(&import->minirt->objects, &sphere))
@@ -154,6 +159,9 @@ int	process_plane(t_import *import, char **infos)
 		return (1);
 	if (set_rgb(plane.color, infos[3]))
 		return (1);
+	if (import->material)
+		if (set_index(&plane.material_index, infos[4]))
+			return (1);
 	if (create_plane(&plane, normal))
 		return (1);
 	if (ft_darray_append(&import->minirt->objects, &plane))
@@ -177,6 +185,9 @@ int	process_cylinder(t_import *import, char **infos)
 		return (1);
 	if (set_rgb(cylinder.color, infos[5]))
 		return (1);
+	if (import->material)
+		if (set_index(&cylinder.material_index, infos[6]))
+			return (1);
 	if (create_cylinder(&cylinder, height, diameter))
 		return (1);
 	if (ft_darray_append(&import->minirt->objects, &cylinder))
@@ -200,11 +211,36 @@ int	process_cone(t_import *import, char **infos)
 		return (1);
 	if (set_rgb(cone.color, infos[5]))
 		return (1);
+	if (import->material)
+		if (set_index(&cone.material_index, infos[6]))
+			return (1);
 	if (create_cone(&cone, height, diameter))
 		return (1);
 	if (ft_darray_append(&import->minirt->objects, &cone))
 		return (1);
 	return (0);
+}
+
+int	process_material(t_import *import, char **infos)
+{
+	t_material	material;
+
+	if (ft_atof(&material.diffuse_reflection, infos[1]))
+		return (1);
+	if (ft_atof(&material.ambient_reflection, infos[2]))
+		return (1);
+	if (ft_atof(&material.specular_reflection, infos[3]))
+		return (1);
+	if (ft_atof(&material.shininess, infos[4]))
+		return (1);
+	if (ft_atof(&material.reflectivity, infos[5]))
+		return (1);
+	if (set_rgb(material.color, infos[6]))
+		return (1);
+	if (ft_atof(&material.repeat_pattern, infos[7]))
+		return (1);
+	if (ft_darray_append(&import->minirt->materials, &material))
+		return (1);
 }
 
 int	process_element(t_import *import, char **infos)
@@ -223,6 +259,8 @@ int	process_element(t_import *import, char **infos)
 		return (process_cylinder(import, infos));
 	if (!ft_strcmp(infos[0], "cn"))
 		return (process_cone(import, infos));
+	if (!ft_strcmp(infos[0], "mt"))
+		return (process_material(import, infos));
 	else
 		return (1);
 }

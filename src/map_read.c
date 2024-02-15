@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:29:20 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/12 15:51:11 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/15 19:18:48 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,19 @@ int	is_blank(char **line)
 		return (0);
 }
 
-int	expected_infos(char *type)
+int	expected_infos(t_import *import, char *type)
 {
 	if (!ft_strcmp(type, "A"))
 		return (3);
 	else if (!ft_strcmp(type, "C") || !ft_strcmp(type, "L")
-		|| !ft_strcmp(type, "sp") || !ft_strcmp(type, "pl"))
+		|| !ft_strcmp(type, "li"))
 		return (4);
+	else if (!ft_strcmp(type, "sp") || !ft_strcmp(type, "pl"))
+			return (4 + import->material);
 	else if (!ft_strcmp(type, "cy") || !ft_strcmp(type, "cn"))
-		return (6);
+		return (6 + import->material);
+	else if (!ft_strcmp(type, "mt"))
+		return (8);
 	else
 		return (1);
 }
@@ -75,7 +79,7 @@ int	read_map(t_import *import)
 		infos = ft_split(line, ' ');
 		if (!infos)
 			return (free(line), ft_clear_ds(infos), 1);
-		if ((int)ft_count_strings(infos) != expected_infos(infos[0]))
+		if ((int)ft_count_strings(infos) != expected_infos(import, infos[0]))
 			return (free(line), ft_clear_ds(infos), 1);
 		if (seen_type(import, infos))
 			return (free(line), ft_clear_ds(infos), 1);

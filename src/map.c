@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 14:24:32 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/15 20:19:23 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/15 20:31:35 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	has_material(int fd, int *material)
 		if (!infos)
 			return (free(line), ft_clear_ds(infos), 1);
 		if (ft_strcmp(infos[0], "mt"))
-			return (*material = 1, 0);
+			return (free(line), ft_clear_ds(infos), *material = 1, 0);
 		ft_clear_ds(infos);
 		free(line);
 	}

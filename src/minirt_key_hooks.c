@@ -29,7 +29,7 @@ int	translate_camera(t_minirt *minirt, float direction[3])
 
 	vmatmul(&minirt->camera.basis, direction, orientation);
 	add_vectors(minirt->camera.origin, 
-		scale_vector(orientation, 0.1f,  orientation, 3), minirt->camera.origin, 3);
+		scale_vector(orientation, 0.5f,  orientation, 3), minirt->camera.origin, 3);
 	look_at(&minirt->camera, minirt);
 	return (0);
 }

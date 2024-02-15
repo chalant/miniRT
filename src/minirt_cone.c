@@ -51,6 +51,7 @@ int	hit_cone(t_object *object, t_ray *ray)
 	float	oc[3];
 	float	direction[3];
 	float	k;
+	float	intersection[3];
 
 	k = 1.0f + object->size[0] * object->size[0];
 	normalize_vector(ray->direction, direction, 3);
@@ -67,24 +68,19 @@ int	hit_cone(t_object *object, t_ray *ray)
 	float t1 = (-abc[1] - discriminant) / (2 * abc[0]);
 	float t2 = (-abc[1] + discriminant) / (2 * abc[0]);
 	t = t1;
-	if (t < 0.0f || t > ray->closest_t)
-		t = t2;
-	if (t < 0.0f || t > ray->closest_t)
-		return (0);
-	float intersection[3];
-	scale_vector(direction, t1, intersection, 3);
+	scale_vector(ray->direction, t, intersection, 3);
 	add_vectors(ray->origin, intersection, intersection, 3);
 	subtract_vectors(object->center, intersection, intersection, 3);
 	float height = dot_product(intersection, object->orientation, 3);
-	if (height < 0.0f || height > object->size[1])
-	{
-		scale_vector(direction, t2, intersection, 3);
-		add_vectors(ray->origin, intersection, intersection, 3);
-		subtract_vectors(object->center, intersection, intersection, 3);
-		height = dot_product(intersection, object->orientation, 3);
+	if (height < 0.0f || height > object->size[1] || t > ray->closest_t || t < 0.0f)
 		t = t2;
-	}
-	if (height < 0.0f || height > object->size[1])
+	if (t < 0.0f || t > ray->closest_t)
+		return (0);
+	scale_vector(ray->direction, t, intersection, 3);
+	add_vectors(ray->origin, intersection, intersection, 3);
+	subtract_vectors(object->center, intersection, intersection, 3);
+	height = dot_product(intersection, object->orientation, 3);
+	if (height < 0.0f || height > object->size[1] || t > ray->closest_t || t < 0.0f)
 		return (0);
 	ray->t = t;
 	return 1;

@@ -64,19 +64,23 @@ int	ray_trace(t_minirt *minirt, t_ray *ray, t_hit *hit, int coords[2])
 	return (1);
 }
 
-int	shadow_ray(t_minirt *minirt, t_ray *ray, t_hit *hit, float visibility[3])
+int	shadow_ray(t_minirt *minirt, t_ray *ray, t_hit *hit, float visibility[3], float light_position[3])
 {
 	int			i;
 	t_object	*object;
 	t_object	*closest;
+	float		hit_point[3];
+	(void)hit;
 
 	i = -1;
-	closest = NULL;
 	ray->closest_t = FLT_MAX;
+	closest = NULL;
 	while (++i < minirt->objects.size)
 	{
 		object = ft_darray_get(&minirt->objects, i);
-		if (object->intersect(object, ray) && ray->t > 0.0f)
+		if (object == hit->object)
+			continue;
+		if (object->intersect(object, ray))
 		{
 			ray->closest_t = ray->t;
 			closest = object;
@@ -86,7 +90,12 @@ int	shadow_ray(t_minirt *minirt, t_ray *ray, t_hit *hit, float visibility[3])
 	visibility[0] = 1.0f;
 	visibility[1] = 1.0f;
 	visibility[2] = 1.0f;
-	if (ray->closest_t > 0.0f && ray->closest_t < FLT_MAX && closest != hit->object)
+	scale_vector(ray->direction, ray->closest_t, hit_point, 3);
+	add_vectors(ray->origin, ray->direction, hit_point, 3);
+	//todo: if the object is below the light and below the object, it won't cast a shadow.
+	if (closest && light_position[1] > closest->center[1] && hit->object->center[1] > closest->center[1])
+		return (0);
+	if (closest && ray->closest_t < FLT_MAX)
 	{
 		visibility[0] = 0.0f;
 		visibility[1] = 0.2f;
@@ -124,14 +133,15 @@ float	specular_power(t_minirt *minirt, t_hit *hit, t_light *light, float light_d
 	float		view[3];
 
 	scale_vector(light_direction, -1.0f, light_direction, 3);
-	reflect(light_direction, hit->normal, dot_product(light_direction, hit->normal, 3), reflection);
+	reflect(light_direction, hit->normal, 
+		dot_product(light_direction, hit->normal, 3), reflection);
 	subtract_vectors(minirt->camera.origin, hit->point, view, 3);
 	normalize_vector(view, view, 3);
 	return (powf(fmaxf(0.0f, dot_product(reflection, view, 3)),
 		hit->object->material->shininess) * light->brightness);
 }
 
-void	compute_shadows(t_minirt *minirt, t_hit *hit, float light_direction[3], float visibility[3])
+void	compute_shadows(t_minirt *minirt, t_hit *hit, float light_direction[3], float visibility[3], float light_position[3])
 {
 	t_ray		lray;
 	t_hit		lhit;
@@ -142,7 +152,7 @@ void	compute_shadows(t_minirt *minirt, t_hit *hit, float light_direction[3], flo
 	lray.origin[1] = hit->point[1] + 0.001f * hit->normal[1];
 	lray.origin[2] = hit->point[2] + 0.001f * hit->normal[2];
 	lhit.object = hit->object;
-	shadow_ray(minirt, &lray, &lhit, visibility);
+	shadow_ray(minirt, &lray, &lhit, visibility, light_position);
 }
 
 float	ambient_light(t_minirt *minirt, t_hit *hit, int i)
@@ -160,7 +170,7 @@ float	specular_light(t_hit *hit, t_light *diffuse, int i)
 	return (hit->object->material->specular_reflection * diffuse->color[i]);
 }
 
-int	handle_light(t_minirt *minirt, t_hit *hit, t_light *diffuse, float color[3])
+int	handle_light(t_minirt *minirt, t_hit *hit, t_light *light, float color[3])
 {
 	int			i;
 	float		hit_angle;
@@ -168,20 +178,21 @@ int	handle_light(t_minirt *minirt, t_hit *hit, t_light *diffuse, float color[3])
 	float		direction[3];
 	float		visibility[3];
 
-	subtract_vectors(diffuse->position, hit->point, direction, 3);
+	subtract_vectors(light->position, hit->point, direction, 3);
+	add_vectors(light->position, direction, direction, 3);
 	normalize_vector(direction, direction, 3);
 	hit_angle = dot_product(hit->normal, direction, 3);
-	compute_shadows(minirt, hit, direction, visibility);
-	spec_pow = specular_power(minirt, hit, diffuse, direction);
+	compute_shadows(minirt, hit, direction, visibility, light->position);
+	spec_pow = specular_power(minirt, hit, light, direction);
 	i = -1;
 	while (++i < 3)
 	{
 		hit->color[i] += visibility[0] * color[i] * hit->energy
 			* ambient_light(minirt, hit, i);
 		hit->color[i] += visibility[1] * color[i] * hit->energy
-			* hit_angle * diffuse_light(hit, diffuse, i);
+			* hit_angle * diffuse_light(hit, light, i);
 		hit->color[i] += visibility[2] *  hit->energy * spec_pow
-			* specular_light(hit, diffuse, i);
+			* specular_light(hit, light, i);
 	}
 	return (0);
 }
@@ -205,7 +216,7 @@ void	add_sky_color(t_minirt *minirt, t_hit *hit)
 int	add_colors(t_minirt *minirt, t_hit *hit)
 {
 	int			j;
-	float		color[3];
+	float		color[4];
 
 	j = -1;
 	get_textures(hit, color);

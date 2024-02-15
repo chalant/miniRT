@@ -175,7 +175,7 @@ typedef struct	s_minirt
 	t_key			shift;
 	t_key			ctrl;
 
-	float			sky_color[3];
+	float			sky_color[4];
 	float			x[4];
 	float			y[4];
 	float			z[4];

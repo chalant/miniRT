@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:32:43 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/12 16:57:10 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/15 16:47:52 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,9 @@ int	check_decimal(char *value, int type)
 		return (0);
 	else if (type == NORMAL)
 		return (0);
-	else if (type == XYZ || type == UNIT)
+	else if (type == UNIT && decimal > 0.0)
+		return (0);
+	else if (type == XYZ)
 		return (0);
 	return (1);
 }
@@ -211,7 +213,7 @@ int	process_element(t_import *import, char **infos)
 		return (process_ambient(import, infos));
 	if (!ft_strcmp(infos[0], "C"))
 		return (process_camera(import, infos));
-	if (!ft_strcmp(infos[0], "L"))
+	if (!ft_strcmp(infos[0], "L") || !ft_strcmp(infos[0], "li"))
 		return (process_light(import, infos));
 	if (!ft_strcmp(infos[0], "sp"))
 		return (process_sphere(import, infos));

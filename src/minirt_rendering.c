@@ -34,8 +34,9 @@ float	*to_screen_space(t_display *display, float pixel[4], float i, float j)
 	return (pixel);
 }
 
-int	set_hit_info(t_hit *hit, t_ray *ray)
+int	set_hit_info(t_minirt *minirt, t_hit *hit, t_ray *ray)
 {
+	hit->material = ft_darray_get(&minirt->materials, hit->object->material_index);
 	hit->ray_origin = ray->origin;
 	scale_vector(ray->direction, hit->distance, hit->point, 3);
 	hit->object->normal(hit->object, hit);
@@ -125,7 +126,7 @@ float	specular_power(t_minirt *minirt, t_hit *hit, t_light *light)
 		hit->object->material->shininess) * light->brightness);
 }
 
-void	compute_shadows(t_minirt *minirt, t_hit *hit, t_light *light, float visibility[3])
+void	cast_shadows(t_minirt *minirt, t_hit *hit, t_light *light, float visibility[3])
 {
 	t_ray		lray;
 	t_hit		lhit;
@@ -175,7 +176,7 @@ int	handle_light(t_minirt *minirt, t_hit *hit, t_light *light, float color[3])
 	add_vectors(hit->point, light->direction, light->direction, 3);
 	normalize_vector(light->direction, light->direction, 3);
 	hit_angle = dot_product(hit->normal, light->direction, 3);
-	compute_shadows(minirt, hit, light, visibility);
+	cast_shadows(minirt, hit, light, visibility);
 	spec_pow = specular_power(minirt, hit, light);
 	i = -1;
 	while (++i < 3)

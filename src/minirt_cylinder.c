@@ -66,7 +66,8 @@ float	*cylinder_normal(t_object *object, t_hit *hit)
 
 	subtract_vectors(hit->ray_origin, object->center, center, 3);
 	add_vectors(hit->point, center, point, 3);
-	scale_vector(object->orientation, dot_product(object->orientation, point, 3), cp, 3);
+	scale_vector(object->orientation,
+		dot_product(object->orientation, point, 3), cp, 3);
 	subtract_vectors(point, cp, hit->normal, 3);
 	scale_vector(hit->normal, 1 / object->size[0], hit->normal, 3);
 	return (hit->normal);
@@ -85,7 +86,8 @@ int	solve_cylinder(t_object *object, t_ray *ray, float solutions[2])
 	oc_axis = dot_product(oc, object->orientation, 3);
 	abc[0] = 1.0f - rd_axis * rd_axis;
 	abc[1] = dot_product(ray->direction, oc, 3) - rd_axis * oc_axis;
-	abc[2] = dot_product(oc, oc, 3) - oc_axis * oc_axis - object->size[0] * object->size[0];
+	abc[2] = dot_product(oc, oc, 3) - oc_axis
+		* oc_axis - object->size[0] * object->size[0];
 	det = abc[1] * abc[1] - abc[0] * abc[2];
 	if (det < 0.0f)
 		return (0);
@@ -105,21 +107,20 @@ int	hit_cylinder(t_object *object, t_ray *ray)
 	if (!n_solutions)
 		return (0);
 	t = solutions[0];
-	if (t < 0.0f)
-		t = solutions[1];
 	height = project_point(ray, object, t);
-	if (height < 0.0f || height > object->size[1] || t > ray->closest_t || t < 0.0f)
+	if (t > ray->closest_t || t < 0.0f
+		|| height < 0.0f || height > object->size[1])
 		t = solutions[1];
 	if (t < 0.0f || t > ray->closest_t)
 		return (0);
 	height = project_point(ray, object, t);
-	if (height < 0.0f || height > object->size[1] || t > ray->closest_t || t < 0.0f)
+	if (height < 0.0f || height > object->size[1])
 		return (0);
 	ray->t = t;
-	return 1;
+	return (1);
 }
 
-int create_cylinder(t_object *object, float height, float diameter)
+int	create_cylinder(t_object *object, float height, float diameter)
 {
 	object->intersect = hit_cylinder;
 	object->normal = cylinder_normal;

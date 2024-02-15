@@ -29,6 +29,7 @@ float	*cone_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 	return (uv_coords);
 }
 
+//todo: this is not the right normal.
 float	*cone_normal(t_object *object, t_hit *hit)
 {
 	float	point[3];
@@ -37,9 +38,9 @@ float	*cone_normal(t_object *object, t_hit *hit)
 
 	subtract_vectors(hit->ray_origin, object->center, center, 3);
 	add_vectors(hit->point, center, point, 3);
-	scale_vector(object->orientation, dot_product(object->orientation, point, 3), cp, 3);
+	scale_vector(object->orientation,
+		dot_product(object->orientation, point, 3), cp, 3);
 	subtract_vectors(point, cp, hit->normal, 3);
-	scale_vector(hit->normal, object->size[0], hit->normal, 3);
 	normalize_vector(hit->normal, hit->normal, 3);
 	return (hit->normal);
 }
@@ -55,9 +56,13 @@ int	solve_cone(t_object *object, t_ray *ray, float solutions[2])
 	k = 1.0f + object->size[0] * object->size[0];
 	scale_vector(object->orientation, object->size[1], ab, 3);
 	subtract_vectors(ray->origin, object->center, oc, 3);
-	abc[0] = dot_product(ray->direction, ray->direction, 3) - k * powf(dot_product(ray->direction, object->orientation, 3), 2);
-	abc[1] = 2 * (dot_product(ray->direction, oc, 3) - k * dot_product(ray->direction, object->orientation, 3) * dot_product(oc, object->orientation, 3));
-	abc[2] = dot_product(oc, oc, 3) - k * powf(dot_product(oc, object->orientation, 3), 2);
+	abc[0] = dot_product(ray->direction, ray->direction, 3) - k
+		* powf(dot_product(ray->direction, object->orientation, 3), 2);
+	abc[1] = 2 * (dot_product(ray->direction, oc, 3) - k
+			* dot_product(ray->direction, object->orientation, 3)
+			* dot_product(oc, object->orientation, 3));
+	abc[2] = dot_product(oc, oc, 3) - k
+		* powf(dot_product(oc, object->orientation, 3), 2);
 	discriminant = abc[1] * abc[1] - 4.0f * abc[0] * abc[2];
 	if (discriminant < 0.0f)
 		return (0);
@@ -89,18 +94,19 @@ int	hit_cone(t_object *object, t_ray *ray)
 		return (0);
 	t = solutions[0];
 	height = project_point(ray, object, t);
-	if (height < 0.0f || height > object->size[1] || t > ray->closest_t || t < 0.0f)
+	if (height < 0.0f || height > object->size[1]
+		|| t > ray->closest_t || t < 0.0f)
 		t = solutions[1];
 	if (t < 0.0f || t > ray->closest_t)
 		return (0);
 	height = project_point(ray, object, t);
-	if (height < 0.0f || height > object->size[1] || t > ray->closest_t || t < 0.0f)
+	if (height < 0.0f || height > object->size[1])
 		return (0);
 	ray->t = t;
-	return 1;
+	return (1);
 }
 
-int create_cone(t_object *object, float height, float diameter)
+int	create_cone(t_object *object, float height, float diameter)
 {
 	object->intersect = hit_cone;
 	object->normal = cone_normal;

@@ -74,19 +74,6 @@ typedef struct	s_plane
 	float		point[4];
 }				t_plane;
 
-typedef struct	s_hit
-{
-	struct	s_object	*object;
-	float				*ray_origin;
-	float				color[4];
-	float				normal[3];
-	float				point[3];
-	float				distance;
-	float				energy;
-	int					object_index;
-	int					*screen_coords;
-}		t_hit;
-
 typedef struct	s_material
 {
 	float		diffuse_reflection;
@@ -101,7 +88,20 @@ typedef struct	s_material
 	t_matrix	bump_map;
 	float		*(*get_texture)(struct s_object*, float uv_coords[2], float color[4]);
 	float		*(*normal_perturb)(struct s_object*, float uv_coords[2], float bump[3]);
-}	t_material;
+}		t_material;
+
+typedef struct	s_hit
+{
+	struct	s_object	*object;
+	struct	s_material	*material;
+	float				*ray_origin;
+	float				color[4];
+	float				normal[3];
+	float				point[3];
+	float				distance;
+	float				energy;
+	int					*screen_coords;
+}		t_hit;
 
 typedef struct	s_object
 {

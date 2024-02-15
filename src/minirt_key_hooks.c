@@ -22,7 +22,7 @@ int	rotate_camera(t_minirt *minirt, t_matrix *rot)
 
 int	translate_camera(t_minirt *minirt, float direction[3])
 {
-	float	orientation[3];
+	float	orientation[4];
 
 	vmatmul(&minirt->camera.basis, direction, orientation);
 	scale_vector(orientation, 0.5f,  orientation, 3);

@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 13:19:18 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/08 18:11:34 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/15 20:18:37 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,17 @@ int	set_unit(float *unit, char *info)
 	return (ft_clear_ds(tab), 0);
 }
 
-// Simplify code with 2 funcs instead of the current 6 ones
+int	set_index(int *index, char *info)
+{
+	char	**tab;
+
+	tab = check_ranges(info, INDEX);
+	if (!tab)
+		return (1);
+	*index = ft_atoi(tab[0]) - 1;
+	return (ft_clear_ds(tab), 0);
+}
+
+// Simplify code with 2 funcs instead of the current 6 ones ?
 // set_value(float *value, char *info, int type)
 // set_values(float *values, char *inf, int type)

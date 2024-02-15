@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:30:29 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/12 16:49:44 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/15 20:16:07 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,9 @@ typedef struct s_import
 	int			ambient;
 	int			camera;
 	int			light;
+	int			material;
 }	t_import;
-
+ 
 typedef enum e_ranges
 {
 	LIGHT,
@@ -35,6 +36,7 @@ typedef enum e_ranges
 	NORMAL,
 	UNIT,
 	FOV,
+	INDEX
 }	t_ranges;
 
 // Map
@@ -45,7 +47,7 @@ int		import_map(t_minirt *minirt, char **av);
 
 // Read
 int		is_blank(char **line);
-int		expected_infos(char *type);
+int		expected_infos(char *type, t_import *import);
 int		seen_type(t_import *import, char **line);
 int		read_map(t_import *import);
 
@@ -72,6 +74,7 @@ int		set_xyz(float *xyz, char *info);
 int		set_normal(float *normal, char *info);
 int		set_fov(float	*fov, char *info);
 int		set_unit(float *light, char *info);
+int		set_index(int *index, char *info);
 
 // Argument to float - atof
 int		check_input(char *nbr, int decimals);

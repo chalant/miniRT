@@ -91,8 +91,8 @@ int	rotate_x(t_minirt *minirt, t_matrix *matrix, float dir[3])
 	float	cos_a;
 	float	sin_a;
 
-	cos_a = cosf(minirt->mouse.hit_point * dir[1]);
-	sin_a = sinf(minirt->mouse.hit_point * dir[1]);
+	cos_a = cosf(to_rad(minirt->mouse.hit_point * dir[1]));
+	sin_a = sinf(to_rad(minirt->mouse.hit_point * dir[1]));
 	matrix->points[0][0] = 1.0f;
 	matrix->points[1][1] = cos_a;
 	matrix->points[2][1] = sin_a;
@@ -115,8 +115,8 @@ int	rotate_y(t_minirt *minirt, t_matrix *matrix, float dir[3])
 	float	cos_a;
 	float	sin_a;
 
-	cos_a = cosf(minirt->mouse.hit_point * dir[0]);
-	sin_a = sinf(minirt->mouse.hit_point * dir[0]);
+	cos_a = cosf(to_rad(minirt->mouse.hit_point * dir[0]));
+	sin_a = sinf(to_rad(minirt->mouse.hit_point * dir[0]));
 	matrix->points[0][0] = cos_a;
 	matrix->points[0][2] = -sin_a;
 	matrix->points[1][1] = 1.0f;
@@ -139,8 +139,8 @@ int	rotate_z(t_minirt *minirt, t_matrix *matrix, float dir[3])
 	float	cos_a;
 	float	sin_a;
 
-	cos_a = cosf(minirt->mouse.hit_point * dir[2]);
-	sin_a = sinf(minirt->mouse.hit_point * dir[2]);
+	cos_a = cosf(to_rad(minirt->mouse.hit_point * dir[2]));
+	sin_a = sinf(to_rad(minirt->mouse.hit_point * dir[2]));
 	matrix->points[0][0] = cos_a;
 	matrix->points[0][2] = -sin_a;
 	matrix->points[1][1] = 1.0f;
@@ -172,11 +172,11 @@ void	apply_scaling(t_minirt *minirt, float dir[4])
 	minirt->selected_object->size[2] += dir[2];
 }
 
-void	apply_translation(t_minirt *minirt, float dir[4])
+void	apply_translation(t_minirt *minirt, float dir[4], float speed)
 {
-	minirt->selected_object->center[0] += minirt->mouse.hit_point * dir[0];
-	minirt->selected_object->center[1] += minirt->mouse.hit_point * dir[1];
-	minirt->selected_object->center[2] += minirt->mouse.hit_point * dir[2];
+	minirt->selected_object->center[0] += speed * dir[0];
+	minirt->selected_object->center[1] += speed * dir[1];
+	minirt->selected_object->center[2] += speed * dir[2];
 }
 
 int	mouse_update(int x, int y, t_minirt *minirt)
@@ -198,7 +198,7 @@ int	mouse_update(int x, int y, t_minirt *minirt)
 	else if (minirt->shift.pressed)
 		apply_scaling(minirt, direction);
 	else
-		apply_translation(minirt, direction);
+		apply_translation(minirt, direction, minirt->mouse.hit_point);
 	copy_vector(position, minirt->mouse.world_position, 3);
 	return (0);
 }

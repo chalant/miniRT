@@ -96,30 +96,23 @@ int	solve_cylinder(t_object *object, t_ray *ray, float solutions[2])
 
 int	hit_cylinder(t_object *object, t_ray *ray)
 {
+	float	t;
 	float	solutions[2];
+	float	n_solutions;
+	float	height;
 
-	if (!solve_cylinder(object, ray, solutions))
+	n_solutions = solve_cylinder(object, ray, solutions);
+	if (!n_solutions)
 		return (0);
-	float intersection[3];
-	float	t1 = solutions[0];
-	float	t2 = solutions[1];
-	float	t = t1;
-	if (t < 0.0f || (t2 > 0.0f && t2 < t1))
-		t = t2;
-	if (t < 0.0f || t > ray->closest_t)
-		return (0);
-	scale_vector(ray->direction, t, intersection, 3);
-	add_vectors(ray->origin, intersection, intersection, 3);
-	subtract_vectors(intersection, object->center, intersection, 3);
-	float height = dot_product(intersection, object->orientation, 3);
+	t = solutions[0];
+	if (t < 0.0f)
+		t = solutions[1];
+	height = project_point(ray, object, t);
 	if (height < 0.0f || height > object->size[1] || t > ray->closest_t || t < 0.0f)
-		t = t2;
+		t = solutions[1];
 	if (t < 0.0f || t > ray->closest_t)
 		return (0);
-	scale_vector(ray->direction, t, intersection, 3);
-	add_vectors(ray->origin, intersection, intersection, 3);
-	subtract_vectors(intersection, object->center, intersection, 3);
-	height = dot_product(intersection, object->orientation, 3);
+	height = project_point(ray, object, t);
 	if (height < 0.0f || height > object->size[1] || t > ray->closest_t || t < 0.0f)
 		return (0);
 	ray->t = t;

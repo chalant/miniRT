@@ -172,10 +172,6 @@ typedef struct	s_minirt
 	t_key			ctrl;
 
 	float			sky_color[4];
-	float			left[3];
-	float			right[3];
-	float			up[3];
-	float			down[3];
 
 	int				rendered;
 }				t_minirt;
@@ -209,6 +205,7 @@ void	scale(t_minirt *minirt, t_object *object, int axis, float rate);
 int		mouse_click_hook(int button, int x, int y, t_minirt *minirt);
 int		mouse_release_hook(int button, int x, int y, t_minirt *minirt);
 int		mouse_update(int x, int y, t_minirt *minirt);
+void	apply_translation(t_minirt *minirt, float dir[4], float speed);
 
 float	*to_screen_space(t_display *display, float pixel[4], float i, float j);
 float	*to_world_space(t_minirt *minirt, float point[4], float result[4]);

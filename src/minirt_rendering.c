@@ -233,7 +233,7 @@ void	bounce_ray(t_ray *ray, t_hit *hit)
 {
 	float		epsilon[3];
 
-	add_vectors(hit->point, scale_vector(hit->normal, 0.001f, epsilon, 3), ray->origin, 3);
+	add_vectors(hit->point, scale_vector(hit->normal, 0.0001f, epsilon, 3), ray->origin, 3);
 	reflect(ray->direction, hit->normal,
 			dot_product(ray->direction, hit->normal, 3), ray->direction);
 	hit->energy *= hit->object->material->reflectivity;

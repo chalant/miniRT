@@ -248,7 +248,7 @@ int	load_materials(t_minirt *minirt)
 	material.ambient_reflection = 0.2f;
 	material.diffuse_reflection = 0.8f;
 	material.specular_reflection = 0.8f;
-	material.shininess = 20.0f;
+	material.shininess = 200.0f;
 	material.reflectivity = 0.05f;
 	material.repeat_pattern = 10.0f;
 	material.get_texture = checkerboard;

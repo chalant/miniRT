@@ -110,12 +110,13 @@ int	get_textures(t_hit *hit, float color[4])
 	return (0);
 }
 
-float	specular_power(t_minirt *minirt, t_hit *hit, t_light *light, float light_direction[3])
+float	specular_power(t_minirt *minirt, t_hit *hit, t_light *light)
 {
 	float		reflection[3];
 	float		view[3];
+	float		light_direction[3];
 
-	scale_vector(light_direction, -1.0f, light_direction, 3);
+	scale_vector(light->direction, -1.0f, light_direction, 3);
 	reflect(light_direction, hit->normal, 
 		dot_product(light_direction, hit->normal, 3), reflection);
 	subtract_vectors(minirt->camera.origin, hit->point, view, 3);
@@ -171,11 +172,11 @@ int	handle_light(t_minirt *minirt, t_hit *hit, t_light *light, float color[3])
 	float		visibility[3];
 
 	subtract_vectors(light->position, hit->point, light->direction, 3);
-	add_vectors(light->position, light->direction, light->direction, 3);
+	add_vectors(hit->point, light->direction, light->direction, 3);
 	normalize_vector(light->direction, light->direction, 3);
 	hit_angle = dot_product(hit->normal, light->direction, 3);
 	compute_shadows(minirt, hit, light, visibility);
-	spec_pow = specular_power(minirt, hit, light, light->direction);
+	spec_pow = specular_power(minirt, hit, light);
 	i = -1;
 	while (++i < 3)
 	{
@@ -233,7 +234,8 @@ void	bounce_ray(t_ray *ray, t_hit *hit)
 	float		epsilon[3];
 
 	add_vectors(hit->point, scale_vector(hit->normal, 0.001f, epsilon, 3), ray->origin, 3);
-	reflect(ray->direction, hit->normal, dot_product(ray->direction, hit->normal, 3), ray->direction);
+	reflect(ray->direction, hit->normal,
+			dot_product(ray->direction, hit->normal, 3), ray->direction);
 	hit->energy *= hit->object->material->reflectivity;
 }
 

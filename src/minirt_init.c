@@ -17,14 +17,6 @@ int	minirt_init(t_minirt *minirt)
 	minirt->rendered = 0;
 	minirt->mlx = NULL;
 	minirt->window = NULL;
-	minirt->rotations = NULL;
-	minirt->translations = NULL;
-	minirt->rev_rotations = NULL;
-	minirt->rev_translations = NULL;
-	minirt->scalings = NULL;
-	minirt->rev_scalings = NULL;
-	minirt->transforms = NULL;
-	minirt->centering = NULL;
 	minirt->selected_object = NULL;
 	minirt->mouse.x = 0;
 	minirt->mouse.y = 0;

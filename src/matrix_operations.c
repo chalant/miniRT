@@ -26,21 +26,6 @@ void	matrix_copy(t_matrix *source, t_matrix *dest, int n)
 	}
 }
 
-int	smatmul(t_matrix *mat, float scalar, t_matrix *result)
-{
-	int	i;
-	int	j;
-
-	i = -1;
-	while (++i < mat->rows)
-	{
-		j = -1;
-		while (++j < mat->cols)
-			result->points[i][j] = scalar * mat->points[i][j];
-	}
-	return (1);
-}
-
 int	vmatmul(t_matrix *mat, float *vec, float *result)
 {
 	int	i;

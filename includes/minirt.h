@@ -148,18 +148,14 @@ typedef struct	s_minirt
 	void			*mlx;
 	void			*window;
 
-	t_transforms_3d	*rotations;
-	t_transforms_3d	*translations;
-	t_transforms_3d	*rev_rotations;
-	t_transforms_3d	*rev_translations;
-	t_transforms_3d	*scalings;
-	t_transforms_3d	*rev_scalings;
+	t_transforms_3d	rotations;
+	t_transforms_3d	translations;
+	t_transforms_3d	rev_rotations;
+	t_transforms_3d	rev_translations;
+	t_transforms_3d	scalings;
+	t_transforms_3d	rev_scalings;
 
-	t_matrix		view_matrix;
 	t_matrix		world_space;
-	t_matrix		*screen_space;
-	t_matrix		*transforms;
-	t_matrix		*centering;
 	t_matrix		tmp;
 	t_object		*selected_object;
 
@@ -176,9 +172,10 @@ typedef struct	s_minirt
 	t_key			ctrl;
 
 	float			sky_color[4];
-	float			x[4];
-	float			y[4];
-	float			z[4];
+	float			left[3];
+	float			right[3];
+	float			up[3];
+	float			down[3];
 
 	int				rendered;
 }				t_minirt;
@@ -193,7 +190,6 @@ int		key_press_hook(int code, t_minirt *minirt);
 
 int		set_rotations(t_minirt *fdf, float x, float y, float z);
 int		translation(t_matrix *matrix, float x, float y, float z);
-int		set_translations(t_minirt *fdf, float x, float y, float z);
 
 int		set_basis(t_matrix *basis, float orientation[3]);
 int		set_camera_transform(t_minirt *minirt, t_camera *camera);
@@ -204,6 +200,7 @@ void	set_translate(t_matrix *matrix, float x, float y, float z);
 float	to_rad(float degrees);
 float   *checkerboard(t_object *object, float uv_coords[2], float color[4]);
 float	*compute_bump(t_object *object, float uv_coords[2], float bump[3]);
+float	project_point(t_ray *ray, t_object *object, float hit);
 
 void	translate(t_minirt *minirt, t_object *object, int axis, float speed);
 void	rotate(t_minirt *minirt, t_object *object, t_matrix *axis);

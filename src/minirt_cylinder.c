@@ -69,16 +69,16 @@ float	*cylinder_normal(t_object *object, t_hit *hit)
 	scale_vector(object->orientation, dot_product(object->orientation, point, 3), cp, 3);
 	subtract_vectors(point, cp, hit->normal, 3);
 	scale_vector(hit->normal, 1 / object->size[0], hit->normal, 3);
-	//normalize_vector(hit->normal, hit->normal, 3);
 	return (hit->normal);
 }
 
-int	hit_cylinder(t_object *object, t_ray *ray)
+int	solve_cylinder(t_object *object, t_ray *ray, float solutions[2])
 {
 	float	oc[3];
 	float	rd_axis;
 	float	oc_axis;
 	float	abc[3];
+	float	det;
 
 	subtract_vectors(ray->origin, object->center, oc, 3);
 	rd_axis = dot_product(ray->direction, object->orientation, 3);
@@ -86,13 +86,23 @@ int	hit_cylinder(t_object *object, t_ray *ray)
 	abc[0] = 1.0f - rd_axis * rd_axis;
 	abc[1] = dot_product(ray->direction, oc, 3) - rd_axis * oc_axis;
 	abc[2] = dot_product(oc, oc, 3) - oc_axis * oc_axis - object->size[0] * object->size[0];
-
-	float	det = abc[1] * abc[1] - abc[0] * abc[2];
+	det = abc[1] * abc[1] - abc[0] * abc[2];
 	if (det < 0.0f)
 		return (0);
-	float	t1 = (-abc[1] - sqrtf(det)) / abc[0];
-	float	t2 = (-abc[1] + sqrtf(det)) / abc[0];
+	solutions[0] = (-abc[1] - sqrtf(det)) / abc[0];
+	solutions[1] = (-abc[1] + sqrtf(det)) / abc[0];
+	return (2);
+}
+
+int	hit_cylinder(t_object *object, t_ray *ray)
+{
+	float	solutions[2];
+
+	if (!solve_cylinder(object, ray, solutions))
+		return (0);
 	float intersection[3];
+	float	t1 = solutions[0];
+	float	t2 = solutions[1];
 	float	t = t1;
 	if (t < 0.0f || (t2 > 0.0f && t2 < t1))
 		t = t2;

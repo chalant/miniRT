@@ -20,8 +20,6 @@ int	set_minirt_transforms(t_minirt *minirt)
 {
 	if (set_rotations(minirt, 2.1f, 2.1f, 2.1f) < 0)
 		return (0);
-	// if (set_translations(minirt, 0.1f, 0.1f, 0.1f) < 0)
-	// 	return (0);
 	return (1);
 }
 
@@ -237,30 +235,6 @@ int	load_scene(t_minirt *minirt)
 	return (1);
 }
 
-// int	main(int argc, char *argv[])
-// {
-// 	t_minirt	minirt;
-
-// 	//todo: use a cache for this.
-// 	(void)argv;
-// 	if (argc - 1 < 0 || argc - 1 > 1)
-// 		return (0);
-// 	minirt_init(&minirt);
-// 	minirt.mouse.x = 0.0f;
-// 	minirt.mouse.y = 0.0f;
-// 	set_variables(&minirt);
-// 	mlx_setup(&minirt);
-// 	set_hooks(&minirt);
-// 	set_minirt_transforms(&minirt);
-// 	homogeneous_matrix(&minirt.tmp, 3, 3);
-// 	load_scene(&minirt);
-// 	perspective_projector(&minirt.world_space, &minirt.display, &minirt.camera);
-// 	invert_matrix(&minirt.world_space, &minirt.world_space, &minirt.tmp, 4);
-// 	perspective_projector(&minirt.view_matrix, &minirt.display, &minirt.camera);
-// 	mlx_loop(minirt.mlx);
-// 	return (0);
-// }
-
 int	load_materials(t_minirt *minirt)
 {
 	t_material	material;
@@ -316,7 +290,7 @@ int	load_materials(t_minirt *minirt)
 	light.position[0] = -40.0f;
 	light.position[1] = 30.0f;
 	light.position[2] = 0.7f;
-	light.brightness = 0.9f;
+	light.brightness = 0.2f;
 	ft_darray_append(&minirt->spot_lights, &light);
 	//diffuse = ft_darray_get(&minirt->spot_lights, 0);
 	// diffuse->position[0] = -40.0f;
@@ -351,7 +325,6 @@ int	main(int argc, char *argv[])
 		return (-1);
 	perspective_projector(&minirt.world_space, &minirt.display, &minirt.camera);
 	invert_matrix(&minirt.world_space, &minirt.world_space, &minirt.tmp, 4);
-	perspective_projector(&minirt.view_matrix, &minirt.display, &minirt.camera);
 	mlx_loop(minirt.mlx);
 	return (0);
 }

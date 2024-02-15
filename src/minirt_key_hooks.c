@@ -14,11 +14,8 @@
 
 int	rotate_camera(t_minirt *minirt, t_matrix *rot)
 {
-	//float	origin[4];
-
 	matmul(&minirt->camera.basis, rot, &minirt->tmp, 3);
 	matrix_copy(&minirt->tmp, &minirt->camera.basis, 3);
-	//vmatmul(&minirt->camera.basis, minirt->camera.origin, origin);
 	look_at(&minirt->camera, minirt);
 	return (0);
 }
@@ -43,49 +40,26 @@ void	set_translate(t_matrix *matrix, float x, float y, float z)
 
 int	key_press_hook(int code, t_minirt *minirt)
 {
-	float		tmp[4];
-
 	if (code == CTRL)
 		minirt->ctrl.pressed = 1;
 	else if (code == SHIFT)
 		minirt->shift.pressed = 1;
 	if (code == RL)
-		rotate_camera(minirt, &minirt->rev_rotations->y_axis);
+		rotate_camera(minirt, &minirt->rev_rotations.y_axis);
 	else if (code == RR)
-		rotate_camera(minirt, &minirt->rotations->y_axis);
+		rotate_camera(minirt, &minirt->rotations.y_axis);
 	else if (code == RU)
-		rotate_camera(minirt, &minirt->rev_rotations->x_axis);
+		rotate_camera(minirt, &minirt->rev_rotations.x_axis);
 	else if (code == RD)
-		rotate_camera(minirt, &minirt->rotations->x_axis);
+		rotate_camera(minirt, &minirt->rotations.x_axis);
 	else if (code == TL)
-	{
-		tmp[0] = 1.0f;
-		tmp[1] = 0.0f;
-		tmp[2] = 0.0f;
-		translate_camera(minirt, tmp);
-
-	}
+		translate_camera(minirt, (float[3]){1.0f, 0.0f, 0.0f});
 	else if (code == TR)
-	{
-		tmp[0] = -1.0f;
-		tmp[1] = 0.0f;
-		tmp[2] = 0.0f;
-		translate_camera(minirt, tmp);
-	}
+		translate_camera(minirt, (float[3]){-1.0f, 0.0f, 0.0f});
 	else if (code == TU)
-	{
-		tmp[0] = 0.0f;
-		tmp[1] = 0.0f;
-		tmp[2] = 1.0f;
-		translate_camera(minirt, tmp);
-	}
+		translate_camera(minirt, (float[3]){0.0f, 0.0f, 1.0f});
 	else if (code == TD)
-	{
-		tmp[0] = 0.0f;
-		tmp[1] = 0.0f;
-		tmp[2] = -1.0f;
-		translate_camera(minirt, tmp);
-	}
+		translate_camera(minirt, (float[3]){0.0f, 0.0f, -1.0f});
 	return (0);
 }
 

@@ -29,7 +29,7 @@ float	*to_screen_space(t_display *display, float pixel[4], float i, float j)
 {
 	pixel[0] = (2.0f * i / (float)display->width) - 1.0f;
 	pixel[1] = (2.0f * j / (float)display->height) - 1.0f;
-	pixel[2] = 1.0f;
+	pixel[2] = 0.0f;
 	pixel[3] = 1.0f;
 	return (pixel);
 }

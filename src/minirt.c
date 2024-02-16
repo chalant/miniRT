@@ -28,23 +28,18 @@ int	mlx_setup(t_minirt *minirt)
 	t_display	*display;
 
 	display = &minirt->display;
-	//todo: malloc protection
-	display->origin = ft_calloc(4, sizeof(float));
-	display->origin[0] = 0.0f;
-	display->origin[1] = 0.0f;
-	display->origin[3] = 0.0f;
 	display->aspect_ratio = (float)display->width / (float)display->height;
 	minirt->mlx = mlx_init();
 	if (!minirt->mlx)
-		return (0);
+		return (-1);
 	minirt->window = mlx_new_window(minirt->mlx,
 		display->width, display->height, "miniRT");
 	if (!minirt->window)
-		return (0);
+		return (-1);
 	display->img = mlx_new_image(minirt->mlx,
 		display->width, display->height);
 	if (!display->img)
-		return (0);
+		return (-1);
 	display->addr = mlx_get_data_addr(display->img, &display->bits_per_pixel,
 			&display->line_length, &display->endian);
 	display->offset = display->bits_per_pixel / 8;
@@ -312,14 +307,16 @@ int	main(int argc, char *argv[])
 	if (argc != 2)
 		return (1);
 	minirt_init(&minirt);
+	//todo: call free here 
+	if (import_map(&minirt, argv))
+		return (1);
+	homogeneous_matrix(&minirt.tmp, 3, 3);
 	minirt.mouse.x = 0.0f;
 	minirt.mouse.y = 0.0f;
 	set_variables(&minirt);
 	mlx_setup(&minirt);
 	set_hooks(&minirt);
 	set_minirt_transforms(&minirt);
-	homogeneous_matrix(&minirt.tmp, 3, 3);
-	import_map(&minirt, argv);
 	to_color(0x0087ceeb, minirt.sky_color);
 	normalize_vector(minirt.camera.orientation, minirt.camera.orientation, 3);
 	load_materials(&minirt);

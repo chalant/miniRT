@@ -141,7 +141,6 @@ typedef struct s_display
 	int				width;
 	int				height;
 	float			aspect_ratio;
-	float			*origin;
 }					t_display;
 
 typedef struct	s_minirt
@@ -173,6 +172,8 @@ typedef struct	s_minirt
 	t_key			ctrl;
 
 	float			sky_color[4];
+	int				key_pressed;
+	int				light_index;
 	int				(*render_mode)(struct s_minirt*);
 
 	int				rendered;

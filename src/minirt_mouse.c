@@ -71,7 +71,8 @@ int	mouse_release_hook(int button, int x, int y, t_minirt *minirt)
 {
 	(void)x;
 	(void)y;
-	minirt->render_mode = full_resolution;
+	if (!minirt->key_pressed)
+		minirt->render_mode = full_resolution;
 	if (button == 2)
 		minirt->mouse.right_click = 0;
 	else if (button == 1)

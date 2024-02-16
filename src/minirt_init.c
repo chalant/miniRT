@@ -20,8 +20,11 @@ int	minirt_init(t_minirt *minirt)
 	minirt->selected_object = NULL;
 	minirt->mouse.x = 0;
 	minirt->mouse.y = 0;
+	minirt->mouse.left_click = 0;
 	minirt->ctrl.pressed = 0;
 	minirt->shift.pressed = 0;
+	minirt->key_pressed = 0;
+	minirt->light_index = 0;
 	if (homogeneous_matrix(&minirt->mouse.direction, 3, 3))
 		return (-1);
 	if (ft_darray_init(&minirt->objects, sizeof(t_object), 10) < 0)

@@ -43,6 +43,8 @@ void	set_translate(t_matrix *matrix, float x, float y, float z)
 
 int	key_press_hook(int code, t_minirt *minirt)
 {
+	printf("Code %d\n", code);
+	minirt->key_pressed = 1;
 	minirt->render_mode = low_resolution;
 	if (code == CTRL)
 		minirt->ctrl.pressed = 1;
@@ -69,10 +71,12 @@ int	key_press_hook(int code, t_minirt *minirt)
 
 int	key_release_hook(int code, t_minirt *minirt)
 {
-	minirt->render_mode = full_resolution;
+	if (!minirt->mouse.left_click)
+		minirt->render_mode = full_resolution;
 	if (code == CTRL)
 		minirt->ctrl.pressed = 0;
 	else if (code == SHIFT)
 		minirt->shift.pressed = 0;
+	minirt->key_pressed = 0;
 	return (0);
 }

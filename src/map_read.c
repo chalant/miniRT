@@ -49,15 +49,21 @@ int	expected_infos(t_import *import, char *type)
 
 int	seen_type(t_import *import, char *type)
 {
-	if (!ft_strcmp(type, "A"))
+	if (!ft_strcmp(type, "A") && (++import->ambient && import->ambient > 1))
+	{
 		if (++import->ambient && import->ambient > 1)
 			return (err("The map has too many ambient elements."));
+	}
 	else if (!ft_strcmp(type, "C"))
+	{
 		if (++import->camera && import->camera > 1)
 			return (err("The map has too many camera elements."));
+	}
 	else if (!ft_strcmp(type, "L"))
+	{
 		if (++import->light && import->light > 1)
 			return (err("The map has too many light elements."));
+	}
 	return (0);
 }
 

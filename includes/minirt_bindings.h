@@ -62,6 +62,7 @@
 #  define MODE 109
 #  define SPACE 32
 #  define ESCAPE 65307
+#  define TAB 65289
 
 #endif
 

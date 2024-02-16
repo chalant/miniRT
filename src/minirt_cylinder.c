@@ -129,7 +129,8 @@ int	create_cylinder(t_object *object, float height, float diameter)
 	object->size[1] = height;
 	object->size[2] = 0.0f;
 	normalize_vector(object->orientation, object->orientation, 3);
-	homogeneous_matrix(&object->basis, 3, 3);
+	if (homogeneous_matrix(&object->basis, 3, 3) == -1)
+		return (-1);
 	set_basis(&object->basis, object->orientation);
 	return (0);
 }

@@ -141,99 +141,99 @@ int	load_bmap(t_material *material, char *file_path)
 	return (0);
 }
 
-int	load_scene(t_minirt *minirt)
-{
-	//todo: need to set object basis for transformations.
-	t_object	new;
-	t_material	material;
-	t_material	other;
+// int	load_scene(t_minirt *minirt)
+// {
+// 	//todo: need to set object basis for transformations.
+// 	t_object	new;
+// 	t_material	material;
+// 	t_material	other;
 
-	//todo: need to load the bump map file...
-	//the file could be specified in the rt file, and would load the
-	//bump map file when parsing.
-	material.ambient_reflection = 0.2f;
-	material.diffuse_reflection = 0.8f;
-	material.shininess = 100.0f;
-	material.reflectivity = 0.2f;
-	material.repeat_pattern = 6.0f;
-	material.get_texture = checkerboard;
-	material.normal_perturb = compute_bump;
+// 	//todo: need to load the bump map file...
+// 	//the file could be specified in the rt file, and would load the
+// 	//bump map file when parsing.
+// 	material.ambient_reflection = 0.2f;
+// 	material.diffuse_reflection = 0.8f;
+// 	material.shininess = 100.0f;
+// 	material.reflectivity = 0.2f;
+// 	material.repeat_pattern = 6.0f;
+// 	material.get_texture = checkerboard;
+// 	material.normal_perturb = compute_bump;
 
-	other.ambient_reflection = 0.8f;
-	other.diffuse_reflection = 0.8f;
-	other.shininess = 100.5f;
-	other.reflectivity = 0.2f;
-	other.repeat_pattern = 0.2f;
-	other.get_texture = checkerboard;
-	other.normal_perturb = compute_bump;
+// 	other.ambient_reflection = 0.8f;
+// 	other.diffuse_reflection = 0.8f;
+// 	other.shininess = 100.5f;
+// 	other.reflectivity = 0.2f;
+// 	other.repeat_pattern = 0.2f;
+// 	other.get_texture = checkerboard;
+// 	other.normal_perturb = compute_bump;
 
-	load_bmap(&material, "resources/mesh.bmap");
-	//to_color(0x00f94449, material.dark_color);
-	to_color(0x00ffffff, material.color);
-	to_color(0x00ffff00, other.color);
-	load_bmap(&other, "resources/gravel.bmap");
-	ft_darray_append(&minirt->materials, &material);
-	ft_darray_append(&minirt->materials, &other);
-	minirt->diffuse.position[0] = -40.0f;
-	minirt->diffuse.position[1] = 30.0f;
-	minirt->diffuse.position[2] = 0.0f;
-	minirt->diffuse.brightness = 0.8f;
-	to_color(0x00ffffff, minirt->diffuse.color);
-	minirt->ambient.brightness = 0.2f;
-	to_color(0x00ffffff, minirt->ambient.color);
-	//todo: malloc protection
-	minirt->camera.fov = 70.0f;
-	minirt->camera.near = -1.0f;
-	minirt->camera.far = 1.0f;
-	minirt->camera.orientation[0] = 0.0f;
-	minirt->camera.orientation[1] = 0.0f;
-	minirt->camera.orientation[2] = -1.0f;
-	minirt->camera.orientation[3] = 1.0f;
-	normalize_vector(minirt->camera.orientation, minirt->camera.orientation, 3);
-	minirt->camera.origin[0] = 0.0f;
-	minirt->camera.origin[1] = 0.0f;
-	minirt->camera.origin[2] = 3.0f;
-	minirt->camera.origin[3] = 1.0f;
-	if (set_camera_transform(minirt, &minirt->camera) == -1)
-		return (-1);
-	create_cone(&new, 2.0f, 1.0f);
-	to_color(0x00f94449, new.color);
-	new.name = "blue sphere";
-	new.center[0] = 0.0f;
-	new.center[1] = 0.0f;
-	new.center[2] = 0.0f;
-	new.center[3] = 1.0f;
-	new.material = ft_darray_get(&minirt->materials, 0);
-	ft_darray_append(&minirt->objects, &new);
-	create_sphere(&new, 0.5f);
-	to_color(0x11aaea8c, new.color);
-	new.name = "green sphere";
-	new.center[0] = -0.9f;
-	new.center[1] = -1.4f;
-	new.center[2] = -0.0f;
-	new.center[3] = 0.0f;
-	new.material = ft_darray_get(&minirt->materials, 0);
-	ft_darray_append(&minirt->objects, &new);
-	create_plane(&new, (float[4]){0.0f, 1.0f, 0.0f, 0.0f});
-	new.name = "plane";
-	to_color(0x003261e3, new.color);
-	new.center[0] = 0.0f;
-	new.center[1] = -2.0f;
-	new.center[2] = 0.0f;
-	new.center[3] = 1.0f;
-	new.material = ft_darray_get(&minirt->materials, 1);
-	ft_darray_append(&minirt->objects, &new);
-	create_sphere(&new, 1.5f);
-	to_color(0x00f94449, new.color);
-	new.name = "red sphere";
-	new.center[0] = 0.8f;
-	new.center[1] = -0.2f;
-	new.center[2] = 0.0f;
-	new.center[3] = 0.0f;
-	new.material = ft_darray_get(&minirt->materials, 0);
-	ft_darray_append(&minirt->objects, &new);
-	return (1);
-}
+// 	load_bmap(&material, "resources/mesh.bmap");
+// 	//to_color(0x00f94449, material.dark_color);
+// 	to_color(0x00ffffff, material.color);
+// 	to_color(0x00ffff00, other.color);
+// 	load_bmap(&other, "resources/gravel.bmap");
+// 	ft_darray_append(&minirt->materials, &material);
+// 	ft_darray_append(&minirt->materials, &other);
+// 	minirt->diffuse.position[0] = -40.0f;
+// 	minirt->diffuse.position[1] = 30.0f;
+// 	minirt->diffuse.position[2] = 0.0f;
+// 	minirt->diffuse.brightness = 0.8f;
+// 	to_color(0x00ffffff, minirt->diffuse.color);
+// 	minirt->ambient.brightness = 0.2f;
+// 	to_color(0x00ffffff, minirt->ambient.color);
+// 	//todo: malloc protection
+// 	minirt->camera.fov = 70.0f;
+// 	minirt->camera.near = -1.0f;
+// 	minirt->camera.far = 1.0f;
+// 	minirt->camera.orientation[0] = 0.0f;
+// 	minirt->camera.orientation[1] = 0.0f;
+// 	minirt->camera.orientation[2] = -1.0f;
+// 	minirt->camera.orientation[3] = 1.0f;
+// 	normalize_vector(minirt->camera.orientation, minirt->camera.orientation, 3);
+// 	minirt->camera.origin[0] = 0.0f;
+// 	minirt->camera.origin[1] = 0.0f;
+// 	minirt->camera.origin[2] = 3.0f;
+// 	minirt->camera.origin[3] = 1.0f;
+// 	if (set_camera_transform(minirt, &minirt->camera) == -1)
+// 		return (-1);
+// 	create_cone(&new, 2.0f, 1.0f);
+// 	to_color(0x00f94449, new.color);
+// 	new.name = "blue sphere";
+// 	new.center[0] = 0.0f;
+// 	new.center[1] = 0.0f;
+// 	new.center[2] = 0.0f;
+// 	new.center[3] = 1.0f;
+// 	new.material = ft_darray_get(&minirt->materials, 0);
+// 	ft_darray_append(&minirt->objects, &new);
+// 	create_sphere(&new, 0.5f);
+// 	to_color(0x11aaea8c, new.color);
+// 	new.name = "green sphere";
+// 	new.center[0] = -0.9f;
+// 	new.center[1] = -1.4f;
+// 	new.center[2] = -0.0f;
+// 	new.center[3] = 0.0f;
+// 	new.material = ft_darray_get(&minirt->materials, 0);
+// 	ft_darray_append(&minirt->objects, &new);
+// 	create_plane(&new, (float[4]){0.0f, 1.0f, 0.0f, 0.0f});
+// 	new.name = "plane";
+// 	to_color(0x003261e3, new.color);
+// 	new.center[0] = 0.0f;
+// 	new.center[1] = -2.0f;
+// 	new.center[2] = 0.0f;
+// 	new.center[3] = 1.0f;
+// 	new.material = ft_darray_get(&minirt->materials, 1);
+// 	ft_darray_append(&minirt->objects, &new);
+// 	create_sphere(&new, 1.5f);
+// 	to_color(0x00f94449, new.color);
+// 	new.name = "red sphere";
+// 	new.center[0] = 0.8f;
+// 	new.center[1] = -0.2f;
+// 	new.center[2] = 0.0f;
+// 	new.center[3] = 0.0f;
+// 	new.material = ft_darray_get(&minirt->materials, 0);
+// 	ft_darray_append(&minirt->objects, &new);
+// 	return (1);
+// }
 
 int	load_materials(t_minirt *minirt)
 {
@@ -259,7 +259,7 @@ int	load_materials(t_minirt *minirt)
 	other.specular_reflection = 0.2f;
 	other.shininess = 20.5f;
 	other.reflectivity = 0.2f;
-	other.repeat_pattern = 0.1f;
+	other.repeat_pattern = 0.01f;
 	other.get_texture = checkerboard;
 	other.normal_perturb = compute_bump;
 
@@ -271,12 +271,16 @@ int	load_materials(t_minirt *minirt)
 	ft_darray_append(&minirt->materials, &material);
 	ft_darray_append(&minirt->materials, &other);
 	object = ft_darray_get(&minirt->objects, 0);
+	object->material_index = 1;
 	object->material = ft_darray_get(&minirt->materials, 1);
 	object = ft_darray_get(&minirt->objects, 1);
+	object->material_index = 0;
 	object->material = ft_darray_get(&minirt->materials, 0);
 	object = ft_darray_get(&minirt->objects, 2);
+	object->material_index = 0;
 	object->material = ft_darray_get(&minirt->materials, 0);
 	object = ft_darray_get(&minirt->objects, 3);
+	object->material_index = 0;
 	object->material = ft_darray_get(&minirt->materials, 0);
 
 	// to_color(0x00ffffff, minirt->diffuse.color);
@@ -325,6 +329,7 @@ int	main(int argc, char *argv[])
 		return (-1);
 	perspective_projector(&minirt.world_space, &minirt.display, &minirt.camera);
 	invert_matrix(&minirt.world_space, &minirt.world_space, &minirt.tmp, 4);
+	minirt.render_mode = full_resolution;
 	mlx_loop(minirt.mlx);
 	return (0);
 }

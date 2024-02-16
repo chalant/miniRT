@@ -14,7 +14,7 @@
 
 int	rotate_camera(t_minirt *minirt, t_matrix *rot)
 {
-	matmul(&minirt->camera.basis, rot, &minirt->tmp, 3);
+	matrix_product(&minirt->camera.basis, rot, &minirt->tmp, 3);
 	matrix_copy(&minirt->tmp, &minirt->camera.basis, 3);
 	look_at(&minirt->camera, minirt);
 	return (0);
@@ -24,11 +24,11 @@ int	translate_camera(t_minirt *minirt, float direction[3])
 {
 	float	orientation[4];
 
-	vmatmul(&minirt->camera.basis, direction, orientation);
-	scale_vector(orientation, 0.5f,  orientation, 3);
+	matvec_product(&minirt->camera.basis, direction, orientation);
+	scale_vector(orientation, 0.5f, orientation, 3);
 	if (minirt->selected_object)
 		apply_translation(minirt, orientation, 1.0f);
-	add_vectors(minirt->camera.origin, 
+	add_vectors(minirt->camera.origin,
 		orientation, minirt->camera.origin, 3);
 	look_at(&minirt->camera, minirt);
 	return (0);
@@ -43,6 +43,7 @@ void	set_translate(t_matrix *matrix, float x, float y, float z)
 
 int	key_press_hook(int code, t_minirt *minirt)
 {
+	minirt->render_mode = low_resolution;
 	if (code == CTRL)
 		minirt->ctrl.pressed = 1;
 	else if (code == SHIFT)
@@ -56,18 +57,19 @@ int	key_press_hook(int code, t_minirt *minirt)
 	else if (code == RD)
 		rotate_camera(minirt, &minirt->rotations.x_axis);
 	else if (code == TL)
-		translate_camera(minirt, (float[3]){1.0f, 0.0f, 0.0f});
+		translate_camera(minirt, (float [3]){1.0f, 0.0f, 0.0f});
 	else if (code == TR)
-		translate_camera(minirt, (float[3]){-1.0f, 0.0f, 0.0f});
+		translate_camera(minirt, (float [3]){-1.0f, 0.0f, 0.0f});
 	else if (code == TU)
-		translate_camera(minirt, (float[3]){0.0f, 0.0f, 1.0f});
+		translate_camera(minirt, (float [3]){0.0f, 0.0f, 1.0f});
 	else if (code == TD)
-		translate_camera(minirt, (float[3]){0.0f, 0.0f, -1.0f});
+		translate_camera(minirt, (float [3]){0.0f, 0.0f, -1.0f});
 	return (0);
 }
 
 int	key_release_hook(int code, t_minirt *minirt)
 {
+	minirt->render_mode = full_resolution;
 	if (code == CTRL)
 		minirt->ctrl.pressed = 0;
 	else if (code == SHIFT)

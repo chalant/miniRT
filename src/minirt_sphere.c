@@ -19,8 +19,8 @@ float	*sphere_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 	float		point[4];
 	float		center[4];
 
-	vmatmul(&object->basis, hit->point, point);
-	vmatmul(&object->basis, object->center, center);
+	matvec_product(&object->basis, hit->point, point);
+	matvec_product(&object->basis, object->center, center);
 	phi = atan2f(point[2] - center[2], point[0] - center[0]);
 	theta = acosf((point[1] - center[1]) / object->size[1]);
 	uv_coords[0] = (phi + M_PI) / (2.0f * M_PI);

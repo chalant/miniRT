@@ -160,8 +160,10 @@ int	process_plane(t_import *import, char **infos)
 	if (set_rgb(plane.color, infos[3]))
 		return (1);
 	if (import->material)
+	{
 		if (set_index(&plane.material_index, infos[4]))
 			return (1);
+	}
 	if (create_plane(&plane, normal))
 		return (1);
 	if (ft_darray_append(&import->minirt->objects, &plane))
@@ -225,22 +227,23 @@ int	process_material(t_import *import, char **infos)
 {
 	t_material	material;
 
-	if (ft_atof(&material.diffuse_reflection, infos[1]))
+	if (ft_atof(infos[1], &material.diffuse_reflection))
 		return (1);
-	if (ft_atof(&material.ambient_reflection, infos[2]))
+	if (ft_atof(infos[2], &material.ambient_reflection))
 		return (1);
-	if (ft_atof(&material.specular_reflection, infos[3]))
+	if (ft_atof(infos[3], &material.specular_reflection))
 		return (1);
-	if (ft_atof(&material.shininess, infos[4]))
+	if (ft_atof(infos[4], &material.shininess))
 		return (1);
-	if (ft_atof(&material.reflectivity, infos[5]))
+	if (ft_atof(infos[5], &material.reflectivity))
 		return (1);
 	if (set_rgb(material.color, infos[6]))
 		return (1);
-	if (ft_atof(&material.repeat_pattern, infos[7]))
+	if (ft_atof(infos[7], &material.repeat_pattern))
 		return (1);
 	if (ft_darray_append(&import->minirt->materials, &material))
 		return (1);
+	return (0);
 }
 
 int	process_element(t_import *import, char **infos)
@@ -261,6 +264,5 @@ int	process_element(t_import *import, char **infos)
 		return (process_cone(import, infos));
 	if (!ft_strcmp(infos[0], "mt"))
 		return (process_material(import, infos));
-	else
-		return (1);
+	return (1);
 }

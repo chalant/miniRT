@@ -47,7 +47,7 @@ int	has_material(int fd, int *material)
 		infos = ft_split(line, ' ');
 		if (!infos)
 			return (free(line), ft_clear_ds(infos), 1);
-		if (ft_strcmp(infos[0], "mt"))
+		if (!ft_strcmp(infos[0], "mt"))
 			return (*material = 1, 0);
 		ft_clear_ds(infos);
 		free(line);
@@ -59,10 +59,15 @@ int	init_import(t_import *import, t_minirt *minirt, char *map)
 {
 	import->minirt = minirt;
 	import->fd = open(map, O_RDONLY);
+	import->material = 0;
 	if (import->fd == -1)
 		return (err("Open() failure."));
 	if (has_material(import->fd, &import->material))
 		return (1);
+	close(import->fd);
+	import->fd = open(map, O_RDONLY);
+	if (import->fd == -1)
+		return (err("Open() failure."));
 	import->ambient = 0;
 	import->camera = 0;
 	import->light = 0;
@@ -79,15 +84,13 @@ int	check_scene(t_import *import)
 int	import_map(t_minirt *minirt, char **av)
 {
 	t_import	import;
-
 	if (check_extension(av[1], ".rt"))
 		return (1);
 	if (init_import(&import, minirt, av[1]))
 		return (1);
 	if (read_map(&import))
 		return (1);
-	else
-		return (printf("Good map!\n"), 0);
+	return (printf("Good map!\n"), 0);
 	// if (check_scene(&import))
 	// 	return (1);
 	return (0);

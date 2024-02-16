@@ -74,6 +74,19 @@ typedef struct	s_plane
 	float		point[4];
 }				t_plane;
 
+typedef struct	s_hit
+{
+	struct	s_object	*object;
+	struct	s_material	*material;
+	float				*ray_origin;
+	float				color[4];
+	float				normal[3];
+	float				point[3];
+	float				distance;
+	float				energy;
+	int					*screen_coords;
+}		t_hit;
+
 typedef struct	s_material
 {
 	float		diffuse_reflection;
@@ -90,22 +103,9 @@ typedef struct	s_material
 	float		*(*normal_perturb)(struct s_object*, float uv_coords[2], float bump[3]);
 }		t_material;
 
-typedef struct	s_hit
-{
-	struct	s_object	*object;
-	struct	s_material	*material;
-	float				*ray_origin;
-	float				color[4];
-	float				normal[3];
-	float				point[3];
-	float				distance;
-	float				energy;
-	int					*screen_coords;
-}		t_hit;
-
 typedef struct	s_object
 {
-	// t_material		*material;
+	t_material		*material;
 	t_matrix		basis;
 	t_matrix		inverse_basis;
 
@@ -173,6 +173,7 @@ typedef struct	s_minirt
 	t_key			ctrl;
 
 	float			sky_color[4];
+	int				(*render_mode)(struct s_minirt*);
 
 	int				rendered;
 }				t_minirt;
@@ -186,7 +187,6 @@ int		key_release_hook(int code, t_minirt *minirt);
 int		key_press_hook(int code, t_minirt *minirt);
 
 int		set_rotations(t_minirt *fdf, float x, float y, float z);
-int		translation(t_matrix *matrix, float x, float y, float z);
 
 int		set_basis(t_matrix *basis, float orientation[3]);
 int		set_camera_transform(t_minirt *minirt, t_camera *camera);
@@ -199,7 +199,6 @@ float   *checkerboard(t_object *object, float uv_coords[2], float color[4]);
 float	*compute_bump(t_object *object, float uv_coords[2], float bump[3]);
 float	project_point(t_ray *ray, t_object *object, float hit);
 
-void	translate(t_minirt *minirt, t_object *object, int axis, float speed);
 void	rotate(t_minirt *minirt, t_object *object, t_matrix *axis);
 void	scale(t_minirt *minirt, t_object *object, int axis, float rate);
 
@@ -211,5 +210,9 @@ void	apply_translation(t_minirt *minirt, float dir[4], float speed);
 float	*to_screen_space(t_display *display, float pixel[4], float i, float j);
 float	*to_world_space(t_minirt *minirt, float point[4], float result[4]);
 void	create_basis(float orientation[3], float u[3], float v[3]);
+void	set_ray(t_minirt *minirt, t_ray *ray, int x, int y);
+
+int		low_resolution(t_minirt *minirt);
+int		full_resolution(t_minirt *minirt);
 
 #endif

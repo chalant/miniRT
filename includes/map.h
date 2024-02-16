@@ -47,7 +47,7 @@ int		import_map(t_minirt *minirt, char **av);
 
 // Read
 int		is_blank(char **line);
-int		expected_infos(char *type, t_import *import);
+int		expected_infos(t_import *import, char *type);
 int		seen_type(t_import *import, char **line);
 int		read_map(t_import *import);
 

@@ -26,7 +26,7 @@ void	matrix_copy(t_matrix *source, t_matrix *dest, int n)
 	}
 }
 
-int	vmatmul(t_matrix *mat, float *vec, float *result)
+int	matvec_product(t_matrix *mat, float *vec, float *result)
 {
 	int	i;
 	int	j;
@@ -42,7 +42,7 @@ int	vmatmul(t_matrix *mat, float *vec, float *result)
 	return (1);
 }
 
-void	matmul(t_matrix *mat1, t_matrix *mat2, t_matrix *result, int n)
+void	matrix_product(t_matrix *mat1, t_matrix *mat2, t_matrix *result, int n)
 {
 	int	i;
 	int	j;
@@ -60,24 +60,4 @@ void	matmul(t_matrix *mat1, t_matrix *mat2, t_matrix *result, int n)
 				result->points[i][j] += mat1->points[i][k] * mat2->points[k][j];
 		}
 	}
-}
-
-void	mattranspose(t_matrix *matrix, t_matrix *result)
-{
-	int	i;
-	int	j;
-
-	i = -1;
-	while (++i < matrix->rows)
-	{
-		j = -1;
-		while (++j < matrix->cols)
-			result->points[j][i] = matrix->points[i][j];
-	}
-}
-
-void	inplace_matmul(t_matrix *mat1, t_matrix *mat2, t_matrix *result, int n)
-{
-	matmul(mat1, mat2, result, n);
-	matrix_copy(result, mat2, n);
 }

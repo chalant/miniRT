@@ -21,7 +21,7 @@ int	set_matrix(t_matrix *matrix, float value)
 	while (++i < matrix->rows)
 	{
 		j = -1;
-		while (++j < matrix->cols) 
+		while (++j < matrix->cols)
 			matrix->points[i][j] = value;
 	}
 	return (0);
@@ -36,7 +36,7 @@ int	compute_pivots(t_matrix *matrix, t_matrix *identity, int i, int n)
 	diag = matrix->points[i][i];
 	if (diag == 0.0f)
 		return (0);
-	while (++j < n) 
+	while (++j < n)
 	{
 		matrix->points[i][j] /= diag;
 		identity->points[i][j] /= diag;
@@ -52,15 +52,16 @@ int	invert_init(t_matrix *matrix, t_matrix *result, t_matrix *identity, int n)
 	return (-1);
 }
 
-void invert_matrix(t_matrix *matrix, t_matrix *result, t_matrix *identity, int n) 
+void	invert_matrix(t_matrix *matrix, t_matrix *result,
+		t_matrix *identity, int n)
 {
-	float       factor;
+	float		factor;
 	int			i;
 	int			j;
 	int			k;
 
 	i = invert_init(matrix, result, identity, n);
-	while (++i < n) 
+	while (++i < n)
 	{
 		if (!compute_pivots(result, identity, i, n))
 			return ;
@@ -68,7 +69,7 @@ void invert_matrix(t_matrix *matrix, t_matrix *result, t_matrix *identity, int n
 		while (++k < n)
 		{
 			if (k == i)
-				continue;
+				continue ;
 			factor = result->points[k][i];
 			j = -1;
 			while (++j < n)

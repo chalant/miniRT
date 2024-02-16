@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:32:43 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/15 20:18:25 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/15 20:40:14 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	check_decimal(char *value, int type)
 
 	if (ft_atof(value, &decimal))
 		return (1);
-	else if (type == LIGHT && decimal >= 0.0 && decimal <= 1.0)
+	if (type == LIGHT && decimal >= 0.0 && decimal <= 1.0)
 		return (0);
 	else if (type == NORMAL)
 		return (0);
@@ -250,19 +250,19 @@ int	process_element(t_import *import, char **infos)
 {
 	if (!ft_strcmp(infos[0], "A"))
 		return (process_ambient(import, infos));
-	if (!ft_strcmp(infos[0], "C"))
+	else if (!ft_strcmp(infos[0], "C"))
 		return (process_camera(import, infos));
-	if (!ft_strcmp(infos[0], "L") || !ft_strcmp(infos[0], "li"))
+	else if (!ft_strcmp(infos[0], "L") || !ft_strcmp(infos[0], "li"))
 		return (process_light(import, infos));
-	if (!ft_strcmp(infos[0], "sp"))
+	else if (!ft_strcmp(infos[0], "sp"))
 		return (process_sphere(import, infos));
-	if (!ft_strcmp(infos[0], "pl"))
+	else if (!ft_strcmp(infos[0], "pl"))
 		return (process_plane(import, infos));
-	if (!ft_strcmp(infos[0], "cy"))
+	else if (!ft_strcmp(infos[0], "cy"))
 		return (process_cylinder(import, infos));
-	if (!ft_strcmp(infos[0], "cn"))
+	else if (!ft_strcmp(infos[0], "cn"))
 		return (process_cone(import, infos));
-	if (!ft_strcmp(infos[0], "mt"))
+	else if (!ft_strcmp(infos[0], "mt"))
 		return (process_material(import, infos));
 	return (1);
 }

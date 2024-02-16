@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:29:20 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/15 19:18:48 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/15 22:33:29 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,18 +47,15 @@ int	expected_infos(t_import *import, char *type)
 		return (1);
 }
 
-int	seen_type(t_import *import, char **line)
+int	seen_type(t_import *import, char *type)
 {
-	char	*type;
-
-	type = line[0];
 	if (!ft_strcmp(type, "A"))
 		if (++import->ambient && import->ambient > 1)
 			return (err("The map has too many ambient elements."));
-	if (!ft_strcmp(type, "C"))
+	else if (!ft_strcmp(type, "C"))
 		if (++import->camera && import->camera > 1)
 			return (err("The map has too many camera elements."));
-	if (!ft_strcmp(type, "L"))
+	else if (!ft_strcmp(type, "L"))
 		if (++import->light && import->light > 1)
 			return (err("The map has too many light elements."));
 	return (0);
@@ -81,7 +78,7 @@ int	read_map(t_import *import)
 			return (free(line), ft_clear_ds(infos), 1);
 		if ((int)ft_count_strings(infos) != expected_infos(import, infos[0]))
 			return (free(line), ft_clear_ds(infos), 1);
-		if (seen_type(import, infos))
+		if (seen_type(import, infos[0]))
 			return (free(line), ft_clear_ds(infos), 1);
 		if (process_element(import, infos))
 			return (free(line), ft_clear_ds(infos), 1);

@@ -87,6 +87,18 @@ typedef struct	s_hit
 	int					*screen_coords;
 }		t_hit;
 
+typedef struct	s_texture
+{
+	float		*(*get_texture)(struct s_material*, struct s_object*, float uv_coords[2], float color[4]);
+}	t_texture;
+
+typedef struct	s_perturbator
+{
+	t_matrix	map;
+
+	float	*(*perturb_normal)(struct s_perturbator*, struct s_object*, float uv_coords[2], float bump[3]);
+}	t_perturbator;
+
 typedef struct	s_material
 {
 	float		diffuse_reflection;
@@ -97,17 +109,11 @@ typedef struct	s_material
 	float		reflectivity;
 	float		color[4];
 	float		repeat_pattern;
-	t_matrix	texture_map;
-	t_matrix	bump_map;
-	float		*(*get_texture)(struct s_object*, float uv_coords[2], float color[4]);
-	float		*(*normal_perturb)(struct s_object*, float uv_coords[2], float bump[3]);
 }		t_material;
 
 typedef struct	s_object
 {
-	t_material		*material;
 	t_matrix		basis;
-	t_matrix		inverse_basis;
 
 	const char		*name;
 	void			*shape;
@@ -121,6 +127,8 @@ typedef struct	s_object
 	float			orientation[3];
 	float			size[3];
 	int				material_index;
+	int				perturbator_index;
+	int				texture_index;
 }				t_object;
 
 typedef struct	s_transforms_3d
@@ -164,6 +172,8 @@ typedef struct	s_minirt
 	t_darray		spot_lights;
 	t_darray		objects;
 	t_darray		materials;
+	t_darray		perturbators;
+	t_darray		textures;
 
 	t_display		display;
 	t_camera		camera;
@@ -196,12 +206,13 @@ int		perspective_projector(t_matrix *matrix, t_display *display, t_camera *camer
 int		render(t_minirt *minirt);
 void	set_translate(t_matrix *matrix, float x, float y, float z);
 float	to_rad(float degrees);
-float   *checkerboard(t_object *object, float uv_coords[2], float color[4]);
-float	*compute_bump(t_object *object, float uv_coords[2], float bump[3]);
+float	*checkerboard(t_material *material, t_object *object, float uv_coords[2], float color[4]);
+float	*horizontal_bands(t_material *material, t_object *object, float uv_coords[2], float color[4]);
+float	*vertical_bands(t_material *material, t_object *object, float uv_coords[2], float color[4]);
+float	*no_texture(t_material *material, t_object *object, float uv_coords[2], float color[4]);
+float	*compute_bump(t_perturbator *perturbator, t_object *object, float uv_coords[2], float bump[3]);
+float	*no_perturbation(t_perturbator *perturbator, t_object *object, float uv_coords[2], float bump[3]);
 float	project_point(t_ray *ray, t_object *object, float hit);
-
-void	rotate(t_minirt *minirt, t_object *object, t_matrix *axis);
-void	scale(t_minirt *minirt, t_object *object, int axis, float rate);
 
 int		mouse_click_hook(int button, int x, int y, t_minirt *minirt);
 int		mouse_release_hook(int button, int x, int y, t_minirt *minirt);

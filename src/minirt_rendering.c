@@ -100,16 +100,20 @@ float	*reflect(float incident[3], float normal[3],
 	return (result);
 }
 
-int	get_textures(t_hit *hit, float color[4])
+int	add_textures(t_minirt *minirt, t_hit *hit, float color[4])
 {
-	float		uv_coords[2];
-	float		perturbation[3];
+	float			uv_coords[2];
+	float			perturbation[3];
+	t_perturbator	*perturbator;
+	t_texture		*texture;
 
+	perturbator = ft_darray_get(&minirt->perturbators, hit->object->perturbator_index);
 	hit->object->uv_coords(hit->object, hit, uv_coords);
-	hit->material->normal_perturb(hit->object, uv_coords, perturbation);
+	perturbator->perturb_normal(perturbator, hit->object, uv_coords, perturbation);
 	add_vectors(hit->normal, perturbation, hit->normal, 3);
 	normalize_vector(hit->normal, hit->normal, 3);
-	hit->material->get_texture(hit->object, uv_coords, color);
+	texture = ft_darray_get(&minirt->textures, hit->object->texture_index);
+	texture->get_texture(hit->material, hit->object, uv_coords, color);
 	return (0);
 }
 
@@ -218,7 +222,7 @@ int	add_colors(t_minirt *minirt, t_hit *hit)
 	float		color[4];
 
 	j = -1;
-	get_textures(hit, color);
+	add_textures(minirt, hit, color);
 	while (++j < minirt->spot_lights.size)
 		handle_light(minirt, hit,
 			ft_darray_get(&minirt->spot_lights, j), color);

@@ -122,6 +122,7 @@ int	hit_cylinder(t_object *object, t_ray *ray)
 
 int	create_cylinder(t_object *object, float height, float diameter)
 {
+	object->perturbator_index = 0;
 	object->intersect = hit_cylinder;
 	object->normal = cylinder_normal;
 	object->uv_coords = cylinder_uv_coords;

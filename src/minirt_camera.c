@@ -12,12 +12,11 @@
 
 #include "minirt.h"
 
-int	set_vtranslate(t_matrix *matrix, float v[3])
+void	set_translate(t_matrix *matrix, float x, float y, float z)
 {
-	matrix->points[0][matrix->cols - 1] = v[0];
-	matrix->points[1][matrix->cols - 1] = v[1];
-	matrix->points[2][matrix->cols - 1] = v[2];
-	return (0);
+	matrix->points[0][matrix->cols - 1] = x;
+	matrix->points[1][matrix->cols - 1] = y;
+	matrix->points[2][matrix->cols - 1] = z;
 }
 
 int	set_col(t_matrix *matrix, float *values, int col, int n)
@@ -30,9 +29,11 @@ int	set_col(t_matrix *matrix, float *values, int col, int n)
 int	look_at(t_camera *camera, t_minirt *fdf)
 {
 	invert_matrix(&camera->basis, &camera->view, &fdf->tmp, 3);
-	set_translate(&camera->view, -camera->origin[0], -camera->origin[1], -camera->origin[2]);
+	set_translate(&camera->view, -camera->origin[0],
+		-camera->origin[1], -camera->origin[2]);
 	matrix_copy(&camera->basis, &camera->inverse_view, 3);
-	set_translate(&camera->inverse_view, camera->origin[0], camera->origin[1], camera->origin[2]);
+	set_translate(&camera->inverse_view, camera->origin[0],
+		camera->origin[1], camera->origin[2]);
 	return (0);
 }
 

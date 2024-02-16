@@ -35,9 +35,7 @@
 #  define SPACE 49
 #  define ESCAPE 53
 #  define COMMAND 261
-
-#  define LEFT_CLICK 1
-#  define RIGHT_CLICK 2
+#  define TAB 48
 
 #endif
 

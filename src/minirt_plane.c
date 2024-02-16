@@ -58,6 +58,7 @@ float	*plane_normal(t_object *object, t_hit *hit)
 
 int	create_plane(t_object *object, float normal[4])
 {
+	object->perturbator_index = 0;
 	copy_vector(normal, object->orientation, 3);
 	normalize_vector(object->orientation, object->orientation, 3);
 	object->intersect = hit_plane;

@@ -33,5 +33,9 @@ int	minirt_init(t_minirt *minirt)
 		return (-1);
 	if (ft_darray_init(&minirt->spot_lights, sizeof(t_light), 10) < 0)
 		return (-1);
+	if (ft_darray_init(&minirt->perturbators, sizeof(t_perturbator), 10) < 0)
+		return (-1);
+	if (ft_darray_init(&minirt->textures, sizeof(t_texture), 10) < 0)
+		return (-1);
 	return (1);
 }

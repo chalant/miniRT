@@ -100,14 +100,15 @@ int	set_variables(t_minirt *minirt)
 	return (1);
 }
 
-int	load_bmap(t_material *material, char *file_path)
+int	load_bmap(t_minirt *minirt, char *file_path)
 {
-	int		fd;
-	char	*line;
-	char	**res;
-	int		height;
-	int		width;
-	int		i;
+	int				fd;
+	char			*line;
+	char			**res;
+	int				height;
+	int				width;
+	int				i;
+	t_perturbator	bump_mapping;
 
 	fd = open(file_path, O_RDONLY);
 	line  = get_next_line(fd);
@@ -116,8 +117,9 @@ int	load_bmap(t_material *material, char *file_path)
 	height = ft_atoi(res[0]);
 	width = ft_atoi(res[1]);
 	ft_clear_ds(res);
-	create_matrix(&material->bump_map, height, width);
-	init_matrix(&material->bump_map, 0.0f);
+	create_matrix(&bump_mapping.map, height, width);
+	init_matrix(&bump_mapping.map, 0.0f);
+	bump_mapping.perturb_normal = compute_bump;
 	i = -1;
 	int	j = 0;
 	line  = get_next_line(fd);
@@ -126,116 +128,25 @@ int	load_bmap(t_material *material, char *file_path)
 		res = ft_split(line, ' ');
 		i = -1;
 		while (++i < width)
-			material->bump_map.points[j][i] = ft_atoi(res[i]);
+			bump_mapping.map.points[j][i] = ft_atoi(res[i]);
 		ft_clear_ds(res);
 		free(line);
 		line = get_next_line(fd);
 		j++;
 	}
+	if (ft_darray_append(&minirt->perturbators, &bump_mapping))
+		return (-1);
 	free(line);
 	return (0);
 }
 
-// int	load_scene(t_minirt *minirt)
-// {
-// 	//todo: need to set object basis for transformations.
-// 	t_object	new;
-// 	t_material	material;
-// 	t_material	other;
-
-// 	//todo: need to load the bump map file...
-// 	//the file could be specified in the rt file, and would load the
-// 	//bump map file when parsing.
-// 	material.ambient_reflection = 0.2f;
-// 	material.diffuse_reflection = 0.8f;
-// 	material.shininess = 100.0f;
-// 	material.reflectivity = 0.2f;
-// 	material.repeat_pattern = 6.0f;
-// 	material.get_texture = checkerboard;
-// 	material.normal_perturb = compute_bump;
-
-// 	other.ambient_reflection = 0.8f;
-// 	other.diffuse_reflection = 0.8f;
-// 	other.shininess = 100.5f;
-// 	other.reflectivity = 0.2f;
-// 	other.repeat_pattern = 0.2f;
-// 	other.get_texture = checkerboard;
-// 	other.normal_perturb = compute_bump;
-
-// 	load_bmap(&material, "resources/mesh.bmap");
-// 	//to_color(0x00f94449, material.dark_color);
-// 	to_color(0x00ffffff, material.color);
-// 	to_color(0x00ffff00, other.color);
-// 	load_bmap(&other, "resources/gravel.bmap");
-// 	ft_darray_append(&minirt->materials, &material);
-// 	ft_darray_append(&minirt->materials, &other);
-// 	minirt->diffuse.position[0] = -40.0f;
-// 	minirt->diffuse.position[1] = 30.0f;
-// 	minirt->diffuse.position[2] = 0.0f;
-// 	minirt->diffuse.brightness = 0.8f;
-// 	to_color(0x00ffffff, minirt->diffuse.color);
-// 	minirt->ambient.brightness = 0.2f;
-// 	to_color(0x00ffffff, minirt->ambient.color);
-// 	//todo: malloc protection
-// 	minirt->camera.fov = 70.0f;
-// 	minirt->camera.near = -1.0f;
-// 	minirt->camera.far = 1.0f;
-// 	minirt->camera.orientation[0] = 0.0f;
-// 	minirt->camera.orientation[1] = 0.0f;
-// 	minirt->camera.orientation[2] = -1.0f;
-// 	minirt->camera.orientation[3] = 1.0f;
-// 	normalize_vector(minirt->camera.orientation, minirt->camera.orientation, 3);
-// 	minirt->camera.origin[0] = 0.0f;
-// 	minirt->camera.origin[1] = 0.0f;
-// 	minirt->camera.origin[2] = 3.0f;
-// 	minirt->camera.origin[3] = 1.0f;
-// 	if (set_camera_transform(minirt, &minirt->camera) == -1)
-// 		return (-1);
-// 	create_cone(&new, 2.0f, 1.0f);
-// 	to_color(0x00f94449, new.color);
-// 	new.name = "blue sphere";
-// 	new.center[0] = 0.0f;
-// 	new.center[1] = 0.0f;
-// 	new.center[2] = 0.0f;
-// 	new.center[3] = 1.0f;
-// 	new.material = ft_darray_get(&minirt->materials, 0);
-// 	ft_darray_append(&minirt->objects, &new);
-// 	create_sphere(&new, 0.5f);
-// 	to_color(0x11aaea8c, new.color);
-// 	new.name = "green sphere";
-// 	new.center[0] = -0.9f;
-// 	new.center[1] = -1.4f;
-// 	new.center[2] = -0.0f;
-// 	new.center[3] = 0.0f;
-// 	new.material = ft_darray_get(&minirt->materials, 0);
-// 	ft_darray_append(&minirt->objects, &new);
-// 	create_plane(&new, (float[4]){0.0f, 1.0f, 0.0f, 0.0f});
-// 	new.name = "plane";
-// 	to_color(0x003261e3, new.color);
-// 	new.center[0] = 0.0f;
-// 	new.center[1] = -2.0f;
-// 	new.center[2] = 0.0f;
-// 	new.center[3] = 1.0f;
-// 	new.material = ft_darray_get(&minirt->materials, 1);
-// 	ft_darray_append(&minirt->objects, &new);
-// 	create_sphere(&new, 1.5f);
-// 	to_color(0x00f94449, new.color);
-// 	new.name = "red sphere";
-// 	new.center[0] = 0.8f;
-// 	new.center[1] = -0.2f;
-// 	new.center[2] = 0.0f;
-// 	new.center[3] = 0.0f;
-// 	new.material = ft_darray_get(&minirt->materials, 0);
-// 	ft_darray_append(&minirt->objects, &new);
-// 	return (1);
-// }
-
-int	load_materials(t_minirt *minirt)
+int	set_materials(t_minirt *minirt)
 {
 	t_material	material;
 	t_material	other;
+	t_texture	txt;
 	t_object	*object;
-	// t_light		*diffuse;
+	t_perturbator	pert;
 
 	//todo: need to load the bump map file...
 	//the file could be specified in the rt file, and would load the
@@ -246,8 +157,15 @@ int	load_materials(t_minirt *minirt)
 	material.shininess = 200.0f;
 	material.reflectivity = 0.05f;
 	material.repeat_pattern = 10.0f;
-	material.get_texture = checkerboard;
-	material.normal_perturb = compute_bump;
+
+	txt.get_texture = no_texture;
+	ft_darray_append(&minirt->textures, &txt);
+	txt.get_texture = checkerboard;
+	ft_darray_append(&minirt->textures, &txt);
+	txt.get_texture = horizontal_bands;
+	ft_darray_append(&minirt->textures, &txt);
+	txt.get_texture = vertical_bands;
+	ft_darray_append(&minirt->textures, &txt);
 
 	other.ambient_reflection = 0.2f;
 	other.diffuse_reflection = 0.8f;
@@ -255,48 +173,35 @@ int	load_materials(t_minirt *minirt)
 	other.shininess = 20.5f;
 	other.reflectivity = 0.2f;
 	other.repeat_pattern = 0.01f;
-	other.get_texture = checkerboard;
-	other.normal_perturb = compute_bump;
 
-	load_bmap(&material, "resources/mesh.bmap");
-	//to_color(0x00f94449, material.dark_color);
+	pert.perturb_normal = no_perturbation;
+	ft_darray_append(&minirt->perturbators, &pert);
+	load_bmap(minirt, "resources/mesh.bmap");
 	to_color(0x00ffffff, material.color);
 	to_color(0x00ffffff, other.color);
-	load_bmap(&other, "resources/gravel.bmap");
+	load_bmap(minirt, "resources/gravel.bmap");
 	ft_darray_append(&minirt->materials, &material);
 	ft_darray_append(&minirt->materials, &other);
+	
 	object = ft_darray_get(&minirt->objects, 0);
 	object->material_index = 1;
-	object->material = ft_darray_get(&minirt->materials, 1);
+	object->perturbator_index = 1;
+	object->texture_index = 0;
+	
 	object = ft_darray_get(&minirt->objects, 1);
 	object->material_index = 0;
-	object->material = ft_darray_get(&minirt->materials, 0);
+	object->perturbator_index = 2;
+	object->texture_index = 1;
+	
 	object = ft_darray_get(&minirt->objects, 2);
 	object->material_index = 0;
-	object->material = ft_darray_get(&minirt->materials, 0);
+	object->perturbator_index = 0;
+	object->texture_index = 2;
+	
 	object = ft_darray_get(&minirt->objects, 3);
 	object->material_index = 0;
-	object->material = ft_darray_get(&minirt->materials, 0);
-
-	// to_color(0x00ffffff, minirt->diffuse.color);
-	// minirt->diffuse.position[0] = -40.0f;
-	// minirt->diffuse.position[1] = -30.0f;
-	// minirt->diffuse.position[2] = 0.7f;
-	// minirt->diffuse.brightness = 0.7f;
-	// ft_darray_append(&minirt->spot_lights, &minirt->diffuse);
-	t_light	light;
-	to_color(0x00ff00ff, light.color);
-	light.position[0] = -40.0f;
-	light.position[1] = 30.0f;
-	light.position[2] = 0.7f;
-	light.brightness = 0.7f;
-	ft_darray_append(&minirt->spot_lights, &light);
-	//diffuse = ft_darray_get(&minirt->spot_lights, 0);
-	// diffuse->position[0] = -40.0f;
-	// diffuse->position[1] = 30.0f;
-	// diffuse->position[2] = 0.0f;
-	// diffuse->brightness = 0.8f;
-	// to_color(0x00ffffff, diffuse->color);
+	object->perturbator_index = 0;
+	object->texture_index = 3;
 	return (0);
 }
 
@@ -319,7 +224,7 @@ int	main(int argc, char *argv[])
 	set_minirt_transforms(&minirt);
 	to_color(0x0087ceeb, minirt.sky_color);
 	normalize_vector(minirt.camera.orientation, minirt.camera.orientation, 3);
-	load_materials(&minirt);
+	set_materials(&minirt);
 	minirt.camera.near = -1.0f;
 	minirt.camera.far = 1.0f;
 	if (set_camera_transform(&minirt, &minirt.camera) == -1)

@@ -34,22 +34,23 @@ int	translate_camera(t_minirt *minirt, float direction[3])
 	return (0);
 }
 
-void	set_translate(t_matrix *matrix, float x, float y, float z)
+int	next_element(t_minirt *minirt)
 {
-	matrix->points[0][matrix->cols - 1] = x;
-	matrix->points[1][matrix->cols - 1] = y;
-	matrix->points[2][matrix->cols - 1] = z;
+	//todo: cycle colors (hsl) when shift is pressed
+	if (minirt->selected_object)
+	{
+		//todo: cycle textures.
+		minirt->selected_object->perturbator_index++;
+		minirt->selected_object->perturbator_index = minirt->selected_object->perturbator_index
+			% minirt->perturbators.size;
+	}
+	minirt->light_index++;
+	minirt->light_index = minirt->light_index % minirt->spot_lights.size;
+	return (0);
 }
 
-int	key_press_hook(int code, t_minirt *minirt)
+int	control_camera(int code, t_minirt *minirt)
 {
-	printf("Code %d\n", code);
-	minirt->key_pressed = 1;
-	minirt->render_mode = low_resolution;
-	if (code == CTRL)
-		minirt->ctrl.pressed = 1;
-	else if (code == SHIFT)
-		minirt->shift.pressed = 1;
 	if (code == RL)
 		rotate_camera(minirt, &minirt->rev_rotations.y_axis);
 	else if (code == RR)
@@ -66,6 +67,42 @@ int	key_press_hook(int code, t_minirt *minirt)
 		translate_camera(minirt, (float [3]){0.0f, 0.0f, 1.0f});
 	else if (code == TD)
 		translate_camera(minirt, (float [3]){0.0f, 0.0f, -1.0f});
+	return (0);
+}
+
+int	control_light(int code, t_minirt *minirt)
+{
+	//todo: need camera orientation.
+	//todo: hue control.
+	t_light	*light;
+
+	light = ft_darray_get(&minirt->spot_lights, minirt->light_index);
+	if (code == RL)
+		light->position[0] -= 5.0f;
+	else if (code == RR)
+		light->position[0] += 5.0f;
+	else if (code == RU)
+		light->position[1] += 5.0f;
+	else if (code == RD)
+		light->position[1] -= 5.0f;
+	return (0);
+}
+
+int	key_press_hook(int code, t_minirt *minirt)
+{
+	minirt->key_pressed = 1;
+	if (code != TAB)
+		minirt->render_mode = low_resolution;
+	if (code == CTRL)
+		minirt->ctrl.pressed = 1;
+	else if (code == SHIFT)
+		minirt->shift.pressed = 1;
+	else if (code == TAB)
+		next_element(minirt);
+	else if (!minirt->shift.pressed)
+		control_camera(code, minirt);
+	else
+		control_light(code, minirt);
 	return (0);
 }
 

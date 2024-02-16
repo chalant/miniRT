@@ -65,6 +65,7 @@ int	hit_sphere(t_object *object, t_ray *ray)
 
 int create_sphere(t_object *object, float radius)
 {
+	object->perturbator_index = 0;
 	object->intersect = hit_sphere;
 	object->normal = sphere_normal;
 	object->uv_coords = sphere_uv_coords;

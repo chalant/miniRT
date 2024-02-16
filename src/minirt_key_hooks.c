@@ -40,9 +40,18 @@ int	next_element(t_minirt *minirt)
 	if (minirt->selected_object)
 	{
 		//todo: cycle textures.
-		minirt->selected_object->perturbator_index++;
-		minirt->selected_object->perturbator_index = minirt->selected_object->perturbator_index
-			% minirt->perturbators.size;
+		if (minirt->shift.pressed)
+		{
+			minirt->selected_object->texture_index++;
+			minirt->selected_object->texture_index = minirt->selected_object->texture_index
+				% minirt->textures.size;
+		}
+		else
+		{
+			minirt->selected_object->perturbator_index++;
+			minirt->selected_object->perturbator_index = minirt->selected_object->perturbator_index
+				% minirt->perturbators.size;
+		}
 	}
 	minirt->light_index++;
 	minirt->light_index = minirt->light_index % minirt->spot_lights.size;
@@ -82,9 +91,9 @@ int	control_light(int code, t_minirt *minirt)
 	else if (code == RR)
 		light->position[0] += 5.0f;
 	else if (code == RU)
-		light->position[1] += 5.0f;
+		light->position[2] += 5.0f;
 	else if (code == RD)
-		light->position[1] -= 5.0f;
+		light->position[2] -= 5.0f;
 	return (0);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
+/*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 15:30:29 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/15 20:16:07 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/19 18:11:26 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ typedef struct s_import
 	int			light;
 	int			material;
 }	t_import;
- 
+
 typedef enum e_ranges
 {
 	LIGHT,

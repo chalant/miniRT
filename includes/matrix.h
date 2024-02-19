@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   matrix.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
+/*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:54:53 by ychalant          #+#    #+#             */
-/*   Updated: 2024/01/31 15:47:41 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/19 18:09:21 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ int		homogeneous_matrix(t_matrix *matrix, int rows, int cols);
 int		set_diagonal(t_matrix *matrix, float value);
 
 void	matrix_product(t_matrix *mat1, t_matrix *mat2, t_matrix *result, int n);
-void	invert_matrix(t_matrix *matrix, t_matrix *result, t_matrix *identity, int n);
+void	invert_matrix(t_matrix *matrix, t_matrix *result,
+			t_matrix *identity, int n);
 void	matrix_copy(t_matrix *source, t_matrix *dest, int n);
 int		matvec_product(t_matrix *mat, float *vec, float *result);
 

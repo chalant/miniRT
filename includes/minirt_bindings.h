@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt_bindings.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
+/*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:54:53 by ychalant          #+#    #+#             */
-/*   Updated: 2024/01/31 16:01:46 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/19 18:11:00 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 #  define TAB 48
 #  define ALT 261
 
-#endif
+# endif
 
 # ifdef __linux__
 
@@ -62,6 +62,6 @@
 #  define TAB 65289
 #  define ALT 65513
 
-#endif
+# endif
 
 #endif

@@ -21,27 +21,40 @@ SRC_FILES =	minirt.c \
 			minirt_key_hooks.c \
 			matrix.c \
 			matrix_operations.c \
+			matrix_utils.c \
 			matrix_inversion.c \
-			vector_operations.c \
+			minirt_vector_operations.c \
+			minirt_vector_products.c \
+			minirt_vector_utils.c \
+			minirt_basis_utils.c \
 			minirt_transforms.c \
-			transforms.c \
 			minirt_bump_mapping.c \
 			minirt_mapping_load.c \
 			minirt_init.c \
 			minirt_cleanup.c \
 			minirt_rotations.c \
+			minirt_rotations_setup.c \
 			minirt_materials.c \
+			minirt_material_edit.c \
 			minirt_window_hooks.c \
 			minirt_plane.c \
 			minirt_sphere.c \
 			minirt_cylinder.c \
 			minirt_cone.c \
 			minirt_rendering.c \
+			minirt_ray.c \
+			minirt_shading.c \
+			minirt_shading_texture.c \
+			minirt_lights.c \
+			minirt_shadows.c \
+			minirt_spaces.c \
 			minirt_camera.c \
+			minirt_camera_control.c \
 			minirt_projection.c \
 			minirt_colors.c \
 			minirt_mouse.c \
-			procedural_textures.c
+			minirt_textures.c \
+			minirt_interaction.c
 
 
 INCLUDES = $(addprefix $(INCLUDES_DIR)/, $(INCLUDES_FILES))
@@ -56,7 +69,7 @@ MLX_MAC = $(MLX_DIR_MAC)/libmlx.a
 
 # C_FLAGS = -O3 -I$(MLX_DIR_LINUX) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror -MMD -MP
 C_FLAGS = -g -O3 -I$(MLX_DIR_LINUX) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror -Wno-unused-result
-C_FLAGS_MAC = -g -O3 -I$(MLX_DIR_MAC) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror -g -fsanitize=address
+C_FLAGS_MAC = -O3 -I$(MLX_DIR_MAC) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror
 
 all:
 	mkdir -p $(OBJ_DIR)

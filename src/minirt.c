@@ -19,13 +19,15 @@ int	main(int argc, char *argv[])
 
 	if (argc != 2)
 		return (1);
-	if (minirt_init(&minirt) < -1)
+	if (minirt_init(&minirt) < 0)
 		return (1);
 	if (import_map(&minirt, argv))
 		return (minirt_cleanup(&minirt) * 1);
-	if (set_camera_transform(&minirt, &minirt.camera) == -1)
+	if (set_camera_transform(&minirt, &minirt.camera) < 0)
 		return (minirt_cleanup(&minirt));
 	if (load_bmaps(&minirt) < 0)
+		return (minirt_cleanup(&minirt));
+	if (set_materials(&minirt) < 0)
 		return (minirt_cleanup(&minirt));
 	mlx_loop(minirt.mlx);
 	return (0);

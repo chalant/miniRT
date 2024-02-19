@@ -1,18 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minirt_math_utils.c                                :+:      :+:    :+:   */
+/*   minirt_vector_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/29 15:53:50 by ychalant          #+#    #+#             */
-/*   Updated: 2024/01/03 15:01:02 by ychalant         ###   ########.fr       */
+/*   Created: 2024/02/09 14:06:48 by ychalant          #+#    #+#             */
+/*   Updated: 2024/02/19 16:39:45 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-float	to_rad(float angle)
+float	*copy_vector(float *src, float *dst, int n)
 {
-	return (angle * (M_PI / 180.0));
+	while (--n > -1)
+		dst[n] = src[n];
+	return (dst);
+}
+
+float	vector_length(float *vector, int n)
+{
+	return (sqrtf(dot_product(vector, vector, n)));
 }

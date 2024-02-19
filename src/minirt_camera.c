@@ -6,7 +6,7 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/09 14:05:24 by ychalant          #+#    #+#             */
-/*   Updated: 2024/02/09 14:05:25 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/02/19 16:53:07 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	set_camera_transform(t_minirt *minirt, t_camera *camera)
 		return (-1);
 	camera->position = camera->origin;
 	if (perspective_projector(&minirt->world_space,
-		&minirt->display, camera))
+			&minirt->display, camera))
 		return (-1);
 	invert_matrix(&minirt->world_space, &minirt->world_space, &minirt->tmp, 4);
 	set_basis(&camera->basis, camera->orientation);

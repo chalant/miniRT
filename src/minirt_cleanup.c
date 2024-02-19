@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minirt_cleanup.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/19 16:08:46 by ychalant          #+#    #+#             */
+/*   Updated: 2024/02/19 16:55:37 by ychalant         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
 void	delete_perturbator(void *address)
 {
-	t_perturbator *perturbator;
+	t_perturbator	*perturbator;
 
 	perturbator = address;
 	delete_matrix(&perturbator->map);

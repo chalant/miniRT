@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minirt_mapping_load.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/19 16:08:59 by ychalant          #+#    #+#             */
+/*   Updated: 2024/02/19 16:50:50 by ychalant         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
 int	init_bmap(t_perturbator *perturbator, int fd)
@@ -7,7 +19,7 @@ int	init_bmap(t_perturbator *perturbator, int fd)
 	int		height;
 	int		width;
 
-	line  = get_next_line(fd);
+	line = get_next_line(fd);
 	res = ft_split(line, ' ');
 	if (!res)
 		return (-1);
@@ -29,7 +41,7 @@ int	load_bmap(t_perturbator *perturbator, int fd)
 	int		j;
 
 	j = 0;
-	line  = get_next_line(fd);
+	line = get_next_line(fd);
 	while (line)
 	{
 		res = ft_split(line, ' ');
@@ -47,9 +59,9 @@ int	load_bmap(t_perturbator *perturbator, int fd)
 	return (0);
 }
 
-int	create_bmap(t_perturbator *pert, const char* file_path)
+int	create_bmap(t_perturbator *pert, const char *file_path)
 {
-	int				fd;
+	int	fd;
 
 	pert->map.points = NULL;
 	pert->map.cols = 0;

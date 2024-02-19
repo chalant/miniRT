@@ -6,7 +6,7 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/09 14:05:01 by ychalant          #+#    #+#             */
-/*   Updated: 2024/02/09 14:05:02 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/02/19 17:03:54 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,16 +67,6 @@ int	solve_cone(t_object *object, t_ray *ray, float solutions[2])
 	solutions[0] = (-abc[1] - discriminant) / (2 * abc[0]);
 	solutions[1] = (-abc[1] + discriminant) / (2 * abc[0]);
 	return (2);
-}
-
-float	project_point(t_ray *ray, t_object *object, float hit)
-{
-	float	projection[3];
-
-	scale_vector(ray->direction, hit, projection, 3);
-	add_vectors(ray->origin, projection, projection, 3);
-	subtract_vectors(object->center, projection, projection, 3);
-	return (dot_product(projection, object->orientation, 3));
 }
 
 int	hit_cone(t_object *object, t_ray *ray)

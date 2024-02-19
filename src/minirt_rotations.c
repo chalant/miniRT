@@ -1,71 +1,68 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minirt_setup.c                                     :+:      :+:    :+:   */
+/*   minirt_rotations.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/29 15:53:50 by ychalant          #+#    #+#             */
-/*   Updated: 2024/02/09 14:06:41 by ychalant         ###   ########.fr       */
+/*   Created: 2024/02/19 16:19:47 by ychalant          #+#    #+#             */
+/*   Updated: 2024/02/19 16:19:48 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-float	to_rad(float angle)
+int	rotate_object(t_minirt *minirt, t_object *object, t_matrix *axis)
 {
-	return (angle * (M_PI / 180.0));
-}
-
-int	x_rotation(t_matrix *matrix, float angle)
-{
-	matrix->points[0][0] = 1.0f;
-	matrix->points[1][1] = cosf(angle);
-	matrix->points[1][2] = -sinf(angle);
-	matrix->points[2][1] = sinf(angle);
-	matrix->points[2][2] = cosf(angle);
+	matrix_product(&object->basis, axis, &minirt->tmp, 3);
+	matrix_copy(&minirt->tmp, &object->basis, 3);
 	return (0);
 }
 
-int	y_rotation(t_matrix *matrix, float angle)
+int	rotate_x(t_minirt *minirt, t_matrix *matrix, float dir[3])
 {
-	matrix->points[0][0] = cosf(angle);
-	matrix->points[0][2] = sinf(angle);
-	matrix->points[1][1] = 1.0f;
-	matrix->points[2][0] = -sinf(angle);
-	matrix->points[2][2] = cosf(angle);
-	return (0);
+	float	tmp[4];
+
+	x_rotation(matrix, 5.0f * to_rad(minirt->mouse.hit_point * dir[1]));
+	rotate_object(minirt, minirt->selected_object, matrix);
+	matvec_product(matrix, minirt->selected_object->orientation, tmp);
+	copy_vector(tmp, minirt->selected_object->orientation, 3);
+	matrix->points[0][0] = 0.0f;
+	matrix->points[1][1] = 0.0f;
+	matrix->points[2][1] = 0.0f;
+	matrix->points[1][2] = 0.0f;
+	matrix->points[2][2] = 0.0f;
+	return (1);
 }
 
-int	z_rotation(t_matrix *matrix, float angle)
+int	rotate_y(t_minirt *minirt, t_matrix *matrix, float dir[3])
 {
-	matrix->points[0][0] = cosf(angle);
-	matrix->points[0][1] = -sinf(angle);
-	matrix->points[1][0] = sinf(angle);
-	matrix->points[1][1] = cosf(angle);
-	matrix->points[2][2] = 1.0f;
-	return (0);
+	float	tmp[4];
+
+	y_rotation(matrix, 5.0f * to_rad(minirt->mouse.hit_point * dir[0]));
+	rotate_object(minirt, minirt->selected_object, matrix);
+	matvec_product(matrix, minirt->selected_object->orientation, tmp);
+	copy_vector(tmp, minirt->selected_object->orientation, 3);
+	matrix->points[0][0] = 0.0f;
+	matrix->points[0][2] = 0.0f;
+	matrix->points[1][1] = 0.0f;
+	matrix->points[2][0] = 0.0f;
+	matrix->points[2][2] = 0.0f;
+	return (1);
 }
 
-int	set_rotations(t_minirt *fdf, float x, float y, float z)
+int	rotate_z(t_minirt *minirt, t_matrix *matrix, float dir[3])
 {
-	if (homogeneous_matrix(&fdf->rotations.x_axis, 3, 3))
-		return (-1);
-	x_rotation(&fdf->rotations.x_axis, to_rad(x));
-	if (homogeneous_matrix(&fdf->rotations.y_axis, 3, 3))
-		return (-1);
-	y_rotation(&fdf->rotations.y_axis, to_rad(y));
-	if (homogeneous_matrix(&fdf->rotations.z_axis, 3, 3))
-		return (-1);
-	z_rotation(&fdf->rotations.z_axis, to_rad(z));
-	if (homogeneous_matrix(&fdf->rev_rotations.x_axis, 3, 3))
-		return (-1);
-	x_rotation(&fdf->rev_rotations.x_axis, to_rad(-x));
-	if (homogeneous_matrix(&fdf->rev_rotations.y_axis, 3, 3))
-		return (-1);
-	y_rotation(&fdf->rev_rotations.y_axis, to_rad(-y));
-	if (homogeneous_matrix(&fdf->rev_rotations.z_axis, 3, 3))
-		return (-1);
-	z_rotation(&fdf->rev_rotations.z_axis, to_rad(-z));
+	float	tmp[4];
+
+	z_rotation(matrix, minirt->mouse.hit_point * dir[0]);
+	rotate_object(minirt, minirt->selected_object, matrix);
+	matvec_product(matrix, minirt->selected_object->orientation, tmp);
+	copy_vector(tmp, minirt->selected_object->orientation, 3);
+	matrix->points[0][0] = 0.0f;
+	matrix->points[0][1] = 0.0f;
+	matrix->points[1][0] = 0.0f;
+	matrix->points[1][1] = 0.0f;
+	matrix->points[2][2] = 0.0f;
 	return (1);
 }

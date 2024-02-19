@@ -6,7 +6,7 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/09 14:00:08 by ychalant          #+#    #+#             */
-/*   Updated: 2024/02/09 14:00:09 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/02/19 16:49:05 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	hit_sphere(t_object *object, t_ray *ray)
 	return (1);
 }
 
-int create_sphere(t_object *object, float radius)
+int	create_sphere(t_object *object, float radius)
 {
 	object->id = !PLANE;
 	object->perturbator_index = 0;

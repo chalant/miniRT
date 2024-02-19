@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
+/*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 14:24:06 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/15 19:46:16 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/02/19 17:41:26 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,6 @@ typedef struct	s_minirt
 
 int		minirt_init(t_minirt *minirt);
 int		minirt_cleanup(t_minirt *minirt);
-int		handle_expose(t_minirt *minirt);
 int		close_program(t_minirt *minirt);
 
 int		key_release_hook(int code, t_minirt *minirt);
@@ -143,5 +142,32 @@ int		full_resolution(t_minirt *minirt);
 
 int		load_bmaps(t_minirt *minirt);
 int		set_materials(t_minirt *minirt);
+
+int		grab_object(t_minirt *minirt, int x, int y);
+
+int		rotate_x(t_minirt *minirt, t_matrix *matrix, float dir[3]);
+int		rotate_y(t_minirt *minirt, t_matrix *matrix, float dir[3]);
+int		rotate_z(t_minirt *minirt, t_matrix *matrix, float dir[3]);
+int		rotate_object(t_minirt *minirt, t_object *object, t_matrix *axis);
+
+void	apply_translation(t_minirt *minirt, float dir[4], float speed);
+void	apply_scaling(t_minirt *minirt, float dir[4]);
+void	apply_rotation(t_minirt *minirt, float dir[4]);
+
+int		update_material(t_minirt *minirt, t_object *object, float direction[4]);
+
+int		control_camera(int code, t_minirt *minirt);
+void	create_basis(float orientation[3], float u[3], float v[3]);
+
+float	*reflect(float incident[3], float normal[3], float hit_angle, float result[3]);
+int		handle_light(t_minirt *minirt, t_hit *hit, t_light *light, float color[3]);
+int		ray_trace(t_minirt *minirt, t_ray *ray, t_hit *hit, int coords[2]);
+void	set_ray(t_minirt *minirt, t_ray *ray, int x, int y);
+int		shade_pixel(t_minirt *minirt, int coords[2]);
+int		add_textures(t_minirt *minirt, t_hit *hit, float color[4]);
+void	bounce_ray(t_ray *ray, t_hit *hit);
+void	cast_shadows(t_minirt *minirt, t_hit *hit, t_light *light, float visibility[3]);
+
+void	minirt_pixel_put(t_display *display, int x, int y, int color);
 
 #endif

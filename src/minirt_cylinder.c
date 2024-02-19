@@ -6,40 +6,11 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/09 14:05:06 by ychalant          #+#    #+#             */
-/*   Updated: 2024/02/09 14:05:07 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/02/19 17:05:12 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-
-float	*choose_arbitray_vector(float result[3], float axis[3])
-{
-	result[0] = 0.0f;
-	result[1] = 1.0f;
-	result[2] = 0.0f;
-	if (fabsf(dot_product(axis, result, 3)) == 1.0f)
-	{
-		result[0] = 0.0f;
-		result[1] = 0.0f;
-		result[2] = 1.0f;
-	}
-	else if (fabsf(dot_product(axis, result, 3)) == 1.0f)
-	{
-		result[0] = 1.0f;
-		result[1] = 0.0f;
-		result[2] = 0.0f;
-	}
-	return (result);
-}
-
-void	create_basis(float orientation[3], float u[3], float v[3])
-{
-	float	arbitrary[3];
-
-	choose_arbitray_vector(arbitrary, orientation);
-	cross_product(arbitrary, orientation, u);
-	cross_product(u, orientation, v);
-}
 
 float	*cylinder_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 {

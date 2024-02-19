@@ -6,7 +6,7 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:53:50 by ychalant          #+#    #+#             */
-/*   Updated: 2024/01/05 15:29:28 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/02/19 16:54:57 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ int	mlx_setup(t_minirt *minirt)
 	if (!minirt->mlx)
 		return (-1);
 	minirt->window = mlx_new_window(minirt->mlx,
-		display->width, display->height, "miniRT");
+			display->width, display->height, "miniRT");
 	if (!minirt->window)
 		return (-1);
 	display->img = mlx_new_image(minirt->mlx,
-		display->width, display->height);
+			display->width, display->height);
 	if (!display->img)
 		return (-1);
 	display->addr = mlx_get_data_addr(display->img, &display->bits_per_pixel,
@@ -48,7 +48,6 @@ int	set_hooks(t_minirt *minirt)
 	mlx_hook(minirt->window, 2, 1L << 0, key_press_hook, minirt);
 	mlx_hook(minirt->window, 3, 1L << 1, key_release_hook, minirt);
 	mlx_hook(minirt->window, 17, 0, close_program, minirt);
-	mlx_expose_hook(minirt->window, handle_expose, minirt);
 	mlx_loop_hook(minirt->mlx, render, minirt);
 	return (1);
 }

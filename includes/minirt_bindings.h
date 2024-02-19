@@ -27,9 +27,6 @@
 #  define TILT_LEFT 97 
 #  define TILT_RIGHT 101
 
-#  define ZI 24
-#  define ZO 27
-
 #  define SHIFT 257
 #  define CTRL 259
 #  define RELOAD 114
@@ -38,7 +35,7 @@
 #  define ESCAPE 53
 #  define COMMAND 261
 #  define TAB 48
-#  define ALT 65513
+#  define ALT 261
 
 #endif
 

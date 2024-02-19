@@ -91,9 +91,9 @@ int	control_light(int code, t_minirt *minirt)
 		light->position[0] -= 5.0f;
 	else if (code == ROT_RIGHT)
 		light->position[0] += 5.0f;
-	else if (code == ROT_UP)
+	else if (code == ROT_UP && !minirt->ctrl.pressed)
 		light->position[2] += 5.0f;
-	else if (code == ROT_DOWN)
+	else if (code == ROT_DOWN && !minirt->ctrl.pressed)
 		light->position[2] -= 5.0f;
 	return (0);
 }

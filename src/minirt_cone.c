@@ -105,6 +105,7 @@ int	hit_cone(t_object *object, t_ray *ray)
 
 int	create_cone(t_object *object, float height, float diameter)
 {
+	object->id = !PLANE;
 	object->intersect = hit_cone;
 	object->normal = cone_normal;
 	object->uv_coords = cone_uv_coords;

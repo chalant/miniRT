@@ -81,8 +81,10 @@ int	init_matrix(t_matrix *matrix, float value)
 
 int	homogeneous_matrix(t_matrix *matrix, int rows, int cols)
 {
-	create_matrix(matrix, rows + 1, cols + 1);
-	init_matrix(matrix, 0.0f);
+	if (create_matrix(matrix, rows + 1, cols + 1) < 0)
+		return (-1);
+	if (init_matrix(matrix, 0.0f) < 0)
+		return (-1);
 	matrix->points[rows][cols] = 1.0f;
 	return (0);
 }

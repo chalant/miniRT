@@ -101,13 +101,14 @@ int	minirt_allocate(t_minirt *minirt)
 
 int	minirt_init(t_minirt *minirt)
 {
-	minirt->low_res = low_resolution;
-	minirt->high_res = full_resolution;
 	minirt_zero(minirt);
 	if (minirt_allocate(minirt))
 		return (-1);
 	mlx_setup(minirt);
 	set_hooks(minirt);
 	to_color(0x0087ceeb, minirt->sky_color);
+	minirt->low_res = low_resolution;
+	minirt->high_res = full_resolution;
+	minirt->render_mode = minirt->high_res;
 	return (1);
 }

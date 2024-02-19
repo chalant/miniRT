@@ -9,12 +9,13 @@ int	init_bmap(t_perturbator *perturbator, int fd)
 
 	line  = get_next_line(fd);
 	res = ft_split(line, ' ');
+	if (!res)
+		return (-1);
 	height = ft_atoi(res[0]);
 	width = ft_atoi(res[1]);
 	ft_clear_ds(res);
-	//todo: protect mallocs.
-	create_matrix(&perturbator->map, height, width);
-	init_matrix(&perturbator->map, 0.0f);
+	if (homogeneous_matrix(&perturbator->map, height - 1, width - 1) < 0)
+		return (-1);
 	perturbator->perturb_normal = compute_bump;
 	free(line);
 	return (0);
@@ -27,13 +28,13 @@ int	load_bmap(t_perturbator *perturbator, int fd)
 	int		i;
 	int		j;
 
-	i = -1;
 	j = 0;
 	line  = get_next_line(fd);
 	while (line)
 	{
-		//todo: malloc protection
 		res = ft_split(line, ' ');
+		if (!res)
+			return (-1);
 		i = -1;
 		while (++i < perturbator->map.cols)
 			perturbator->map.points[j][i] = ft_atoi(res[i]);
@@ -46,25 +47,37 @@ int	load_bmap(t_perturbator *perturbator, int fd)
 	return (0);
 }
 
+int	create_bmap(t_perturbator *pert, const char* file_path)
+{
+	int				fd;
+
+	pert->map.points = NULL;
+	pert->map.cols = 0;
+	pert->map.rows = 0;
+	fd = open(file_path, O_RDONLY);
+	if (init_bmap(pert, fd) < 0)
+		return (-1);
+	if (load_bmap(pert, fd) < 0)
+		return (-1);
+	close(fd);
+	return (0);
+}
+
 int	load_bmaps(t_minirt *minirt)
 {
 	t_perturbator	pert;
-	int				fd;
 
 	pert.map.points = NULL;
+	pert.map.cols = 0;
+	pert.map.rows = 0;
 	pert.perturb_normal = no_perturbation;
 	ft_darray_append(&minirt->perturbators, &pert);
-	//todo: protect fd
-	//todo: malloc protections.
-	fd = open("resources/mesh.bmap", O_RDONLY);
-	init_bmap(&pert, fd);
-	load_bmap(&pert, fd);
+	if (create_bmap(&pert, "resources/mesh.bmap"))
+		return (-1);
 	if (ft_darray_append(&minirt->perturbators, &pert))
 		return (-1);
-	pert.map.points = NULL;
-	fd = open("resources/gravel.bmap", O_RDONLY);
-	init_bmap(&pert, fd);
-	load_bmap(&pert, fd);
+	if (create_bmap(&pert, "resources/gravel.bmap"))
+		return (-1);
 	if (ft_darray_append(&minirt->perturbators, &pert))
 		return (-1);
 	return (0);

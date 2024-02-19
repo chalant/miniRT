@@ -67,7 +67,11 @@ int	main(int argc, char *argv[])
 	if (set_camera_transform(&minirt, &minirt.camera) == -1)
 		return (minirt_cleanup(&minirt));
 	set_materials(&minirt);
-	load_bmaps(&minirt);
+	if (load_bmaps(&minirt) < 0)
+	{
+		printf("FAIL\n");
+		return (minirt_cleanup(&minirt));
+	}
 	mlx_loop(minirt.mlx);
 	return (0);
 }

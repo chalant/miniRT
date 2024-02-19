@@ -142,5 +142,6 @@ int		low_resolution(t_minirt *minirt);
 int		full_resolution(t_minirt *minirt);
 
 int		load_bmaps(t_minirt *minirt);
+int		set_materials(t_minirt *minirt);
 
 #endif

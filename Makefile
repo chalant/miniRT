@@ -23,14 +23,14 @@ SRC_FILES =	minirt.c \
 			matrix_operations.c \
 			matrix_inversion.c \
 			vector_operations.c \
-			rotations.c \
 			minirt_transforms.c \
 			transforms.c \
 			minirt_bump_mapping.c \
 			minirt_mapping_load.c \
 			minirt_init.c \
 			minirt_cleanup.c \
-			minirt_setup.c \
+			minirt_rotations.c \
+			minirt_materials.c \
 			minirt_window_hooks.c \
 			minirt_plane.c \
 			minirt_sphere.c \

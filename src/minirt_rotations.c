@@ -17,6 +17,36 @@ float	to_rad(float angle)
 	return (angle * (M_PI / 180.0));
 }
 
+int	x_rotation(t_matrix *matrix, float angle)
+{
+	matrix->points[0][0] = 1.0f;
+	matrix->points[1][1] = cosf(angle);
+	matrix->points[1][2] = -sinf(angle);
+	matrix->points[2][1] = sinf(angle);
+	matrix->points[2][2] = cosf(angle);
+	return (0);
+}
+
+int	y_rotation(t_matrix *matrix, float angle)
+{
+	matrix->points[0][0] = cosf(angle);
+	matrix->points[0][2] = sinf(angle);
+	matrix->points[1][1] = 1.0f;
+	matrix->points[2][0] = -sinf(angle);
+	matrix->points[2][2] = cosf(angle);
+	return (0);
+}
+
+int	z_rotation(t_matrix *matrix, float angle)
+{
+	matrix->points[0][0] = cosf(angle);
+	matrix->points[0][1] = -sinf(angle);
+	matrix->points[1][0] = sinf(angle);
+	matrix->points[1][1] = cosf(angle);
+	matrix->points[2][2] = 1.0f;
+	return (0);
+}
+
 int	set_rotations(t_minirt *fdf, float x, float y, float z)
 {
 	if (homogeneous_matrix(&fdf->rotations.x_axis, 3, 3))

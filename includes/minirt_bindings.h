@@ -20,10 +20,12 @@
 #  define TL 0x00
 #  define TR 0x02
 
-#  define RU 126
-#  define RD 125
-#  define RL 124
-#  define RR 123
+#  define ROT_UP 126
+#  define ROT_DOWN 125
+#  define ROT_LEFT 124
+#  define ROT_RIGHT 123
+#  define TILT_LEFT 97 
+#  define TILT_RIGHT 101
 
 #  define ZI 24
 #  define ZO 27
@@ -36,6 +38,7 @@
 #  define ESCAPE 53
 #  define COMMAND 261
 #  define TAB 48
+#  define ALT 65513
 
 #endif
 
@@ -46,13 +49,12 @@
 #  define TL 113
 #  define TR 100
 
-#  define RU 65362
-#  define RD 65364
-#  define RL 65363
-#  define RR 65361
-
-#  define ZI 61
-#  define ZO 45
+#  define ROT_UP 65362
+#  define ROT_DOWN 65364
+#  define ROT_LEFT 65363
+#  define ROT_RIGHT 65361
+#  define TILT_LEFT 97 
+#  define TILT_RIGHT 101
 
 #  define SHIFT 65505
 #  define CTRL 65507
@@ -61,6 +63,7 @@
 #  define SPACE 32
 #  define ESCAPE 65307
 #  define TAB 65289
+#  define ALT 65513
 
 #endif
 

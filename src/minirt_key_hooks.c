@@ -28,15 +28,14 @@ int	translate_camera(t_minirt *minirt, float direction[3])
 	scale_vector(orientation, 0.5f, orientation, 3);
 	if (minirt->selected_object)
 		apply_translation(minirt, orientation, 1.0f);
-	add_vectors(minirt->camera.origin,
-		orientation, minirt->camera.origin, 3);
+	add_vectors(minirt->camera.position,
+		orientation, minirt->camera.position, 3);
 	look_at(&minirt->camera, minirt);
 	return (0);
 }
 
 int	next_element(t_minirt *minirt)
 {
-	//todo: cycle colors (hsl) when shift is pressed
 	if (minirt->selected_object)
 	{
 		//todo: cycle textures.
@@ -54,20 +53,25 @@ int	next_element(t_minirt *minirt)
 		}
 	}
 	minirt->light_index++;
-	minirt->light_index = minirt->light_index % minirt->spot_lights.size;
+	minirt->light_index = minirt->light_index % minirt->lights.size;
 	return (0);
 }
 
 int	control_camera(int code, t_minirt *minirt)
 {
-	if (code == RL)
+	minirt->render_mode = minirt->low_res;
+	if (code == ROT_LEFT)
 		rotate_camera(minirt, &minirt->rev_rotations.y_axis);
-	else if (code == RR)
+	else if (code == ROT_RIGHT)
 		rotate_camera(minirt, &minirt->rotations.y_axis);
-	else if (code == RU)
+	else if (code == ROT_UP)
 		rotate_camera(minirt, &minirt->rev_rotations.x_axis);
-	else if (code == RD)
+	else if (code == ROT_DOWN)
 		rotate_camera(minirt, &minirt->rotations.x_axis);
+	else if (code == TILT_RIGHT)
+		rotate_camera(minirt, &minirt->rotations.z_axis);
+	else if (code == TILT_LEFT)
+		rotate_camera(minirt, &minirt->rev_rotations.z_axis);
 	else if (code == TL)
 		translate_camera(minirt, (float [3]){1.0f, 0.0f, 0.0f});
 	else if (code == TR)
@@ -81,18 +85,16 @@ int	control_camera(int code, t_minirt *minirt)
 
 int	control_light(int code, t_minirt *minirt)
 {
-	//todo: need camera orientation.
-	//todo: hue control.
 	t_light	*light;
 
-	light = ft_darray_get(&minirt->spot_lights, minirt->light_index);
-	if (code == RL)
+	light = ft_darray_get(&minirt->lights, minirt->light_index);
+	if (code == ROT_LEFT)
 		light->position[0] -= 5.0f;
-	else if (code == RR)
+	else if (code == ROT_RIGHT)
 		light->position[0] += 5.0f;
-	else if (code == RU)
+	else if (code == ROT_UP)
 		light->position[2] += 5.0f;
-	else if (code == RD)
+	else if (code == ROT_DOWN)
 		light->position[2] -= 5.0f;
 	return (0);
 }
@@ -100,12 +102,12 @@ int	control_light(int code, t_minirt *minirt)
 int	key_press_hook(int code, t_minirt *minirt)
 {
 	minirt->key_pressed = 1;
-	if (code != TAB)
-		minirt->render_mode = low_resolution;
 	if (code == CTRL)
 		minirt->ctrl.pressed = 1;
 	else if (code == SHIFT)
 		minirt->shift.pressed = 1;
+	else if (code == ALT)
+		minirt->alt.pressed = 1;
 	else if (code == TAB)
 		next_element(minirt);
 	else if (!minirt->shift.pressed)
@@ -118,11 +120,13 @@ int	key_press_hook(int code, t_minirt *minirt)
 int	key_release_hook(int code, t_minirt *minirt)
 {
 	if (!minirt->mouse.left_click)
-		minirt->render_mode = full_resolution;
+		minirt->render_mode = minirt->high_res;
 	if (code == CTRL)
 		minirt->ctrl.pressed = 0;
 	else if (code == SHIFT)
 		minirt->shift.pressed = 0;
+	else if (code == ALT)
+		minirt->alt.pressed = 0;
 	minirt->key_pressed = 0;
 	return (0);
 }

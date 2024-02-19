@@ -25,6 +25,7 @@
 # include "mlx.h"
 # include "minirt_controls.h"
 # include "get_next_line.h"
+# include "minirt_objects.h"
 
 typedef struct	s_light
 {
@@ -34,102 +35,18 @@ typedef struct	s_light
 	float	brightness;
 }	t_light;
 
-typedef struct	s_ray
-{
-	float		object_center[4];
-	float		direction[4];
-	float		origin[3];
-	float		closest_t;
-	float		t;
-}	t_ray;
-
 typedef struct	s_camera
 {
 	t_matrix		basis;
 	t_matrix		view;
 	t_matrix		inverse_view;
 	float			orientation[4];
-	float			right[3];
-	float			up[3];
 	float			origin[4];
+	float			*position;
 	float			fov;
 	float			near;
 	float			far;
 }				t_camera;
-
-typedef struct	s_sphere
-{
-	float		radius;
-	const char	*name;
-}				t_sphere;
-
-typedef struct	s_cylinder
-{
-	float		radius;
-	float		height;
-}				t_cylinsder;
-
-typedef struct	s_plane
-{
-	float		point[4];
-}				t_plane;
-
-typedef struct	s_hit
-{
-	struct	s_object	*object;
-	struct	s_material	*material;
-	float				*ray_origin;
-	float				color[4];
-	float				normal[3];
-	float				point[3];
-	float				distance;
-	float				energy;
-	int					*screen_coords;
-}		t_hit;
-
-typedef struct	s_texture
-{
-	float		*(*get_texture)(struct s_material*, struct s_object*, float uv_coords[2], float color[4]);
-}	t_texture;
-
-typedef struct	s_perturbator
-{
-	t_matrix	map;
-
-	float	*(*perturb_normal)(struct s_perturbator*, struct s_object*, float uv_coords[2], float bump[3]);
-}	t_perturbator;
-
-typedef struct	s_material
-{
-	float		diffuse_reflection;
-	float		ambient_reflection;
-	float		specular_reflection;
-	float		shininess;
-	float		emission;
-	float		reflectivity;
-	float		color[4];
-	float		repeat_pattern;
-}		t_material;
-
-typedef struct	s_object
-{
-	t_matrix		basis;
-
-	const char		*name;
-	void			*shape;
-	float			center[4];
-	int				id;
-	int				(*intersect)(struct s_object*, t_ray*);
-	int				(*transform)(struct s_object*, t_matrix*, float*);
-	float			*(*normal)(struct s_object*, t_hit*);
-	float			*(*uv_coords)(struct s_object*, t_hit*, float coords[2]);
-	float			color[4];
-	float			orientation[3];
-	float			size[3];
-	int				material_index;
-	int				perturbator_index;
-	int				texture_index;
-}				t_object;
 
 typedef struct	s_transforms_3d
 {
@@ -157,19 +74,15 @@ typedef struct	s_minirt
 	void			*window;
 
 	t_transforms_3d	rotations;
-	t_transforms_3d	translations;
 	t_transforms_3d	rev_rotations;
-	t_transforms_3d	rev_translations;
-	t_transforms_3d	scalings;
-	t_transforms_3d	rev_scalings;
 
 	t_matrix		world_space;
 	t_matrix		tmp;
 	t_object		*selected_object;
 
-	t_light			diffuse;
 	t_light			ambient;
-	t_darray		spot_lights;
+
+	t_darray		lights;
 	t_darray		objects;
 	t_darray		materials;
 	t_darray		perturbators;
@@ -180,19 +93,20 @@ typedef struct	s_minirt
 	t_mouse			mouse;
 	t_key			shift;
 	t_key			ctrl;
+	t_key			alt;
 
 	float			sky_color[4];
 	int				key_pressed;
 	int				light_index;
 	int				(*render_mode)(struct s_minirt*);
-
-	int				rendered;
+	int				(*low_res)(struct s_minirt*);
+	int				(*high_res)(struct s_minirt*);
 }				t_minirt;
 
 int		minirt_init(t_minirt *minirt);
+int		minirt_cleanup(t_minirt *minirt);
 int		handle_expose(t_minirt *minirt);
 int		close_program(t_minirt *minirt);
-int		update_view(t_minirt *minirt);
 
 int		key_release_hook(int code, t_minirt *minirt);
 int		key_press_hook(int code, t_minirt *minirt);
@@ -226,5 +140,8 @@ void	set_ray(t_minirt *minirt, t_ray *ray, int x, int y);
 
 int		low_resolution(t_minirt *minirt);
 int		full_resolution(t_minirt *minirt);
+
+int		load_bmap(t_minirt *minirt, char *file_path);
+int		load_bmaps(t_minirt *minirt);
 
 #endif

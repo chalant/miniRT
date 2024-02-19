@@ -29,11 +29,11 @@ int	set_col(t_matrix *matrix, float *values, int col, int n)
 int	look_at(t_camera *camera, t_minirt *fdf)
 {
 	invert_matrix(&camera->basis, &camera->view, &fdf->tmp, 3);
-	set_translate(&camera->view, -camera->origin[0],
-		-camera->origin[1], -camera->origin[2]);
+	set_translate(&camera->view, -camera->position[0],
+		-camera->position[1], -camera->position[2]);
 	matrix_copy(&camera->basis, &camera->inverse_view, 3);
-	set_translate(&camera->inverse_view, camera->origin[0],
-		camera->origin[1], camera->origin[2]);
+	set_translate(&camera->inverse_view, camera->position[0],
+		camera->position[1], camera->position[2]);
 	return (0);
 }
 
@@ -64,13 +64,21 @@ int	set_basis(t_matrix *basis, float orientation[3])
 
 int	set_camera_transform(t_minirt *minirt, t_camera *camera)
 {
+	camera->near = -1.0f;
+	camera->far = 1.0f;
+	normalize_vector(camera->orientation, camera->orientation, 3);
 	if (homogeneous_matrix(&camera->basis, 2, 2) == -1)
 		return (-1);
-	set_basis(&camera->basis, camera->orientation);
 	if (homogeneous_matrix(&camera->inverse_view, 3, 3) == -1)
 		return (-1);
 	if (homogeneous_matrix(&camera->view, 3, 3) == -1)
 		return (-1);
+	camera->position = camera->origin;
+	if (perspective_projector(&minirt->world_space,
+		&minirt->display, camera))
+		return (-1);
+	invert_matrix(&minirt->world_space, &minirt->world_space, &minirt->tmp, 4);
+	set_basis(&camera->basis, camera->orientation);
 	look_at(camera, minirt);
 	return (0);
 }

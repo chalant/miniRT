@@ -42,7 +42,7 @@ int	grab_object(t_minirt *minirt, int x, int y)
 		return (0);
 	to_screen_space(&minirt->display, ray.direction, x, y);
 	to_world_space(minirt, ray.direction, position);
-	copy_vector(minirt->camera.origin, ray.origin, 3);
+	copy_vector(minirt->camera.position, ray.origin, 3);
 	matvec_product(&minirt->camera.inverse_view, position, ray.direction);
 	if (!mouse_hit(minirt, &ray, &closest))
 		return (0);
@@ -54,9 +54,6 @@ int	grab_object(t_minirt *minirt, int x, int y)
 
 int	mouse_click_hook(int button, int x, int y, t_minirt *minirt)
 {
-
-	if (button == 2)
-		minirt->mouse.right_click = 1;
 	if (button == 1)
 	{
 		grab_object(minirt, x, y);
@@ -73,9 +70,7 @@ int	mouse_release_hook(int button, int x, int y, t_minirt *minirt)
 	(void)y;
 	if (!minirt->key_pressed)
 		minirt->render_mode = full_resolution;
-	if (button == 2)
-		minirt->mouse.right_click = 0;
-	else if (button == 1)
+	if (button == 1)
 	{
 		minirt->selected_object = NULL;
 		minirt->mouse.left_click = 0;
@@ -94,7 +89,7 @@ int	rotate_x(t_minirt *minirt, t_matrix *matrix, float dir[3])
 {
 	float	tmp[4];
 
-	x_rotation(matrix, minirt->mouse.hit_point * dir[1]);
+	x_rotation(matrix, 5.0f * to_rad(minirt->mouse.hit_point * dir[1]));
 	rotate_object(minirt, minirt->selected_object, matrix);
 	matvec_product(matrix, minirt->selected_object->orientation, tmp);
 	copy_vector(tmp, minirt->selected_object->orientation, 3);
@@ -110,7 +105,7 @@ int	rotate_y(t_minirt *minirt, t_matrix *matrix, float dir[3])
 {
 	float	tmp[4];
 
-	y_rotation(matrix, minirt->mouse.hit_point * dir[0]);
+	y_rotation(matrix, 5.0f * to_rad(minirt->mouse.hit_point * dir[0]));
 	rotate_object(minirt, minirt->selected_object, matrix);
 	matvec_product(matrix, minirt->selected_object->orientation, tmp);
 	copy_vector(tmp, minirt->selected_object->orientation, 3);
@@ -126,7 +121,7 @@ int	rotate_z(t_minirt *minirt, t_matrix *matrix, float dir[3])
 {
 	float	tmp[4];
 
-	z_rotation(matrix, minirt->mouse.hit_point * dir[2]);
+	z_rotation(matrix, minirt->mouse.hit_point * dir[0]);
 	rotate_object(minirt, minirt->selected_object, matrix);
 	matvec_product(matrix, minirt->selected_object->orientation, tmp);
 	copy_vector(tmp, minirt->selected_object->orientation, 3);
@@ -140,15 +135,18 @@ int	rotate_z(t_minirt *minirt, t_matrix *matrix, float dir[3])
 
 void	apply_rotation(t_minirt *minirt, float dir[4])
 {
+	minirt->render_mode = minirt->low_res;
 	rotate_x(minirt, &minirt->mouse.direction, dir);
 	rotate_y(minirt, &minirt->mouse.direction, dir);
-	rotate_z(minirt, &minirt->mouse.direction, dir);
+	if (minirt->shift.pressed)
+		rotate_z(minirt, &minirt->mouse.direction, dir);
 }
 
 void	apply_scaling(t_minirt *minirt, float dir[4])
 {
 	t_object	*selected;
 
+	minirt->render_mode = minirt->low_res;
 	selected = minirt->selected_object;
 	minirt->selected_object->size[0] += -selected->size[0] * dir[0];
 	minirt->selected_object->size[1] += selected->size[1] * dir[1];
@@ -157,9 +155,36 @@ void	apply_scaling(t_minirt *minirt, float dir[4])
 
 void	apply_translation(t_minirt *minirt, float dir[4], float speed)
 {
+	minirt->render_mode = minirt->low_res;
 	minirt->selected_object->center[0] += speed * dir[0];
 	minirt->selected_object->center[1] += speed * dir[1];
 	minirt->selected_object->center[2] += speed * dir[2];
+}
+
+int	update_pattern(t_material *material, float direction[4])
+{
+	material->repeat_pattern += direction[1];
+	return (0);
+}
+
+int	update_material(t_minirt *minirt, t_object *object, float direction[4])
+{
+	t_material	*material;
+
+	material = ft_darray_get(&minirt->materials, object->material_index);
+	if (minirt->ctrl.pressed)
+		return (update_pattern(material, direction));
+	material->shininess += direction[1] * minirt->mouse.hit_point * 5.0f;
+	if (material->shininess < 2.0f)
+		material->shininess = 2.0f;
+	else if (material->shininess > 200.0f)
+		material->shininess = 200.0f;
+	material->reflectivity += -direction[0];
+	if (material->reflectivity >= 0.5f)
+		material->reflectivity = 0.5f;
+	else if (material->reflectivity < 0.0f)
+		material->reflectivity = 0.0f;
+	return (0);
 }
 
 int	mouse_update(int x, int y, t_minirt *minirt)
@@ -171,13 +196,14 @@ int	mouse_update(int x, int y, t_minirt *minirt)
 
 	if (!minirt->selected_object)
 		return (0);
-	minirt->render_mode = low_resolution;
 	to_screen_space(&minirt->display, coords, x, y);
 	to_world_space(minirt, coords, position);
 	subtract_vectors(position, minirt->mouse.world_position, direction, 3);
 	direction[3] = 1.0f;
 	matvec_product(&minirt->camera.basis, direction, dir);
-	if (minirt->ctrl.pressed)
+	if (minirt->alt.pressed)
+		update_material(minirt, minirt->selected_object, dir);
+	else if (minirt->ctrl.pressed)
 		apply_rotation(minirt, dir);
 	else if (minirt->shift.pressed)
 		apply_scaling(minirt, dir);

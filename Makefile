@@ -27,7 +27,9 @@ SRC_FILES =	minirt.c \
 			minirt_transforms.c \
 			transforms.c \
 			minirt_bump_mapping.c \
+			minirt_mapping_load.c \
 			minirt_init.c \
+			minirt_cleanup.c \
 			minirt_setup.c \
 			minirt_window_hooks.c \
 			minirt_plane.c \

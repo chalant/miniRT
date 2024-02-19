@@ -20,14 +20,6 @@ void	free_mlx(t_minirt *fdf)
 		mlx_destroy_window(fdf->mlx, fdf->window);
 }
 
-int	update_view(t_minirt *minirt)
-{
-	if (!minirt->rendered)
-		render(minirt);
-	//minirt->rendered = 1;
-	return (0);
-}
-
 int	close_program(t_minirt *fdf)
 {
 	//minirt_cleanup(fdf, 0);

@@ -1,6 +1,7 @@
 #include "minirt.h"
 
-float	*no_perturbation(t_perturbator *perturbator, t_object *object, float uv_coords[2], float bump[3])
+float	*no_perturbation(t_perturbator *perturbator, t_object *object,
+	float uv_coords[2], float bump[3])
 {
 	(void)perturbator;
 	(void)object;
@@ -12,7 +13,38 @@ float	*no_perturbation(t_perturbator *perturbator, t_object *object, float uv_co
 	return (bump);
 }
 
-float	*compute_bump(t_perturbator *perturbator, t_object *object, float uv_coords[2], float bump[3])
+float	compute_du(t_matrix *bump_map, float uv_coords[2], float epsilon)
+{
+	int	v;
+	int	u_e;
+	int	u_ne;
+
+	v = abs((int)(uv_coords[1] * (bump_map->rows - 1)) % bump_map->rows);
+	u_e = abs((int)((uv_coords[0] + epsilon)
+				* (bump_map->cols - 1)) % bump_map->cols);
+	u_ne = abs((int)((uv_coords[0] - epsilon)
+				* (bump_map->cols - 1)) % bump_map->cols);
+	return ((bump_map->points[v][u_e] - bump_map->points[v][u_ne])
+		/ (2.0f * epsilon));
+}
+
+float	compute_dv(t_matrix *bump_map, float uv_coords[2], float epsilon)
+{
+	int	v_e;
+	int	u;
+	int	v_ne;
+
+	v_e = abs((int)((uv_coords[1] + epsilon)
+				* (bump_map->rows - 1)) % bump_map->rows);
+	u = abs((int)(uv_coords[0] * (bump_map->cols - 1)) % bump_map->cols);
+	v_ne = abs((int)((uv_coords[1] - epsilon)
+				* (bump_map->rows - 1)) % bump_map->rows);
+	return ((bump_map->points[v_e][u] - bump_map->points[v_ne][u])
+		/ (2.0f * epsilon));
+}
+
+float	*compute_bump(t_perturbator *perturbator, t_object *object,
+	float uv_coords[2], float bump[3])
 {
 	t_matrix	bump_map;
 	float		epsilon;
@@ -23,17 +55,9 @@ float	*compute_bump(t_perturbator *perturbator, t_object *object, float uv_coord
 	epsilon = 0.001f;
 	bump_strength = 0.00001f;
 	bump_map = perturbator->map;
-	int u_e = abs((int)((uv_coords[0] + epsilon) * (bump_map.cols - 1)) % bump_map.cols);
-	int v_e = abs((int)((uv_coords[1] + epsilon) * (bump_map.rows - 1)) % bump_map.rows);
-	int u = abs((int)(uv_coords[0] * (bump_map.cols - 1)) % bump_map.cols);
-	int	v = abs((int)(uv_coords[1] * (bump_map.rows - 1)) % bump_map.rows);
-	int	u_ne = abs((int)((uv_coords[0]  - epsilon) * (bump_map.cols - 1)) % bump_map.cols);
-	int	v_ne = abs((int)((uv_coords[1] - epsilon) * (bump_map.rows - 1)) % bump_map.rows);
-
-	du = (bump_map.points[v][u_e] - bump_map.points[v][u_ne]) / (2.0f * epsilon);
-    dv = (bump_map.points[v_e][u] - bump_map.points[v_ne][u]) / (2.0f * epsilon);
-
-    bump[0] = bump_strength * (object->center[0] - du);
+	du = compute_du(&bump_map, uv_coords, epsilon);
+	dv = compute_dv(&bump_map, uv_coords, epsilon);
+	bump[0] = bump_strength * (object->center[0] - du);
 	bump[1] = bump_strength * (object->center[1] - dv);
 	bump[2] = bump_strength * object->center[2];
 	return (bump);

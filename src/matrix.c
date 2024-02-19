@@ -35,6 +35,8 @@ int	delete_matrix(t_matrix *matrix)
 
 	if (!matrix)
 		return (0);
+	if (!matrix->points)
+		return (0);
 	i = -1;
 	while (++i < matrix->rows)
 		free(matrix->points[i]);

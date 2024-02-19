@@ -29,18 +29,15 @@ float	*cone_uv_coords(t_object *object, t_hit *hit, float uv_coords[2])
 	return (uv_coords);
 }
 
-//todo: this is not the right normal.
 float	*cone_normal(t_object *object, t_hit *hit)
 {
-	float	point[3];
-	float	cp[3];
-	float	center[3];
+	float	pc[3];
+	float	tmp[3];
 
-	subtract_vectors(hit->ray_origin, object->center, center, 3);
-	add_vectors(hit->point, center, point, 3);
-	scale_vector(object->orientation,
-		dot_product(object->orientation, point, 3), cp, 3);
-	subtract_vectors(point, cp, hit->normal, 3);
+	add_vectors(hit->ray_origin, hit->point, tmp, 3);
+	subtract_vectors(tmp, object->center, pc, 3);
+	cross_product(object->orientation, pc, tmp);
+	cross_product(tmp, pc, hit->normal);
 	normalize_vector(hit->normal, hit->normal, 3);
 	return (hit->normal);
 }
@@ -108,7 +105,6 @@ int	hit_cone(t_object *object, t_ray *ray)
 
 int	create_cone(t_object *object, float height, float diameter)
 {
-	object->perturbator_index = 0;
 	object->intersect = hit_cone;
 	object->normal = cone_normal;
 	object->uv_coords = cone_uv_coords;

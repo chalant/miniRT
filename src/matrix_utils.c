@@ -6,11 +6,11 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:09:20 by ychalant          #+#    #+#             */
-/*   Updated: 2024/02/19 17:09:34 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/02/19 18:17:02 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "matrix.h"
+#include "linear_algebra.h"
 
 int	homogeneous_matrix(t_matrix *matrix, int rows, int cols)
 {

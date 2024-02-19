@@ -7,7 +7,7 @@ MLX_DIR_MAC = ./minilibx_mac
 
 INCLUDES_FILES = minirt.h \
 		         minirt_bindings.h \
-		         matrix.h \
+		         linear_algebra.h \
 				 minirt_objects.h \
 				 minirt_colors.h
 

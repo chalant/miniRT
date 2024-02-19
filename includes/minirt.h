@@ -6,7 +6,7 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 14:24:06 by alexphil          #+#    #+#             */
-/*   Updated: 2024/02/19 18:05:48 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/02/19 18:16:46 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <stdio.h>
 # include <math.h>
 # include <fcntl.h>
-# include "matrix.h"
+# include "linear_algebra.h"
 # include "minirt_bindings.h"
 # include "minirt_colors.h"
 # include "libft.h"

@@ -141,7 +141,6 @@ void	set_ray(t_minirt *minirt, t_ray *ray, int x, int y);
 int		low_resolution(t_minirt *minirt);
 int		full_resolution(t_minirt *minirt);
 
-int		load_bmap(t_minirt *minirt, char *file_path);
 int		load_bmaps(t_minirt *minirt);
 
 #endif

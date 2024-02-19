@@ -38,7 +38,6 @@ int	next_element(t_minirt *minirt)
 {
 	if (minirt->selected_object)
 	{
-		//todo: cycle textures.
 		if (minirt->shift.pressed)
 		{
 			minirt->selected_object->texture_index++;

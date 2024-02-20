@@ -6,7 +6,7 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:53:50 by ychalant          #+#    #+#             */
-/*   Updated: 2024/02/19 16:47:23 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/02/20 15:30:30 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	free_mlx(t_minirt *minirt)
 		mlx_destroy_image(minirt->mlx, minirt->display.img);
 	if (minirt->window)
 		mlx_destroy_window(minirt->mlx, minirt->window);
-	mlx_destroy_display(minirt->mlx);
 }
 
 int	close_program(t_minirt *minirt, int status)

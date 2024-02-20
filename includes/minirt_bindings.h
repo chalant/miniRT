@@ -6,7 +6,7 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:54:53 by ychalant          #+#    #+#             */
-/*   Updated: 2024/02/19 18:11:00 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/02/20 16:05:35 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@
 #  define ROT_DOWN 125
 #  define ROT_LEFT 124
 #  define ROT_RIGHT 123
-#  define TILT_LEFT 97 
-#  define TILT_RIGHT 101
+#  define TILT_LEFT 12 
+#  define TILT_RIGHT 14
 
 #  define SHIFT 257
 #  define CTRL 259

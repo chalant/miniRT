@@ -18,18 +18,35 @@ void	delete_perturbator(void *address)
 
 	perturbator = address;
 	delete_matrix(&perturbator->map);
+	printf("Deleted\n");
+}
+
+void	delete_object(void *address)
+{
+	t_object	*object;
+
+	object = address;
+	delete_matrix(&object->basis);
 }
 
 int	minirt_cleanup(t_minirt *minirt)
 {
+	delete_matrix(&minirt->tmp);
+	delete_matrix(&minirt->world_space);
 	delete_matrix(&minirt->mouse.direction);
 	delete_matrix(&minirt->camera.basis);
 	delete_matrix(&minirt->camera.view);
 	delete_matrix(&minirt->camera.inverse_view);
-	ft_darray_delete(&minirt->objects, NULL);
+	delete_matrix(&minirt->rotations.x_axis);
+	delete_matrix(&minirt->rotations.y_axis);
+	delete_matrix(&minirt->rotations.z_axis);
+	delete_matrix(&minirt->rev_rotations.x_axis);
+	delete_matrix(&minirt->rev_rotations.y_axis);
+	delete_matrix(&minirt->rev_rotations.z_axis);
+	ft_darray_delete(&minirt->objects, delete_object);
 	ft_darray_delete(&minirt->lights, NULL);
 	ft_darray_delete(&minirt->textures, NULL);
 	ft_darray_delete(&minirt->materials, NULL);
-	ft_darray_delete(&minirt->perturbators, NULL);
+	ft_darray_delete(&minirt->perturbators, delete_perturbator);
 	return (1);
 }

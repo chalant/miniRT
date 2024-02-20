@@ -55,7 +55,7 @@ int	control_light(int code, t_minirt *minirt)
 int	key_press_hook(int code, t_minirt *minirt)
 {
 	if (code == ESCAPE)
-		return (close_program(minirt));
+		return (close_program(minirt, 0));
 	minirt->key_pressed = 1;
 	if (code == CTRL)
 		minirt->ctrl.pressed = 1;

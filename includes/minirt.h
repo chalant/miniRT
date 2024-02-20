@@ -106,7 +106,7 @@ typedef struct s_minirt
 
 int		minirt_init(t_minirt *minirt);
 int		minirt_cleanup(t_minirt *minirt);
-int		close_program(t_minirt *minirt);
+int		close_program(t_minirt *minirt, int status);
 
 int		key_release_hook(int code, t_minirt *minirt);
 int		key_press_hook(int code, t_minirt *minirt);
@@ -132,7 +132,7 @@ void	create_basis(float orientation[3], float u[3], float v[3]);
 int		low_resolution(t_minirt *minirt);
 int		full_resolution(t_minirt *minirt);
 
-int		load_bmaps(t_minirt *minirt);
+int		load_bump_maps(t_minirt *minirt);
 int		set_materials(t_minirt *minirt);
 
 int		grab_object(t_minirt *minirt, int x, int y);

@@ -20,15 +20,15 @@ int	main(int argc, char *argv[])
 	if (argc != 2)
 		return (1);
 	if (minirt_init(&minirt) < 0)
-		return (1);
+		close_program(&minirt, 1);
 	if (import_map(&minirt, argv))
-		return (minirt_cleanup(&minirt) * 1);
+		close_program(&minirt, 1);
 	if (set_camera_transform(&minirt, &minirt.camera) < 0)
-		return (minirt_cleanup(&minirt));
-	if (load_bmaps(&minirt) < 0)
-		return (minirt_cleanup(&minirt));
+		close_program(&minirt, 1);
+	if (load_bump_maps(&minirt) < 0)
+		close_program(&minirt, 1);
 	if (set_materials(&minirt) < 0)
-		return (minirt_cleanup(&minirt));
+		close_program(&minirt, 1);
 	mlx_loop(minirt.mlx);
 	return (0);
 }

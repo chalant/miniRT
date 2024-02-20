@@ -18,11 +18,12 @@ void	free_mlx(t_minirt *minirt)
 		mlx_destroy_image(minirt->mlx, minirt->display.img);
 	if (minirt->window)
 		mlx_destroy_window(minirt->mlx, minirt->window);
+	mlx_destroy_display(minirt->mlx);
 }
 
-int	close_program(t_minirt *minirt)
+int	close_program(t_minirt *minirt, int status)
 {
 	minirt_cleanup(minirt);
 	free_mlx(minirt);
-	exit(0);
+	exit(status);
 }

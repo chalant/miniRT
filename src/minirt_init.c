@@ -54,6 +54,7 @@ int	set_hooks(t_minirt *minirt)
 
 int	minirt_zero(t_minirt *minirt)
 {
+	minirt->display.img = NULL;
 	minirt->mlx = NULL;
 	minirt->window = NULL;
 	minirt->selected_object = NULL;
@@ -74,6 +75,12 @@ int	minirt_zero(t_minirt *minirt)
 	minirt->camera.basis.points = NULL;
 	minirt->camera.inverse_view.points = NULL;
 	minirt->camera.view.points = NULL;
+	minirt->rotations.x_axis.points = NULL;
+	minirt->rotations.y_axis.points = NULL;
+	minirt->rotations.z_axis.points = NULL;
+	minirt->rev_rotations.x_axis.points = NULL;
+	minirt->rev_rotations.y_axis.points = NULL;
+	minirt->rev_rotations.z_axis.points = NULL;
 	return (0);
 }
 

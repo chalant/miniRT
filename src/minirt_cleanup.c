@@ -18,7 +18,6 @@ void	delete_perturbator(void *address)
 
 	perturbator = address;
 	delete_matrix(&perturbator->map);
-	printf("Deleted\n");
 }
 
 void	delete_object(void *address)

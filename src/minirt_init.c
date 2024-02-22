@@ -6,7 +6,7 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:53:50 by ychalant          #+#    #+#             */
-/*   Updated: 2024/02/19 16:54:57 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/02/22 11:01:10 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,6 @@ int	minirt_zero(t_minirt *minirt)
 	minirt->camera.basis.points = NULL;
 	minirt->camera.inverse_view.points = NULL;
 	minirt->camera.view.points = NULL;
-	minirt->rotations.x_axis.points = NULL;
-	minirt->rotations.y_axis.points = NULL;
-	minirt->rotations.z_axis.points = NULL;
-	minirt->rev_rotations.x_axis.points = NULL;
-	minirt->rev_rotations.y_axis.points = NULL;
-	minirt->rev_rotations.z_axis.points = NULL;
 	return (0);
 }
 
@@ -108,6 +102,12 @@ int	minirt_allocate(t_minirt *minirt)
 int	minirt_init(t_minirt *minirt)
 {
 	minirt_zero(minirt);
+	minirt->rotations.x_axis.points = NULL;
+	minirt->rotations.y_axis.points = NULL;
+	minirt->rotations.z_axis.points = NULL;
+	minirt->rev_rotations.x_axis.points = NULL;
+	minirt->rev_rotations.y_axis.points = NULL;
+	minirt->rev_rotations.z_axis.points = NULL;
 	if (minirt_allocate(minirt))
 		return (-1);
 	mlx_setup(minirt);

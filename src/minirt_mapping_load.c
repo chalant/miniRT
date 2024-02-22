@@ -6,7 +6,7 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 16:08:59 by ychalant          #+#    #+#             */
-/*   Updated: 2024/02/19 16:50:50 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/02/22 10:44:11 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,14 @@ int	load_bump_maps(t_minirt *minirt)
 	if (ft_darray_append(&minirt->perturbators, &pert))
 		return (delete_matrix(&pert.map) - 1);
 	if (create_bmap(&pert, "resources/gravel.bmap"))
+		return (delete_matrix(&pert.map) - 1);
+	if (ft_darray_append(&minirt->perturbators, &pert))
+		return (delete_matrix(&pert.map) - 1);
+	if (create_bmap(&pert, "resources/wood.bmap"))
+		return (delete_matrix(&pert.map) - 1);
+	if (ft_darray_append(&minirt->perturbators, &pert))
+		return (delete_matrix(&pert.map) - 1);
+	if (create_bmap(&pert, "resources/mars.bmap"))
 		return (delete_matrix(&pert.map) - 1);
 	if (ft_darray_append(&minirt->perturbators, &pert))
 		return (delete_matrix(&pert.map) - 1);

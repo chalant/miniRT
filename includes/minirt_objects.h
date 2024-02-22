@@ -6,7 +6,7 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 18:06:34 by ychalant          #+#    #+#             */
-/*   Updated: 2024/02/19 18:08:35 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/02/22 12:34:44 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ typedef struct s_hit
 	struct s_object		*object;
 	struct s_material	*material;
 	float				*ray_origin;
-	float				ray_direction[3];
+	int					inside;
 	float				color[4];
 	float				normal[3];
 	float				point[3];

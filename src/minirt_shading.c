@@ -6,7 +6,7 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:42:34 by ychalant          #+#    #+#             */
-/*   Updated: 2024/02/19 17:43:03 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/02/22 12:34:50 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,10 @@ int	set_hit_info(t_minirt *minirt, t_hit *hit, t_ray *ray)
 	scale_vector(ray->direction, ray->t, hit->point, 3);
 	hit->object->normal(hit->object, hit);
 	if (dot_product(hit->normal, ray->direction, 3) > 0.0f)
+	{
+		hit->inside = 1;
 		scale_vector(hit->normal, -1.0f, hit->normal, 3);
+	}
 	add_vectors(hit->point, ray->origin, hit->point, 3);
 	return (1);
 }

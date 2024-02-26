@@ -103,6 +103,7 @@ linux:
 clean:
 	make -C $(LIBFT_DIR) clean
 	rm -rf $(OBJ_DIR)
+	rm -rf minilibx_mac/*.a minilibx_mac/*.o
 
 fclean: clean
 	make -C $(LIBFT_DIR) fclean

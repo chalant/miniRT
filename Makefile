@@ -67,43 +67,41 @@ NAME = minirt
 LINUX = lin
 
 LIBFT = $(LIBFT_DIR)/libft.a
-MINILIBX_LINUX = $(MLX_DIR_LINUX)/libmlx_Linux.a
-MLX_MAC = $(MLX_DIR_MAC)/libmlx.a
 
-# C_FLAGS = -O3 -I$(MLX_DIR_LINUX) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror -MMD -MP
-C_FLAGS = -g -O3 -I$(MLX_DIR_LINUX) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror -Wno-unused-result
-C_FLAGS_MAC = -O3 -I$(MLX_DIR_MAC) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+	MLX_DIR = ./minilibx
+    LFLAGS = -lXext -lX11 -lm
+	MINILIBX = $(MLX_DIR)/libmlx_Linux.a
+endif
+ifeq ($(UNAME_S),Darwin)
+	MLX_DIR = ./minilibx_mac
+    LFLAGS = -framework OpenGL -framework AppKit
+	MINILIBX = $(MLX_DIR)/libmlx.a
+endif
+
+C_FLAGS += -O3 -I$(MLX_DIR) -I$(INCLUDES_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -Wall -Wextra -Werror
 
 all:
 	mkdir -p $(OBJ_DIR)
 	make $(NAME)
 
-$(NAME): $(OBJ) $(LIBFT) $(MLX_MAC)
-	cc $(C_FLAGS_MAC) $(OBJ) $(LIBFT) $(MLX_MAC) -framework OpenGL -framework AppKit -o $(NAME)
+$(NAME): $(OBJ) $(LIBFT) $(MINILIBX)
+	cc $(C_FLAGS) $(OBJ) $(LIBFT) $(MINILIBX) $(LFLAGS) -o $(NAME)
 
-$(LINUX): $(OBJ) $(LIBFT) $(MINILIBX_LINUX)
-	cc $(C_FLAGS) $(OBJ) $(LIBFT) $(MINILIBX_LINUX) -lXext -lX11 -lm -o $(NAME)
-
-$(MINILIBX_LINUX):
-	make -C $(MLX_DIR_LINUX)
+$(MINILIBX):
+	make -C $(MLX_DIR)
 
 $(LIBFT):
 	make -C $(LIBFT_DIR)
 
-$(MLX_MAC):
-	make -C $(MLX_DIR_MAC)
-
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCLUDES)
 	cc $(C_FLAGS) -c $< -o $@
-
-linux:
-	mkdir -p $(OBJ_DIR)
-	make $(LINUX)
 
 clean:
 	make -C $(LIBFT_DIR) clean
 	rm -rf $(OBJ_DIR)
-	rm -rf minilibx_mac/*.a minilibx_mac/*.o
+	make -C $(MLX_DIR) clean
 
 fclean: clean
 	make -C $(LIBFT_DIR) fclean

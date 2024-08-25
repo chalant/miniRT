@@ -14,8 +14,11 @@ INCLUDES_FILES = minirt.h \
 SRC_FILES =	minirt.c \
 			map.c \
 			map_read.c \
-			map_process.c \
-			map_process_utils.c \
+			map_process1.c \
+			map_process2.c \
+			map_process3.c \
+			map_process_utils1.c \
+			map_process_utils2.c \
 			map_atof.c \
 			map_error.c \
 			minirt_key_hooks.c \
@@ -100,6 +103,7 @@ linux:
 clean:
 	make -C $(LIBFT_DIR) clean
 	rm -rf $(OBJ_DIR)
+	rm -rf minilibx_mac/*.a minilibx_mac/*.o
 
 fclean: clean
 	make -C $(LIBFT_DIR) fclean

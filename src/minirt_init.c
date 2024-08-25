@@ -6,7 +6,7 @@
 /*   By: ychalant <ychalant@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 15:53:50 by ychalant          #+#    #+#             */
-/*   Updated: 2024/02/22 11:01:10 by ychalant         ###   ########.fr       */
+/*   Updated: 2024/02/26 17:12:04 by ychalant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ int	minirt_zero(t_minirt *minirt)
 	minirt->camera.basis.points = NULL;
 	minirt->camera.inverse_view.points = NULL;
 	minirt->camera.view.points = NULL;
+	minirt->world_space.points = NULL;
 	return (0);
 }
 

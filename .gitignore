@@ -1,0 +1,5 @@
+minirt
+*.o
+*.a
+.vscode
+obj

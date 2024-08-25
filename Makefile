@@ -2,8 +2,6 @@ INCLUDES_DIR = ./includes
 SRC_DIR = ./src
 OBJ_DIR = ./obj
 LIBFT_DIR = ./libft
-MLX_DIR_LINUX = ./minilibx
-MLX_DIR_MAC = ./minilibx_mac
 
 INCLUDES_FILES = minirt.h \
 		         minirt_bindings.h \
@@ -64,7 +62,6 @@ INCLUDES = $(addprefix $(INCLUDES_DIR)/, $(INCLUDES_FILES))
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC_FILES:.c=.o))
 
 NAME = minirt
-LINUX = lin
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
@@ -73,6 +70,7 @@ ifeq ($(UNAME_S),Linux)
 	MLX_DIR = ./minilibx
     LFLAGS = -lXext -lX11 -lm
 	MINILIBX = $(MLX_DIR)/libmlx_Linux.a
+	C_FLAGS = -Wno-unused-result
 endif
 ifeq ($(UNAME_S),Darwin)
 	MLX_DIR = ./minilibx_mac

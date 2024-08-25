@@ -32,7 +32,7 @@ struct s_col_name mlx_col_name[] =
  { "moccasin" , 0xffe4b5 },
  { "cornsilk" , 0xfff8dc },
  { "ivory" , 0xfffff0 },
- { "lemon chiffon" , 0xfffacd },xvar
+ { "lemon chiffon" , 0xfffacd },
  { "lemonchiffon" , 0xfffacd },
  { "seashell" , 0xfff5ee },
  { "honeydew" , 0xf0fff0 },

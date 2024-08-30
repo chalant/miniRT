@@ -10,7 +10,7 @@ A simple raytracing engine
 - **libbsd-dev**: Required for building the project on Linux
 
 ## Installation
-### On Linux
+### On Ubuntu
 1. **Clone repository:**
 ```
 git clone https://github.com/chalant/miniRT.git

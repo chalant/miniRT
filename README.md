@@ -1,6 +1,6 @@
 # MINIRT
-A simple raytracing engine
 ## Description
+A simple raytracing engine. Supports checkerboarding, simple reflections and bump maps
 ![Feature Screenshot](./resources/Screenshot_20240904_152524.png)
 ![Feature Screenshot](./resources/Screenshot_20240904_152558.png)
 ## Table of Contents

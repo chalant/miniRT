@@ -41,16 +41,16 @@
 
 # ifdef __linux__
 
-#  define TU 122
+#  define TU 119
 #  define TD 115
-#  define TL 113
+#  define TL 97
 #  define TR 100
 
 #  define ROT_UP 65362
 #  define ROT_DOWN 65364
 #  define ROT_LEFT 65363
 #  define ROT_RIGHT 65361
-#  define TILT_LEFT 97 
+#  define TILT_LEFT 113 
 #  define TILT_RIGHT 101
 
 #  define SHIFT 65505

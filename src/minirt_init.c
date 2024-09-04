@@ -113,7 +113,7 @@ int	minirt_init(t_minirt *minirt)
 		return (-1);
 	mlx_setup(minirt);
 	set_hooks(minirt);
-	to_color(0x0087ceeb, minirt->sky_color);
+	to_color(0x00000000, minirt->sky_color);
 	minirt->low_res = low_resolution;
 	minirt->high_res = full_resolution;
 	minirt->render_mode = minirt->high_res;

@@ -2,6 +2,7 @@
 ## Description
 A simple raytracing engine using phongs lighting model. Supports checkerboarding, simple reflections and bump maps.
 Ability to drag and dynamically apply simple transformations like scaling, rotations and translations on objects in the scene.
+
 ![Feature Screenshot](./resources/Screenshot_20240904_152524.png)
 ![Feature Screenshot](./resources/Screenshot_20240904_152558.png)
 ![Feature Screenshot](./resources/Screenshot_20240904_150508.png)

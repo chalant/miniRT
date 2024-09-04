@@ -1,13 +1,14 @@
 # MINIRT
 ## Description
-A simple raytracing engine. Supports checkerboarding, simple reflections and bump maps
+A simple raytracing engine using phongs lighting model. Supports checkerboarding, simple reflections and bump maps.
+Ability to drag and dynamically apply simple transformations like scaling, rotations and translations on objects in the scene.
 ![Feature Screenshot](./resources/Screenshot_20240904_152524.png)
 ![Feature Screenshot](./resources/Screenshot_20240904_152558.png)
+![Feature Screenshot](./resources/Screenshot_20240904_150508.png)
 ## Table of Contents
 1. [Requirements](#installation)
 2. [Installation](#requirements)
 3. [Usage](#usage)
-4. [Commands](#commands)
 
 ## Requirements
 - **libbsd-dev**: Required for building the project on Linux
@@ -44,15 +45,3 @@ make
 ```
 ./minirt map.rt
 ```
-## Commands
-| **Action**                         | **Windows/Linux**          | **Mac**                 |
-|------------------------------------|----------------------------|-------------------------|
-| Move up, down, left, right         | `W, S, A, D`               | `W, S, A, D`            |
-| Zoom in/out                        | `+/-`                      | ``+/-``                 |
-| Rotate Up, Down, Left, Right       | `↑, ↓, ←, →`               | `↑, ↓, ←, →`            |
-| Increase/Decrease Elevation        | `Shift + Ctrl + ↑/↓`       | `Shift + Cmd + ↑/↓`     |
-| Increase/Decrease Width            | `Shift + Ctrl + →/←`       | `Shift + Cmd + →/←`     |
-| Increase/Decrease Height           | `Ctrl + ↑/↓`               | `Cmd + ↑/↓`             |
-| Increase/Decrease Color separation | `Alt + ↑/↓`                | `Alt + ↑/↓`             |
-| Rotate colors                      | `Alt + →/←`                | `Alt + →/←`             |
-| Toggle height lightness on/off     | `Alt + L`                  | `Alt + L`               |

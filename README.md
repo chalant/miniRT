@@ -1,4 +1,5 @@
 # MINIRT
+Raytracing Engine
 ## Description
 A simple raytracing engine using phongs lighting model. Supports checkerboarding, simple reflections and bump maps.
 Ability to drag and dynamically apply simple transformations like scaling, rotations and translations on objects in the scene.

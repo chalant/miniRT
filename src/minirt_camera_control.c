@@ -14,8 +14,41 @@
 
 int	rotate_camera(t_minirt *minirt, t_matrix *rot)
 {
+	// todo: only apply transformations to x and z axis.
 	matrix_product(&minirt->camera.basis, rot, &minirt->tmp, 3);
 	matrix_copy(&minirt->tmp, &minirt->camera.basis, 3);
+	look_at(&minirt->camera, minirt);
+	return (0);
+}
+
+int camera_yaw(t_minirt *minirt, t_matrix *rot) {
+	float	forward[4];
+	float	right[4];
+	float	up[4];
+	float	result[4];
+	int	i = 0;
+	
+	while (i < minirt->camera.basis.rows)
+	{
+		right[i] =  minirt->camera.basis.points[i][0];
+		forward[i] = minirt->camera.basis.points[i][2];
+		i++;
+	}
+	matvec_product(rot, forward, result);
+	copy_vector(result, forward, 4);
+	matvec_product(rot, right, result);
+	copy_vector(result, right, 4);
+	i = 0;
+	while (i < minirt->camera.basis.rows)
+	{
+		minirt->camera.basis.points[i][0] = right[i];
+		minirt->camera.basis.points[i][2] = forward[i];
+		i++;
+	}
+	cross_product(forward, right, up);
+	i = -1;
+	while (++i < minirt->camera.basis.rows)
+		minirt->camera.basis.points[i][1] = up[i];
 	look_at(&minirt->camera, minirt);
 	return (0);
 }
@@ -38,9 +71,9 @@ int	control_camera(int code, t_minirt *minirt)
 {
 	minirt->render_mode = minirt->low_res;
 	if (code == ROT_LEFT)
-		rotate_camera(minirt, &minirt->rev_rotations.y_axis);
+		camera_yaw(minirt, &minirt->rev_rotations.y_axis);
 	else if (code == ROT_RIGHT)
-		rotate_camera(minirt, &minirt->rotations.y_axis);
+		camera_yaw(minirt, &minirt->rotations.y_axis);
 	else if (code == ROT_UP)
 		rotate_camera(minirt, &minirt->rev_rotations.x_axis);
 	else if (code == ROT_DOWN)
